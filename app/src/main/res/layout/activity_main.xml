@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1165B1"
+    android:fitsSystemWindows="true"
+    tools:context=".activity.MainActivity">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="#1165B1"
+        android:gravity="center"
+        android:text="交通运输企业安全生产云服务平台"
+        android:textColor="#ffffff"
+        android:textSize="17sp"></TextView>
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:layout_alignParentBottom="true"
+        android:background="#ffffff"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/button_one"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawablePadding="3dp"
+            android:drawableTop="@drawable/selector_current_icon"
+            android:gravity="center"
+            android:text="当前任务"
+            android:textColor="@drawable/selector_current_text"
+            android:textSize="10sp"></RadioButton>
+
+        <RadioButton
+            android:id="@+id/button_two"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawablePadding="3dp"
+            android:drawableTop="@drawable/selector_complete_icon"
+            android:gravity="center"
+            android:text="完成任务"
+            android:textColor="@drawable/selector_current_text"
+            android:textSize="10sp"></RadioButton>
+
+        <RadioButton
+            android:id="@+id/button_three"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawablePadding="3dp"
+            android:drawableTop="@drawable/selector_mine_icon"
+            android:gravity="center"
+            android:text="我的"
+            android:textColor="@drawable/selector_current_text"
+            android:textSize="10sp"></RadioButton>
+    </RadioGroup>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@id/radioGroup"
+        android:background="#22666666"></View>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/radioGroup"
+        android:layout_below="@id/title"
+        android:background="#ffffff"></android.support.v4.view.ViewPager>
+
+</RelativeLayout>

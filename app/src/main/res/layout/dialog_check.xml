@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="431dp"
+        android:layout_height="224dp"
+        android:layout_centerInParent="true"
+        android:background="#ffffff"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/cancle"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="21dp"
+                android:layout_marginTop="19dp"
+                android:scaleType="center"
+                android:src="@mipmap/icon_x"></ImageView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="77dp"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="54dp"
+                    android:background="#DCDCDC"></View>
+
+                <TextView
+                    android:id="@+id/method"
+                    android:layout_width="106dp"
+                    android:layout_height="34dp"
+                    android:layout_marginTop="21dp"
+                    android:background="@drawable/check_checked"
+                    android:gravity="center"
+                    android:text="检查方法"
+                    android:textColor="#333333"
+                    android:textSize="17sp"></TextView>
+
+                <TextView
+                    android:id="@+id/element"
+                    android:layout_width="106dp"
+                    android:layout_height="34dp"
+                    android:layout_marginTop="21dp"
+                    android:background="@drawable/check_unchecked"
+                    android:gravity="center"
+                    android:text="检查要素"
+                    android:textColor="#333333"
+                    android:textSize="17sp"></TextView>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="54dp"
+                    android:background="#DCDCDC"></View>
+
+            </LinearLayout>
+        </RelativeLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="23dp">
+
+            <TextView
+                android:id="@+id/content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="35dp"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:textColor="#7F7F7F"
+                android:textSize="15sp"></TextView>
+        </ScrollView>
+    </LinearLayout>
+</RelativeLayout>
