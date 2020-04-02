@@ -24,6 +24,8 @@ import com.du.management.activity.SecondActivity;
 import com.du.management.bean.Content;
 import com.du.management.bean.Task;
 import com.du.management.http.HttpConstant;
+import com.du.management.newBean.NewContent;
+import com.du.management.newBean.NewTask;
 import com.du.management.utils.Utils;
 import com.du.management.view.CommitDialog;
 import com.du.management.view.MyGridView;
@@ -39,10 +41,10 @@ import java.util.Map;
 public class CurrentTaskAdapter extends BaseAdapter {
 
     private Context context;
-    private List<Task> list = new ArrayList<>();
+    private List<NewTask> list = new ArrayList<>();
     private int status;
 
-    public CurrentTaskAdapter(Context context, List<Task> list) {
+    public CurrentTaskAdapter(Context context, List<NewTask> list) {
         this.context = context;
         this.list = list;
     }
@@ -77,21 +79,21 @@ public class CurrentTaskAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        final Task task = list.get(position);
-        if (!TextUtils.isEmpty(task.getTaskName()))
-            viewHolder.taskNameTV.setText(task.getTaskName());
-        if (!TextUtils.isEmpty(task.getName()))
-            viewHolder.companyTV.setText(task.getName());
-        viewHolder.endTimeTV.setText(Utils.changeTime(task.getEndTime()) + "截止");
-        GridAdapter adapter = new GridAdapter(task.getContentList());
+        final NewTask task = list.get(position);
+        if (!TextUtils.isEmpty(task.getRenwuname()))
+            viewHolder.taskNameTV.setText(task.getRenwuname());
+//        if (!TextUtils.isEmpty(task.getName()))
+//            viewHolder.companyTV.setText(task.getName());
+        viewHolder.endTimeTV.setText(Utils.formatString(task.getCreatedtime()) + "截止");
+        GridAdapter adapter = new GridAdapter(task.getJczcJianchashishis());
         viewHolder.gridView.setAdapter(adapter);
         viewHolder.gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int i, long id) {
                 Intent intent = new Intent(context, SecondActivity.class);
-                intent.putExtra("title", list.get(position).getContentList().get(i).getLabel());
-                intent.putExtra("taskId", String.valueOf(list.get(position).getTaskId()));
-                intent.putExtra("contentId", list.get(position).getContentList().get(i).getContentId());
+                intent.putExtra("title", list.get(position).getJczcJianchashishis().get(i).getDanweiName());
+                intent.putExtra("taskId", String.valueOf(list.get(position).getRenwuId()));
+                intent.putExtra("contentId", list.get(position).getJczcJianchashishis().get(i).getXiangmuId());
                 context.startActivity(intent);
             }
         });
@@ -108,7 +110,7 @@ public class CurrentTaskAdapter extends BaseAdapter {
                         final RequestQueue requestQueue = Volley.newRequestQueue(context);
                         final StringBuffer stringBuffer = new StringBuffer();
                         Map<String, String> params = new HashMap<>();
-                        params.put("taskId", String.valueOf(task.getTaskId()));
+                        params.put("taskId", String.valueOf(task.getRenwuId()));
                         params.put("state", "1");
                         stringBuffer.append(HttpConstant.REQUSET_BASE_URL).append("rule/netbook/update/task");
                         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT, stringBuffer.toString(), new JSONObject(params), new Response.Listener<JSONObject>() {
@@ -167,9 +169,9 @@ public class CurrentTaskAdapter extends BaseAdapter {
     }
 
     public class GridAdapter extends BaseAdapter {
-        private List<Content> contentList = new ArrayList<>();
+        private List<NewContent> contentList = new ArrayList<>();
 
-        public GridAdapter(List<Content> contentList) {
+        public GridAdapter(List<NewContent> contentList) {
             this.contentList = contentList;
         }
 
@@ -198,9 +200,9 @@ public class CurrentTaskAdapter extends BaseAdapter {
                 convertView.setTag(viewHolder);
             }
             viewHolder = (GridViewHolder) convertView.getTag();
-            Content content = contentList.get(position);
-            if (!TextUtils.isEmpty(content.getLabel()))
-                viewHolder.textView.setText(content.getLabel());
+            NewContent content = contentList.get(position);
+            if (!TextUtils.isEmpty(content.getDanweiName()))
+                viewHolder.textView.setText(content.getDanweiName());
             return convertView;
         }
     }

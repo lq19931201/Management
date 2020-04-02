@@ -34,13 +34,17 @@ import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
 import com.du.management.MainApplication;
 import com.du.management.R;
+import com.du.management.adapter.CurrentTaskAdapter;
 import com.du.management.adapter.SecondAdapter;
 import com.du.management.adapter.ThirdDetailAdapter;
 import com.du.management.adapter.ThirdListAdapter;
 import com.du.management.bean.TaskBody;
 import com.du.management.bean.TaskLevel;
 import com.du.management.bean.TaskTheme;
+import com.du.management.http.HeaderStringRequest;
 import com.du.management.http.HttpConstant;
+import com.du.management.newBean.NewContent;
+import com.du.management.newBean.NewTask;
 import com.du.management.utils.Utils;
 import com.du.management.view.CancleDialog;
 import com.du.management.view.MyListView;
@@ -79,7 +83,7 @@ public class SecondActivity extends BaseActivity {
 
     private String contentId;
 
-    private List<TaskLevel> secondList = new ArrayList<>();
+    private List<NewContent> secondList = new ArrayList<>();
 
     private List<TaskBody> thirdList = new ArrayList<>();
 
@@ -169,43 +173,33 @@ public class SecondActivity extends BaseActivity {
         contentId = getIntent().getStringExtra("contentId");
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         StringBuffer stringBuffer = new StringBuffer();
-        Map<String, String> params = new HashMap<>();
-        params.put("taskId", taskId);
-        params.put("parentId", contentId);
-        stringBuffer.append(HttpConstant.REQUSET_BASE_URL).append("rule/netbook/getList");
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, stringBuffer.toString(), new JSONObject(params), new Response.Listener<JSONObject>() {
+        stringBuffer.append(HttpConstant.REQUSET_BASE_URL).append("jianchazhicheng/getJianchashishiRenwu/").append(MainApplication.userId).append("/" + taskId);
+        HeaderStringRequest request = new HeaderStringRequest(Request.Method.GET, stringBuffer.toString(), new Response.Listener<String>() {
             @Override
-            public void onResponse(JSONObject response) {
+            public void onResponse(String response) {
                 try {
-                    if (response.getInt("code") == 200) {
-                        JSONArray jsonArray = response.getJSONArray("data");
+                    Log.w("lqlqlq", response);
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject.getString("code").equals(HttpConstant.CODE_SUCCESS)) {
+                        JSONArray jsonArray = jsonObject.getJSONArray("data");
                         Gson gson = new Gson();
                         for (int i = 0; i < jsonArray.length(); i++) {
-                            secondList.add((TaskLevel) gson.fromJson(jsonArray.getJSONObject(i).toString(), TaskLevel.class));
+                            secondList.add(gson.fromJson(jsonArray.getJSONObject(i).toString(), NewContent.class));
                         }
                         recyclerView.setAdapter(secondAdapter);
-                        requestThirdList(String.valueOf(secondList.get(0).getContentId()), taskId);
+                        requestThirdList(String.valueOf(secondList.get(0).getXiangmuId()), taskId);
                     }
-
                 } catch (Exception e) {
-                    e.printStackTrace();
-                }
 
+                }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(SecondActivity.this, "网络请求失败", Toast.LENGTH_SHORT).show();
             }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("token", MainApplication.TOKEN);
-                return headers;
-            }
-        };
-        requestQueue.add(jsonObjectRequest);
+        });
+        requestQueue.add(request);
         secondAdapter.setOnItemClickListener(new SecondAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int postion) {
@@ -213,7 +207,7 @@ public class SecondActivity extends BaseActivity {
                 SecondCurrentPosition = postion;
                 secondAdapter.notifyDataSetChanged();
                 thirdList.clear();
-                requestThirdList(String.valueOf(secondList.get(postion).getContentId()), taskId);
+                requestThirdList(String.valueOf(secondList.get(postion).getXiangmuId()), taskId);
             }
         });
     }

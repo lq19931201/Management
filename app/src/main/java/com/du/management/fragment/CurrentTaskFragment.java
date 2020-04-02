@@ -13,12 +13,14 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.du.management.MainApplication;
 import com.du.management.R;
 import com.du.management.activity.SecondActivity;
 import com.du.management.adapter.CurrentTaskAdapter;
 import com.du.management.bean.Task;
 import com.du.management.http.HeaderStringRequest;
 import com.du.management.http.HttpConstant;
+import com.du.management.newBean.NewTask;
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
@@ -33,7 +35,7 @@ import java.util.List;
 public class CurrentTaskFragment extends BaseFragment {
     private ListView listView;
 
-    private List<Task> list = new ArrayList<>();
+    private List<NewTask> list = new ArrayList<>();
 
     @Override
     protected View initView(ViewGroup container) {
@@ -56,20 +58,19 @@ public class CurrentTaskFragment extends BaseFragment {
 
     @Override
     protected void initData() {
-        String url = new StringBuffer().append(HttpConstant.REQUSET_BASE_URL).append("jianchazhicheng/getJiancharenwu").toString();
+        String url = new StringBuffer().append(HttpConstant.REQUSET_BASE_URL).append("jianchazhicheng/getJiancharenwu/").append(MainApplication.userId).toString();
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         HeaderStringRequest request = new HeaderStringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
-                    Log.w("lqlqlq", response);
                     JSONObject jsonObject = new JSONObject(response);
                     String code = jsonObject.getString("code");
                     if (code.equals(HttpConstant.CODE_SUCCESS)) {
                         JSONArray jsonArray = jsonObject.getJSONArray("data");
                         Gson gson = new Gson();
                         for (int i = 0; i < jsonArray.length(); i++) {
-                            Task task = gson.fromJson(jsonArray.getJSONObject(i).toString(), Task.class);
+                            NewTask task = gson.fromJson(jsonArray.getJSONObject(i).toString(), NewTask.class);
                             list.add(task);
                         }
                         CurrentTaskAdapter adapter = new CurrentTaskAdapter(getActivity(), list);

@@ -14,19 +14,20 @@ import com.du.management.R;
 import com.du.management.activity.SecondActivity;
 import com.du.management.bean.Content;
 import com.du.management.bean.TaskLevel;
+import com.du.management.newBean.NewContent;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SecondAdapter extends RecyclerView.Adapter<SecondAdapter.ViewHolder> {
 
-    private List<TaskLevel> list = new ArrayList<>();
+    private List<NewContent> list = new ArrayList<>();
 
     private Context context;
 
     private OnItemClickListener onItemClickListener;
 
-    public SecondAdapter(Context context, List<TaskLevel> data) {
+    public SecondAdapter(Context context, List<NewContent> data) {
         this.list = data;
         this.context = context;
     }
@@ -45,8 +46,8 @@ public class SecondAdapter extends RecyclerView.Adapter<SecondAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        if (!TextUtils.isEmpty(list.get(position).getLabel())) {
-            holder.textView.setText(list.get(position).getLabel());
+        if (!TextUtils.isEmpty(list.get(position).getDanweiName())) {
+            holder.textView.setText(list.get(position).getDanweiName());
         }
         if (position == SecondActivity.SecondCurrentPosition) {
             holder.textView.setTextColor(context.getResources().getColor(R.color.second));

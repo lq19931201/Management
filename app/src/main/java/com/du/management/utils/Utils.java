@@ -3,9 +3,12 @@ package com.du.management.utils;
 import android.content.Context;
 import android.os.Environment;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class Utils {
 
@@ -30,5 +33,18 @@ public class Utils {
         } else {
             return context.getFilesDir().getAbsolutePath();
         }
+    }
+
+    public static String formatString(String time) {
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SSSZ");
+        DateFormat df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        df2.setTimeZone(TimeZone.getTimeZone("GMT"));
+        Date date = null;
+        try {
+            date = df.parse(time);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return df2.format(date);
     }
 }
