@@ -2,7 +2,6 @@ package com.du.management.activity;
 
 import android.Manifest;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -15,11 +14,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,17 +31,14 @@ import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
 import com.du.management.MainApplication;
 import com.du.management.R;
-import com.du.management.adapter.CurrentTaskAdapter;
 import com.du.management.adapter.SecondAdapter;
 import com.du.management.adapter.ThirdDetailAdapter;
 import com.du.management.adapter.ThirdListAdapter;
 import com.du.management.bean.TaskBody;
-import com.du.management.bean.TaskLevel;
 import com.du.management.bean.TaskTheme;
 import com.du.management.http.HeaderStringRequest;
 import com.du.management.http.HttpConstant;
 import com.du.management.newBean.NewContent;
-import com.du.management.newBean.NewTask;
 import com.du.management.utils.Utils;
 import com.du.management.view.CancleDialog;
 import com.du.management.view.MyListView;
@@ -178,7 +172,6 @@ public class SecondActivity extends BaseActivity {
             @Override
             public void onResponse(String response) {
                 try {
-                    Log.w("lqlqlq", response);
                     JSONObject jsonObject = new JSONObject(response);
                     if (jsonObject.getString("code").equals(HttpConstant.CODE_SUCCESS)) {
                         JSONArray jsonArray = jsonObject.getJSONArray("data");
@@ -187,10 +180,9 @@ public class SecondActivity extends BaseActivity {
                             secondList.add(gson.fromJson(jsonArray.getJSONObject(i).toString(), NewContent.class));
                         }
                         recyclerView.setAdapter(secondAdapter);
-                        requestThirdList(String.valueOf(secondList.get(0).getXiangmuId()), taskId);
+                        requestThirdList(String.valueOf(secondList.get(0).getMobanId()), String.valueOf(secondList.get(0).getXiangmuId()));
                     }
                 } catch (Exception e) {
-
                 }
             }
         }, new Response.ErrorListener() {
@@ -212,20 +204,19 @@ public class SecondActivity extends BaseActivity {
         });
     }
 
-    private void requestThirdList(String contentId, String taskId) {
-        final RequestQueue requestQueue = Volley.newRequestQueue(this);
+    private void requestThirdList(String mobanId, String xiangmuId) {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
         StringBuffer stringBuffer = new StringBuffer();
-        Map<String, String> params = new HashMap<>();
-        params.put("taskId", taskId);
-        params.put("contentId", contentId);
-        stringBuffer.append(HttpConstant.REQUSET_BASE_URL).append("rule/netbook/getThird");
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, stringBuffer.toString(), new JSONObject(params), new Response.Listener<JSONObject>() {
+        stringBuffer.append(HttpConstant.REQUSET_BASE_URL).append("jianchazhicheng/getJianchashishiMoban/").append(MainApplication.userId).append("/" + mobanId).append("/" + xiangmuId);
+        HeaderStringRequest request = new HeaderStringRequest(Request.Method.GET, stringBuffer.toString(), new Response.Listener<String>() {
             @Override
-            public void onResponse(JSONObject response) {
+            public void onResponse(String response) {
                 try {
-                    if (response.getInt("code") == 200) {
+                    Log.w("lqlqlq", response);
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject.getString("code").equals(HttpConstant.CODE_SUCCESS)) {
                         Gson gson = new Gson();
-                        JSONArray jsonArray = response.getJSONArray("data");
+                        JSONArray jsonArray = jsonObject.getJSONArray("data");
                         for (int i = 0; i < jsonArray.length(); i++) {
                             thirdList.add((TaskBody) gson.fromJson(jsonArray.getJSONObject(i).toString(), TaskBody.class));
                         }
@@ -257,15 +248,8 @@ public class SecondActivity extends BaseActivity {
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(SecondActivity.this, "网络请求失败", Toast.LENGTH_SHORT).show();
             }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("token", MainApplication.TOKEN);
-                return headers;
-            }
-        };
-        requestQueue.add(jsonObjectRequest);
+        });
+        requestQueue.add(request);
     }
 
     private void compare(List<TaskBody> thirdList, List<TaskTheme> thirdDetailList) {
