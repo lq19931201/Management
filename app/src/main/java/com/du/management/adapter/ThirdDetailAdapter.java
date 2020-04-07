@@ -24,6 +24,7 @@ import com.du.management.bean.TaskTheme;
 import com.du.management.bean.TaskThemeBasis;
 import com.du.management.http.HeaderStringRequest;
 import com.du.management.http.HttpConstant;
+import com.du.management.newBean.Jcxm;
 import com.du.management.view.CheckDialog;
 import com.du.management.view.LawDialog;
 import com.du.management.view.ReadDialog;
@@ -40,13 +41,13 @@ import java.util.Map;
 
 public class ThirdDetailAdapter extends BaseAdapter {
 
-    private List<TaskTheme> list = new ArrayList<>();
+    private List<Jcxm> list = new ArrayList<>();
 
     private Context context;
 
     private boolean isComplete;
 
-    public ThirdDetailAdapter(Context context, List<TaskTheme> list, boolean isComplete) {
+    public ThirdDetailAdapter(Context context, List<Jcxm> list, boolean isComplete) {
         this.context = context;
         this.list = list;
         this.isComplete = isComplete;
@@ -85,9 +86,9 @@ public class ThirdDetailAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        final TaskTheme taskTheme = list.get(position);
+        final Jcxm taskTheme = list.get(position);
         if (!taskTheme.isAdd) {
-            viewHolder.nameTV.setText(taskTheme.getName());
+            viewHolder.nameTV.setText(taskTheme.getJcxmName());
             viewHolder.nameTV.setVisibility(View.VISIBLE);
             viewHolder.faIV.setVisibility(View.VISIBLE);
             viewHolder.remarkIV.setVisibility(View.VISIBLE);
@@ -97,7 +98,7 @@ public class ThirdDetailAdapter extends BaseAdapter {
             viewHolder.bufuheTV.setVisibility(View.VISIBLE);
             viewHolder.checkBox.setVisibility(View.VISIBLE);
         } else {
-            viewHolder.nameTV.setText(taskTheme.getName());
+            viewHolder.nameTV.setText(taskTheme.getJcxmName());
             viewHolder.nameTV.setVisibility(View.INVISIBLE);
             viewHolder.faIV.setVisibility(View.INVISIBLE);
             viewHolder.remarkIV.setVisibility(View.INVISIBLE);
@@ -125,150 +126,150 @@ public class ThirdDetailAdapter extends BaseAdapter {
         viewHolder.jianIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final RequestQueue requestQueue = Volley.newRequestQueue(context);
-                final StringBuffer stringBuffer = new StringBuffer();
-                Map<String, String> params = new HashMap<>();
-                params.put("themeId", String.valueOf(taskTheme.getThemeId()));
-                stringBuffer.append(HttpConstant.REQUSET_BASE_URL).append("rule/netbook/getElement");
-                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, stringBuffer.toString(), new JSONObject(params), new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            if (response.getInt("code") == 200) {
-                                StringBuffer element = new StringBuffer();
-                                try {
-                                    JSONArray jsonArray = response.getJSONArray("data");
-                                    for (int i = 0; i < jsonArray.length(); i++) {
-                                        element.append(i + 1).append(".").append(jsonArray.getJSONObject(i).getString("name")).append("\n");
-                                    }
-                                    String method = "";
-                                    if (taskTheme.getMethodList() != null && taskTheme.getMethodList().size() > 0) {
-                                        for (int k = 0; k < taskTheme.getMethodList().size(); k++) {
-                                            method = method + (k + 1) + "." + taskTheme.getMethodList().get(k) + "\n";
-                                        }
-                                    }
-                                    CheckDialog checkDialog = new CheckDialog(context, method, element.toString());
-                                    checkDialog.show();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-
-                            }
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(context, "网络请求失败", Toast.LENGTH_SHORT).show();
-                    }
-                }) {
-                    @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
-                        HashMap<String, String> headers = new HashMap<String, String>();
-                        headers.put("token", MainApplication.TOKEN);
-                        return headers;
-                    }
-                };
-                requestQueue.add(jsonObjectRequest);
+//                final RequestQueue requestQueue = Volley.newRequestQueue(context);
+//                final StringBuffer stringBuffer = new StringBuffer();
+//                Map<String, String> params = new HashMap<>();
+//                params.put("themeId", String.valueOf(taskTheme.getThemeId()));
+//                stringBuffer.append(HttpConstant.REQUSET_BASE_URL).append("rule/netbook/getElement");
+//                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, stringBuffer.toString(), new JSONObject(params), new Response.Listener<JSONObject>() {
+//                    @Override
+//                    public void onResponse(JSONObject response) {
+//                        try {
+//                            if (response.getInt("code") == 200) {
+//                                StringBuffer element = new StringBuffer();
+//                                try {
+//                                    JSONArray jsonArray = response.getJSONArray("data");
+//                                    for (int i = 0; i < jsonArray.length(); i++) {
+//                                        element.append(i + 1).append(".").append(jsonArray.getJSONObject(i).getString("name")).append("\n");
+//                                    }
+//                                    String method = "";
+//                                    if (taskTheme.getMethodList() != null && taskTheme.getMethodList().size() > 0) {
+//                                        for (int k = 0; k < taskTheme.getMethodList().size(); k++) {
+//                                            method = method + (k + 1) + "." + taskTheme.getMethodList().get(k) + "\n";
+//                                        }
+//                                    }
+//                                    CheckDialog checkDialog = new CheckDialog(context, method, element.toString());
+//                                    checkDialog.show();
+//                                } catch (Exception e) {
+//                                    e.printStackTrace();
+//                                }
+//
+//                            }
+//
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//
+//                    }
+//                }, new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                        Toast.makeText(context, "网络请求失败", Toast.LENGTH_SHORT).show();
+//                    }
+//                }) {
+//                    @Override
+//                    public Map<String, String> getHeaders() throws AuthFailureError {
+//                        HashMap<String, String> headers = new HashMap<String, String>();
+//                        headers.put("token", MainApplication.TOKEN);
+//                        return headers;
+//                    }
+//                };
+//                requestQueue.add(jsonObjectRequest);
 
             }
         });
         viewHolder.faIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String url = new StringBuffer().append(HttpConstant.REQUSET_BASE_URL).append("rule/netbook/getrule/").append(taskTheme.getThemeId()).toString();
-                RequestQueue requestQueue = Volley.newRequestQueue(context);
-                HeaderStringRequest request = new HeaderStringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            int code = jsonObject.getInt("code");
-                            if (code == 200) {
-                                JSONArray jsonArray = jsonObject.getJSONArray("data");
-                                Gson gson = new Gson();
-                                List<TaskThemeBasis> list = new ArrayList<>();
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    list.add(gson.fromJson(jsonArray.getJSONObject(i).toString(), TaskThemeBasis.class));
-                                }
-                                LawDialog lawDialog = new LawDialog(context, list);
-                                lawDialog.show();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(context, "网络请求失败", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                requestQueue.add(request);
+//                String url = new StringBuffer().append(HttpConstant.REQUSET_BASE_URL).append("rule/netbook/getrule/").append(taskTheme.getThemeId()).toString();
+//                RequestQueue requestQueue = Volley.newRequestQueue(context);
+//                HeaderStringRequest request = new HeaderStringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+//                    @Override
+//                    public void onResponse(String response) {
+//                        try {
+//                            JSONObject jsonObject = new JSONObject(response);
+//                            int code = jsonObject.getInt("code");
+//                            if (code == 200) {
+//                                JSONArray jsonArray = jsonObject.getJSONArray("data");
+//                                Gson gson = new Gson();
+//                                List<TaskThemeBasis> list = new ArrayList<>();
+//                                for (int i = 0; i < jsonArray.length(); i++) {
+//                                    list.add(gson.fromJson(jsonArray.getJSONObject(i).toString(), TaskThemeBasis.class));
+//                                }
+//                                LawDialog lawDialog = new LawDialog(context, list);
+//                                lawDialog.show();
+//                            }
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }, new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                        Toast.makeText(context, "网络请求失败", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//                requestQueue.add(request);
             }
         });
         viewHolder.remarkIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final RemarkDialog rDialog = new RemarkDialog(context, String.valueOf(taskTheme.getTaskThemeId()));
-                rDialog.show();
-                rDialog.setOnSaveClick(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        rDialog.dismiss();
-                        final RequestQueue requestQueue = Volley.newRequestQueue(context);
-                        final StringBuffer stringBuffer = new StringBuffer();
-                        Map<String, String> params = new HashMap<>();
-                        params.put("taskThemeId", String.valueOf(taskTheme.getTaskThemeId()));
-//                        params.put("imageId","");//上传图片id
-//                        params.put("fileId","");//上传文件id
-                        if (TextUtils.isEmpty(rDialog.getEditText().getText().toString())) {
-                            Toast.makeText(context, "请输入内容", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        params.put("situation", rDialog.getEditText().getText().toString());
-                        stringBuffer.append(HttpConstant.REQUSET_BASE_URL).append("rule/netbook");
-                        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT, stringBuffer.toString(), new JSONObject(params), new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                try {
-                                    if (response.getInt("code") == 200) {
-                                        Toast.makeText(context, "备注成功", Toast.LENGTH_SHORT).show();
-                                    }
-
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-
-                            }
-                        }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Toast.makeText(context, "网络请求失败", Toast.LENGTH_SHORT).show();
-                            }
-                        }) {
-                            @Override
-                            public Map<String, String> getHeaders() throws AuthFailureError {
-                                HashMap<String, String> headers = new HashMap<String, String>();
-                                headers.put("token", MainApplication.TOKEN);
-                                return headers;
-                            }
-                        };
-                        requestQueue.add(jsonObjectRequest);
-                    }
-                });
+//                final RemarkDialog rDialog = new RemarkDialog(context, String.valueOf(taskTheme.getTaskThemeId()));
+//                rDialog.show();
+//                rDialog.setOnSaveClick(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        rDialog.dismiss();
+//                        final RequestQueue requestQueue = Volley.newRequestQueue(context);
+//                        final StringBuffer stringBuffer = new StringBuffer();
+//                        Map<String, String> params = new HashMap<>();
+//                        params.put("taskThemeId", String.valueOf(taskTheme.getTaskThemeId()));
+////                        params.put("imageId","");//上传图片id
+////                        params.put("fileId","");//上传文件id
+//                        if (TextUtils.isEmpty(rDialog.getEditText().getText().toString())) {
+//                            Toast.makeText(context, "请输入内容", Toast.LENGTH_SHORT).show();
+//                            return;
+//                        }
+//                        params.put("situation", rDialog.getEditText().getText().toString());
+//                        stringBuffer.append(HttpConstant.REQUSET_BASE_URL).append("rule/netbook");
+//                        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT, stringBuffer.toString(), new JSONObject(params), new Response.Listener<JSONObject>() {
+//                            @Override
+//                            public void onResponse(JSONObject response) {
+//                                try {
+//                                    if (response.getInt("code") == 200) {
+//                                        Toast.makeText(context, "备注成功", Toast.LENGTH_SHORT).show();
+//                                    }
+//
+//                                } catch (Exception e) {
+//                                    e.printStackTrace();
+//                                }
+//
+//                            }
+//                        }, new Response.ErrorListener() {
+//                            @Override
+//                            public void onErrorResponse(VolleyError error) {
+//                                Toast.makeText(context, "网络请求失败", Toast.LENGTH_SHORT).show();
+//                            }
+//                        }) {
+//                            @Override
+//                            public Map<String, String> getHeaders() throws AuthFailureError {
+//                                HashMap<String, String> headers = new HashMap<String, String>();
+//                                headers.put("token", MainApplication.TOKEN);
+//                                return headers;
+//                            }
+//                        };
+//                        requestQueue.add(jsonObjectRequest);
+//                    }
+//                });
             }
         });
         viewHolder.takePhotoIV.setOnClickListener(listener);
         viewHolder.readTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ReadDialog readDialog = new ReadDialog(context, String.valueOf(taskTheme.getTaskThemeId()), String.valueOf(taskTheme.getThemeId()));
-                readDialog.show();
+//                ReadDialog readDialog = new ReadDialog(context, String.valueOf(taskTheme.getTaskThemeId()), String.valueOf(taskTheme.getThemeId()));
+//                readDialog.show();
             }
         });
         return convertView;

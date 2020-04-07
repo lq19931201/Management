@@ -27,18 +27,17 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
 import com.du.management.MainApplication;
 import com.du.management.R;
 import com.du.management.adapter.SecondAdapter;
 import com.du.management.adapter.ThirdDetailAdapter;
 import com.du.management.adapter.ThirdListAdapter;
-import com.du.management.bean.TaskBody;
-import com.du.management.bean.TaskTheme;
 import com.du.management.http.HeaderStringRequest;
 import com.du.management.http.HttpConstant;
+import com.du.management.newBean.Jcxm;
 import com.du.management.newBean.NewContent;
+import com.du.management.newBean.ThreeData;
 import com.du.management.utils.Utils;
 import com.du.management.view.CancleDialog;
 import com.du.management.view.MyListView;
@@ -79,7 +78,7 @@ public class SecondActivity extends BaseActivity {
 
     private List<NewContent> secondList = new ArrayList<>();
 
-    private List<TaskBody> thirdList = new ArrayList<>();
+    private List<ThreeData> thirdList = new ArrayList<>();
 
     private SecondAdapter secondAdapter;
 
@@ -199,10 +198,11 @@ public class SecondActivity extends BaseActivity {
                 SecondCurrentPosition = postion;
                 secondAdapter.notifyDataSetChanged();
                 thirdList.clear();
-                requestThirdList(String.valueOf(secondList.get(postion).getXiangmuId()), taskId);
+                requestThirdList(String.valueOf(secondList.get(postion).getMobanId()), String.valueOf(secondList.get(0).getXiangmuId()));
             }
         });
     }
+
 
     private void requestThirdList(String mobanId, String xiangmuId) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -212,18 +212,17 @@ public class SecondActivity extends BaseActivity {
             @Override
             public void onResponse(String response) {
                 try {
-                    Log.w("lqlqlq", response);
                     JSONObject jsonObject = new JSONObject(response);
                     if (jsonObject.getString("code").equals(HttpConstant.CODE_SUCCESS)) {
                         Gson gson = new Gson();
                         JSONArray jsonArray = jsonObject.getJSONArray("data");
                         for (int i = 0; i < jsonArray.length(); i++) {
-                            thirdList.add((TaskBody) gson.fromJson(jsonArray.getJSONObject(i).toString(), TaskBody.class));
+                            thirdList.add(gson.fromJson(jsonArray.getJSONObject(i).toString(), ThreeData.class));
                         }
                         thirdListAdapter = new ThirdListAdapter(SecondActivity.this, thirdList);
                         thirdListView.setAdapter(thirdListAdapter);
                         if (thirdList != null && thirdList.size() > 0) {
-                            final List<TaskTheme> thirdDetaiList = thirdList.get(0).getTaskThemeList();
+                            final List<Jcxm> thirdDetaiList = thirdList.get(0).getJcxmlist();
                             compare(thirdList, thirdDetaiList);
                             thirdDetailAdapter = new ThirdDetailAdapter(SecondActivity.this, thirdDetaiList, isComplete);
                             thirdDetailListView.setAdapter(thirdDetailAdapter);
@@ -234,7 +233,7 @@ public class SecondActivity extends BaseActivity {
                                 }
                             });
                         } else {
-                            thirdDetailAdapter = new ThirdDetailAdapter(SecondActivity.this, new ArrayList<TaskTheme>(), isComplete);
+                            thirdDetailAdapter = new ThirdDetailAdapter(SecondActivity.this, new ArrayList<Jcxm>(), isComplete);
                             thirdDetailListView.setAdapter(thirdDetailAdapter);
                         }
                     }
@@ -252,16 +251,15 @@ public class SecondActivity extends BaseActivity {
         requestQueue.add(request);
     }
 
-    private void compare(List<TaskBody> thirdList, List<TaskTheme> thirdDetailList) {
+    private void compare(List<ThreeData> thirdList, List<Jcxm> thirdDetailList) {
         int size = thirdList.size();
         int detailSize = thirdDetailList.size();
         while (detailSize <= size * 2) {
-            TaskTheme taskTheme = new TaskTheme();
-            taskTheme.setName("lalalallala");
+            Jcxm taskTheme = new Jcxm();
+            taskTheme.setJcxmName("lalalallala");
             taskTheme.setAdd(true);
             thirdDetailList.add(taskTheme);
             detailSize += 1;
-
         }
     }
 
@@ -277,18 +275,18 @@ public class SecondActivity extends BaseActivity {
         thirdListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ThirdCurrentPosition = position;
-                thirdListAdapter.notifyDataSetChanged();
-                final List<TaskTheme> thirdDetaiList = thirdList.get(position).getTaskThemeList();
-                compare(thirdList, thirdDetaiList);
-                thirdDetailAdapter = new ThirdDetailAdapter(SecondActivity.this, thirdList.get(position).getTaskThemeList(), isComplete);
-                thirdDetailListView.setAdapter(thirdDetailAdapter);
-                thirdDetailAdapter.setOnViewClickListener(new ThirdDetailAdapter.OnViewClickListener() {
-                    @Override
-                    public void onViewClick(View view, int position) {
-                        openCamera(thirdDetaiList.get(position));
-                    }
-                });
+//                ThirdCurrentPosition = position;
+//                thirdListAdapter.notifyDataSetChanged();
+//                final List<TaskTheme> thirdDetaiList = thirdList.get(position).getTaskThemeList();
+//                compare(thirdList, thirdDetaiList);
+//                thirdDetailAdapter = new ThirdDetailAdapter(SecondActivity.this, thirdList.get(position).getTaskThemeList(), isComplete);
+//                thirdDetailListView.setAdapter(thirdDetailAdapter);
+//                thirdDetailAdapter.setOnViewClickListener(new ThirdDetailAdapter.OnViewClickListener() {
+//                    @Override
+//                    public void onViewClick(View view, int position) {
+//                        openCamera(thirdDetaiList.get(position));
+//                    }
+//                });
             }
         });
         cancleTV.setOnClickListener(new View.OnClickListener() {
@@ -346,10 +344,10 @@ public class SecondActivity extends BaseActivity {
 
     private static int PHOTO_REQUEST_CAREMA = 0x12;
 
-    private long taskThemeId;
+    private long jcxmId;
 
-    public void openCamera(TaskTheme taskTheme) {
-        taskThemeId = taskTheme.getTaskThemeId();
+    public void openCamera(Jcxm taskTheme) {
+        jcxmId = taskTheme.getJcxmId();
         //获取系統版本
         int currentapiVersion = android.os.Build.VERSION.SDK_INT;
         // 激活相机
@@ -451,7 +449,7 @@ public class SecondActivity extends BaseActivity {
             saveBitmap(bitmap, new File(filePath));
             try {
                 File realFile = new File(filePath);
-                upload(HttpConstant.REQUSET_BASE_URL + "rule/basic/file", realFile.getAbsolutePath(), realFile.getName());
+                upload(HttpConstant.REQUSET_BASE_URL + "/jianchazhicheng/upLoadJianchaPic", realFile.getAbsolutePath(), realFile.getName());
             } catch (Exception e) {
 
             }
@@ -460,7 +458,10 @@ public class SecondActivity extends BaseActivity {
     }
 
     private void upload(String url, String filePath, String fileName) throws Exception {
-        RequestBody requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart("file", fileName, RequestBody.create(MediaType.parse("multipart/form-data"), new File(filePath))).build();
+        RequestBody requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart("jcjgPicFile", fileName, RequestBody.create(MediaType.parse("multipart/form-data"), new File(filePath)))
+//                .addFormDataPart("jczbId",)
+//                .addFormDataPart("xiangmuId",)
+                .build();
         okhttp3.Request request = new okhttp3.Request.Builder().header("Authorization", "Client-ID " + UUID.randomUUID()).url(url).post(requestBody).build();
         OkHttpClient okHttpClient = new OkHttpClient();
         Call call = okHttpClient.newCall(request);
@@ -476,12 +477,12 @@ public class SecondActivity extends BaseActivity {
                 try {
                     JSONObject jsonObject = new JSONObject(response.body().string());
                     if (jsonObject.getInt("code") == 200) {
-                        Log.e("lqlq", "taskThemeId===" + taskThemeId);
-                        if (taskThemeId != 0) {
+                        Log.e("lqlq", "jcxmId===" + jcxmId);
+                        if (jcxmId != 0) {
                             final RequestQueue requestQueue = Volley.newRequestQueue(SecondActivity.this);
                             final StringBuffer stringBuffer = new StringBuffer();
                             Map<String, String> params = new HashMap<>();
-                            params.put("taskThemeId", String.valueOf(taskThemeId));
+                            params.put("jcxmId", String.valueOf(jcxmId));
                             String imageId = jsonObject.getJSONObject("data").getString("fileId");
                             params.put("imageId", imageId);//上传图片id
 //                        params.put("fileId","");//上传文件id
@@ -497,12 +498,12 @@ public class SecondActivity extends BaseActivity {
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
-                                    taskThemeId = 0;
+                                    jcxmId = 0;
                                 }
                             }, new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
-                                    taskThemeId = 0;
+                                    jcxmId = 0;
                                     Toast.makeText(SecondActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
                                 }
                             }) {
@@ -524,58 +525,58 @@ public class SecondActivity extends BaseActivity {
     }
 
     private void saveRequest() {
-        List<PushBean> saveList = new ArrayList<>();
-        for (int i = 0; i < thirdList.size(); i++) {
-            TaskBody taskBody = thirdList.get(i);
-            for (int k = 0; k < taskBody.getTaskThemeList().size(); k++) {
-                TaskTheme taskTheme = taskBody.getTaskThemeList().get(k);
-                if (taskTheme.getTaskThemeId() == null)
-                    continue;
-                PushBean pushBean = new PushBean();
-                pushBean.setAccord(taskTheme.isAccord());
-                pushBean.setTaskThemeId(taskTheme.getTaskThemeId());
-                saveList.add(pushBean);
-            }
-        }
-        JSONObject jsonObject = getJson(saveList);
-        if (jsonObject == null) {
-            Toast.makeText(SecondActivity.this, "数据格式出错", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        final RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(HttpConstant.REQUSET_BASE_URL).append("rule/netbook/save/task");
-        JsonRequest<JSONObject> jsonRequest = new JsonObjectRequest(Request.Method.POST, stringBuffer.toString(), jsonObject,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            int code = response.getInt("code");
-                            if (code == 200) {
-                                Toast.makeText(SecondActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
-                                finish();
-                            }
-                        } catch (Exception e) {
-
-                        }
-
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(SecondActivity.this, "网络请求失败", Toast.LENGTH_SHORT).show();
-            }
-        }) {
-
-            @Override
-            public Map<String, String> getHeaders() {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("token", MainApplication.TOKEN);
-                headers.put("Content-Type", "application/json");
-                return headers;
-            }
-        };
-        requestQueue.add(jsonRequest);
+//        List<PushBean> saveList = new ArrayList<>();
+//        for (int i = 0; i < thirdList.size(); i++) {
+//            TaskBody taskBody = thirdList.get(i);
+//            for (int k = 0; k < taskBody.getTaskThemeList().size(); k++) {
+//                TaskTheme taskTheme = taskBody.getTaskThemeList().get(k);
+//                if (taskTheme.getTaskThemeId() == null)
+//                    continue;
+//                PushBean pushBean = new PushBean();
+//                pushBean.setAccord(taskTheme.isAccord());
+//                pushBean.setTaskThemeId(taskTheme.getTaskThemeId());
+//                saveList.add(pushBean);
+//            }
+//        }
+//        JSONObject jsonObject = getJson(saveList);
+//        if (jsonObject == null) {
+//            Toast.makeText(SecondActivity.this, "数据格式出错", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        final RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+//        StringBuffer stringBuffer = new StringBuffer();
+//        stringBuffer.append(HttpConstant.REQUSET_BASE_URL).append("rule/netbook/save/task");
+//        JsonRequest<JSONObject> jsonRequest = new JsonObjectRequest(Request.Method.POST, stringBuffer.toString(), jsonObject,
+//                new Response.Listener<JSONObject>() {
+//                    @Override
+//                    public void onResponse(JSONObject response) {
+//                        try {
+//                            int code = response.getInt("code");
+//                            if (code == 200) {
+//                                Toast.makeText(SecondActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
+//                                finish();
+//                            }
+//                        } catch (Exception e) {
+//
+//                        }
+//
+//                    }
+//                }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Toast.makeText(SecondActivity.this, "网络请求失败", Toast.LENGTH_SHORT).show();
+//            }
+//        }) {
+//
+//            @Override
+//            public Map<String, String> getHeaders() {
+//                HashMap<String, String> headers = new HashMap<String, String>();
+//                headers.put("token", MainApplication.TOKEN);
+//                headers.put("Content-Type", "application/json");
+//                return headers;
+//            }
+//        };
+//        requestQueue.add(jsonRequest);
 
     }
 
@@ -586,7 +587,7 @@ public class SecondActivity extends BaseActivity {
             JSONObject tmpObj = null;
             for (int i = 0; i < list.size(); i++) {
                 tmpObj = new JSONObject();
-                tmpObj.put("taskThemeId", list.get(i).getTaskThemeId());
+                tmpObj.put("jcxmId", list.get(i).getTaskThemeId());
                 tmpObj.put("accord", list.get(i).isAccord());
                 jsonArray.put(tmpObj);
             }
