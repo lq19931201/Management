@@ -3,7 +3,6 @@ package com.du.management.newBean;
 import java.util.List;
 
 public class Jcxm {
-    public boolean isAdd;
     public long jcxmId;
     public String jcxmName;
     public String deleted;
@@ -14,7 +13,6 @@ public class Jcxm {
     public String createdBy;
     public String updatedBy;
     public List<Jcnr> jcnrlist;
-    private boolean accord;
 
     public long getJcxmId() {
         return jcxmId;
@@ -94,21 +92,5 @@ public class Jcxm {
 
     public void setJcnrlist(List<Jcnr> jcnrlist) {
         this.jcnrlist = jcnrlist;
-    }
-
-    public void setAdd(boolean add) {
-        isAdd = add;
-    }
-
-    public boolean isAdd() {
-        return isAdd;
-    }
-
-    public void setAccord(boolean accord) {
-        this.accord = accord;
-    }
-
-    public boolean isAccord() {
-        return accord;
     }
 }

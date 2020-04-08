@@ -35,7 +35,10 @@ import com.du.management.adapter.ThirdDetailAdapter;
 import com.du.management.adapter.ThirdListAdapter;
 import com.du.management.http.HeaderStringRequest;
 import com.du.management.http.HttpConstant;
+import com.du.management.newBean.Jcnr;
+import com.du.management.newBean.Jcnrfj;
 import com.du.management.newBean.Jcxm;
+import com.du.management.newBean.Jczb;
 import com.du.management.newBean.NewContent;
 import com.du.management.newBean.ThreeData;
 import com.du.management.utils.Utils;
@@ -74,11 +77,11 @@ public class SecondActivity extends BaseActivity {
 
     private String taskId;
 
-    private String contentId;
+    private String xiangmuId;
 
     private List<NewContent> secondList = new ArrayList<>();
 
-    private List<ThreeData> thirdList = new ArrayList<>();
+    private List<Jcnrfj> thirdList = new ArrayList<>();
 
     private SecondAdapter secondAdapter;
 
@@ -163,7 +166,7 @@ public class SecondActivity extends BaseActivity {
             bottomLV.setVisibility(View.GONE);
         }
         taskId = getIntent().getStringExtra("taskId");
-        contentId = getIntent().getStringExtra("contentId");
+        xiangmuId = getIntent().getStringExtra("xiangmuId");
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append(HttpConstant.REQUSET_BASE_URL).append("jianchazhicheng/getJianchashishiRenwu/").append(MainApplication.userId).append("/" + taskId);
@@ -172,6 +175,7 @@ public class SecondActivity extends BaseActivity {
             public void onResponse(String response) {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
+                    Log.w("lqlq", "二级:" + jsonObject.toString());
                     if (jsonObject.getString("code").equals(HttpConstant.CODE_SUCCESS)) {
                         JSONArray jsonArray = jsonObject.getJSONArray("data");
                         Gson gson = new Gson();
@@ -198,7 +202,7 @@ public class SecondActivity extends BaseActivity {
                 SecondCurrentPosition = postion;
                 secondAdapter.notifyDataSetChanged();
                 thirdList.clear();
-                requestThirdList(String.valueOf(secondList.get(postion).getMobanId()), String.valueOf(secondList.get(0).getXiangmuId()));
+                requestThirdList(String.valueOf(secondList.get(postion).getMobanId()), String.valueOf(secondList.get(postion).getXiangmuId()));
             }
         });
     }
@@ -215,14 +219,21 @@ public class SecondActivity extends BaseActivity {
                     JSONObject jsonObject = new JSONObject(response);
                     if (jsonObject.getString("code").equals(HttpConstant.CODE_SUCCESS)) {
                         Gson gson = new Gson();
-                        JSONArray jsonArray = jsonObject.getJSONArray("data");
+                        JSONArray jsonArray = jsonObject.getJSONArray("data").getJSONObject(0).getJSONArray("jcxmlist");
                         for (int i = 0; i < jsonArray.length(); i++) {
-                            thirdList.add(gson.fromJson(jsonArray.getJSONObject(i).toString(), ThreeData.class));
+                            JSONArray jcnrArray = jsonArray.getJSONObject(i).getJSONArray("jcnrlist");
+                            for (int j = 0; j < jcnrArray.length(); j++) {
+                                JSONArray jcnrfjArray = jcnrArray.getJSONObject(j).getJSONArray("jcnrfjlist");
+                                for (int k = 0; k < jcnrfjArray.length(); k++) {
+                                    thirdList.add(gson.fromJson(jcnrfjArray.getJSONObject(k).toString(), Jcnrfj.class));
+                                }
+                            }
                         }
                         thirdListAdapter = new ThirdListAdapter(SecondActivity.this, thirdList);
                         thirdListView.setAdapter(thirdListAdapter);
                         if (thirdList != null && thirdList.size() > 0) {
-                            final List<Jcxm> thirdDetaiList = thirdList.get(0).getJcxmlist();
+                            final List<Jczb> thirdDetaiList = new ArrayList<>();
+                            thirdDetaiList.addAll(thirdList.get(ThirdCurrentPosition).getJczblist());
                             compare(thirdList, thirdDetaiList);
                             thirdDetailAdapter = new ThirdDetailAdapter(SecondActivity.this, thirdDetaiList, isComplete);
                             thirdDetailListView.setAdapter(thirdDetailAdapter);
@@ -233,7 +244,7 @@ public class SecondActivity extends BaseActivity {
                                 }
                             });
                         } else {
-                            thirdDetailAdapter = new ThirdDetailAdapter(SecondActivity.this, new ArrayList<Jcxm>(), isComplete);
+                            thirdDetailAdapter = new ThirdDetailAdapter(SecondActivity.this, new ArrayList<Jczb>(), isComplete);
                             thirdDetailListView.setAdapter(thirdDetailAdapter);
                         }
                     }
@@ -251,12 +262,12 @@ public class SecondActivity extends BaseActivity {
         requestQueue.add(request);
     }
 
-    private void compare(List<ThreeData> thirdList, List<Jcxm> thirdDetailList) {
+    private void compare(List<Jcnrfj> thirdList, List<Jczb> thirdDetailList) {
         int size = thirdList.size();
         int detailSize = thirdDetailList.size();
         while (detailSize <= size * 2) {
-            Jcxm taskTheme = new Jcxm();
-            taskTheme.setJcxmName("lalalallala");
+            Jczb taskTheme = new Jczb();
+            taskTheme.setJczbName("lalalallala");
             taskTheme.setAdd(true);
             thirdDetailList.add(taskTheme);
             detailSize += 1;
@@ -275,18 +286,19 @@ public class SecondActivity extends BaseActivity {
         thirdListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                ThirdCurrentPosition = position;
-//                thirdListAdapter.notifyDataSetChanged();
-//                final List<TaskTheme> thirdDetaiList = thirdList.get(position).getTaskThemeList();
-//                compare(thirdList, thirdDetaiList);
-//                thirdDetailAdapter = new ThirdDetailAdapter(SecondActivity.this, thirdList.get(position).getTaskThemeList(), isComplete);
-//                thirdDetailListView.setAdapter(thirdDetailAdapter);
-//                thirdDetailAdapter.setOnViewClickListener(new ThirdDetailAdapter.OnViewClickListener() {
-//                    @Override
-//                    public void onViewClick(View view, int position) {
-//                        openCamera(thirdDetaiList.get(position));
-//                    }
-//                });
+                ThirdCurrentPosition = position;
+                thirdListAdapter.notifyDataSetChanged();
+                final List<Jczb> thirdDetaiList = new ArrayList<>();
+                thirdDetaiList.addAll(thirdList.get(ThirdCurrentPosition).getJczblist());
+                compare(thirdList, thirdDetaiList);
+                thirdDetailAdapter = new ThirdDetailAdapter(SecondActivity.this, thirdDetaiList, isComplete);
+                thirdDetailListView.setAdapter(thirdDetailAdapter);
+                thirdDetailAdapter.setOnViewClickListener(new ThirdDetailAdapter.OnViewClickListener() {
+                    @Override
+                    public void onViewClick(View view, int position) {
+                        openCamera(thirdDetaiList.get(position));
+                    }
+                });
             }
         });
         cancleTV.setOnClickListener(new View.OnClickListener() {
@@ -344,10 +356,10 @@ public class SecondActivity extends BaseActivity {
 
     private static int PHOTO_REQUEST_CAREMA = 0x12;
 
-    private long jcxmId;
+    private long jczbId;
 
-    public void openCamera(Jcxm taskTheme) {
-        jcxmId = taskTheme.getJcxmId();
+    public void openCamera(Jczb taskTheme) {
+        jczbId = taskTheme.getJczbId();
         //获取系統版本
         int currentapiVersion = android.os.Build.VERSION.SDK_INT;
         // 激活相机
@@ -458,9 +470,12 @@ public class SecondActivity extends BaseActivity {
     }
 
     private void upload(String url, String filePath, String fileName) throws Exception {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("jcjgPicFile", fileName);
+        jsonObject.put("xiangmuId", xiangmuId);
+        jsonObject.put("jczbId", jczbId);
         RequestBody requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart("jcjgPicFile", fileName, RequestBody.create(MediaType.parse("multipart/form-data"), new File(filePath)))
-//                .addFormDataPart("jczbId",)
-//                .addFormDataPart("xiangmuId",)
+                .addFormDataPart("name", jsonObject.toString())
                 .build();
         okhttp3.Request request = new okhttp3.Request.Builder().header("Authorization", "Client-ID " + UUID.randomUUID()).url(url).post(requestBody).build();
         OkHttpClient okHttpClient = new OkHttpClient();
@@ -469,20 +484,22 @@ public class SecondActivity extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Toast.makeText(SecondActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
-                Log.e("lqlq", "e===" + e.getMessage().toString());
+                Log.w("lqlq", "e===" + e.getMessage().toString());
             }
 
             @Override
             public void onResponse(Call call, okhttp3.Response response) throws IOException {
                 try {
+                    Toast.makeText(SecondActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
                     JSONObject jsonObject = new JSONObject(response.body().string());
+                    Log.e("lqlq", jsonObject.toString());
                     if (jsonObject.getInt("code") == 200) {
-                        Log.e("lqlq", "jcxmId===" + jcxmId);
-                        if (jcxmId != 0) {
+                        Log.e("lqlq", "jcxmId===" + jczbId);
+                        if (jczbId != 0) {
                             final RequestQueue requestQueue = Volley.newRequestQueue(SecondActivity.this);
                             final StringBuffer stringBuffer = new StringBuffer();
                             Map<String, String> params = new HashMap<>();
-                            params.put("jcxmId", String.valueOf(jcxmId));
+                            params.put("jcxmId", String.valueOf(jczbId));
                             String imageId = jsonObject.getJSONObject("data").getString("fileId");
                             params.put("imageId", imageId);//上传图片id
 //                        params.put("fileId","");//上传文件id
@@ -498,12 +515,12 @@ public class SecondActivity extends BaseActivity {
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
-                                    jcxmId = 0;
+                                    jczbId = 0;
                                 }
                             }, new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
-                                    jcxmId = 0;
+                                    jczbId = 0;
                                     Toast.makeText(SecondActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
                                 }
                             }) {

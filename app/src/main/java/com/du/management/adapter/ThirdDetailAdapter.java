@@ -25,6 +25,7 @@ import com.du.management.bean.TaskThemeBasis;
 import com.du.management.http.HeaderStringRequest;
 import com.du.management.http.HttpConstant;
 import com.du.management.newBean.Jcxm;
+import com.du.management.newBean.Jczb;
 import com.du.management.view.CheckDialog;
 import com.du.management.view.LawDialog;
 import com.du.management.view.ReadDialog;
@@ -41,13 +42,13 @@ import java.util.Map;
 
 public class ThirdDetailAdapter extends BaseAdapter {
 
-    private List<Jcxm> list = new ArrayList<>();
+    private List<Jczb> list = new ArrayList<>();
 
     private Context context;
 
     private boolean isComplete;
 
-    public ThirdDetailAdapter(Context context, List<Jcxm> list, boolean isComplete) {
+    public ThirdDetailAdapter(Context context, List<Jczb> list, boolean isComplete) {
         this.context = context;
         this.list = list;
         this.isComplete = isComplete;
@@ -86,9 +87,9 @@ public class ThirdDetailAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        final Jcxm taskTheme = list.get(position);
+        final Jczb taskTheme = list.get(position);
         if (!taskTheme.isAdd) {
-            viewHolder.nameTV.setText(taskTheme.getJcxmName());
+            viewHolder.nameTV.setText(taskTheme.getJczbName());
             viewHolder.nameTV.setVisibility(View.VISIBLE);
             viewHolder.faIV.setVisibility(View.VISIBLE);
             viewHolder.remarkIV.setVisibility(View.VISIBLE);
@@ -98,7 +99,7 @@ public class ThirdDetailAdapter extends BaseAdapter {
             viewHolder.bufuheTV.setVisibility(View.VISIBLE);
             viewHolder.checkBox.setVisibility(View.VISIBLE);
         } else {
-            viewHolder.nameTV.setText(taskTheme.getJcxmName());
+            viewHolder.nameTV.setText(taskTheme.getJczbName());
             viewHolder.nameTV.setVisibility(View.INVISIBLE);
             viewHolder.faIV.setVisibility(View.INVISIBLE);
             viewHolder.remarkIV.setVisibility(View.INVISIBLE);

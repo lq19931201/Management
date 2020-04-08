@@ -1,8 +1,10 @@
 package com.du.management.newBean;
 
 public class Jczb {
+    public boolean isAdd;
+    private boolean accord;
     public String nextXulieId;
-    public String jczbId;
+    public long jczbId;
     public String jczbName;
     public String jczbdeleted;
     public String jczbparentId;
@@ -27,11 +29,11 @@ public class Jczb {
         this.nextXulieId = nextXulieId;
     }
 
-    public String getJczbId() {
+    public long getJczbId() {
         return jczbId;
     }
 
-    public void setJczbId(String jczbId) {
+    public void setJczbId(long jczbId) {
         this.jczbId = jczbId;
     }
 
@@ -153,5 +155,21 @@ public class Jczb {
 
     public void setJczcZhibiaoMobanBean(JczcZhibiaoMoban jczcZhibiaoMobanBean) {
         this.jczcZhibiaoMobanBean = jczcZhibiaoMobanBean;
+    }
+
+    public boolean isAdd() {
+        return isAdd;
+    }
+
+    public void setAdd(boolean add) {
+        isAdd = add;
+    }
+
+    public void setAccord(boolean accord) {
+        this.accord = accord;
+    }
+
+    public boolean isAccord() {
+        return accord;
     }
 }

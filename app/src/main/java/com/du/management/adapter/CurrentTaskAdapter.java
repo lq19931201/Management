@@ -93,7 +93,7 @@ public class CurrentTaskAdapter extends BaseAdapter {
                 Intent intent = new Intent(context, SecondActivity.class);
                 intent.putExtra("title", list.get(position).getJczcJianchashishis().get(i).getDanweiName());
                 intent.putExtra("taskId", String.valueOf(list.get(position).getRenwuId()));
-                intent.putExtra("contentId", list.get(position).getJczcJianchashishis().get(i).getXiangmuId());
+                intent.putExtra("xiangmuId", list.get(position).getJczcJianchashishis().get(i).getXiangmuId());
                 context.startActivity(intent);
             }
         });

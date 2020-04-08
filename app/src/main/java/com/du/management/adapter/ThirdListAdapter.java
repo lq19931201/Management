@@ -10,8 +10,8 @@ import android.widget.TextView;
 
 import com.du.management.R;
 import com.du.management.activity.SecondActivity;
-import com.du.management.bean.TaskBody;
-import com.du.management.newBean.ThreeData;
+import com.du.management.newBean.Jcnr;
+import com.du.management.newBean.Jcnrfj;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +20,9 @@ public class ThirdListAdapter extends BaseAdapter {
 
     private Context context;
 
-    private List<ThreeData> list = new ArrayList<>();
+    private List<Jcnrfj> list = new ArrayList<>();
 
-    public ThirdListAdapter(Context context, List<ThreeData> list) {
+    public ThirdListAdapter(Context context, List<Jcnrfj> list) {
         this.context = context;
         this.list = list;
     }
@@ -54,9 +54,9 @@ public class ThirdListAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        final ThreeData taskBody = list.get(position);
-        if (!TextUtils.isEmpty(taskBody.getSslyName())) {
-            viewHolder.titleTV.setText(taskBody.getSslyName());
+        final Jcnrfj taskBody = list.get(position);
+        if (!TextUtils.isEmpty(taskBody.getJcnrfjName())) {
+            viewHolder.titleTV.setText(taskBody.getJcnrfjName());
         }
         if (position == SecondActivity.ThirdCurrentPosition) {
             viewHolder.titleTV.setBackgroundColor(context.getResources().getColor(R.color.six_e));
