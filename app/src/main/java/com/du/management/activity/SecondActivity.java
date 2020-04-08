@@ -27,6 +27,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
 import com.du.management.MainApplication;
 import com.du.management.R;
@@ -77,7 +78,7 @@ public class SecondActivity extends BaseActivity {
 
     private String taskId;
 
-    private String xiangmuId;
+    private long xiangmuId;
 
     private List<NewContent> secondList = new ArrayList<>();
 
@@ -166,7 +167,7 @@ public class SecondActivity extends BaseActivity {
             bottomLV.setVisibility(View.GONE);
         }
         taskId = getIntent().getStringExtra("taskId");
-        xiangmuId = getIntent().getStringExtra("xiangmuId");
+        xiangmuId = getIntent().getLongExtra("xiangmuId", 0);
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append(HttpConstant.REQUSET_BASE_URL).append("jianchazhicheng/getJianchashishiRenwu/").append(MainApplication.userId).append("/" + taskId);
@@ -470,14 +471,12 @@ public class SecondActivity extends BaseActivity {
     }
 
     private void upload(String url, String filePath, String fileName) throws Exception {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("jcjgPicFile", fileName);
-        jsonObject.put("xiangmuId", xiangmuId);
-        jsonObject.put("jczbId", jczbId);
-        RequestBody requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart("jcjgPicFile", fileName, RequestBody.create(MediaType.parse("multipart/form-data"), new File(filePath)))
-                .addFormDataPart("name", jsonObject.toString())
+        RequestBody requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM).
+                addFormDataPart("xiangmuId", String.valueOf(xiangmuId)).
+                addFormDataPart("jczbId", String.valueOf(jczbId)).
+                addFormDataPart("jcjgPicFile", fileName, RequestBody.create(MediaType.parse("multipart/form-data"), new File(filePath)))
                 .build();
-        okhttp3.Request request = new okhttp3.Request.Builder().header("Authorization", "Client-ID " + UUID.randomUUID()).url(url).post(requestBody).build();
+        okhttp3.Request request = new okhttp3.Request.Builder().header("Authorization", "Client-ID " + UUID.randomUUID()).header("content-type", "multipart/form-data").url(url).post(requestBody).build();
         OkHttpClient okHttpClient = new OkHttpClient();
         Call call = okHttpClient.newCall(request);
         call.enqueue(new Callback() {
@@ -490,110 +489,65 @@ public class SecondActivity extends BaseActivity {
             @Override
             public void onResponse(Call call, okhttp3.Response response) throws IOException {
                 try {
-                    Toast.makeText(SecondActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
                     JSONObject jsonObject = new JSONObject(response.body().string());
-                    Log.e("lqlq", jsonObject.toString());
-                    if (jsonObject.getInt("code") == 200) {
-                        Log.e("lqlq", "jcxmId===" + jczbId);
-                        if (jczbId != 0) {
-                            final RequestQueue requestQueue = Volley.newRequestQueue(SecondActivity.this);
-                            final StringBuffer stringBuffer = new StringBuffer();
-                            Map<String, String> params = new HashMap<>();
-                            params.put("jcxmId", String.valueOf(jczbId));
-                            String imageId = jsonObject.getJSONObject("data").getString("fileId");
-                            params.put("imageId", imageId);//上传图片id
-//                        params.put("fileId","");//上传文件id
-                            stringBuffer.append(HttpConstant.REQUSET_BASE_URL).append("rule/netbook/save/image");
-                            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, stringBuffer.toString(), new JSONObject(params), new Response.Listener<JSONObject>() {
-                                @Override
-                                public void onResponse(JSONObject response) {
-                                    try {
-                                        if (response.getInt("code") == 200) {
-                                            Toast.makeText(SecondActivity.this, "上传成功", Toast.LENGTH_SHORT).show();
-                                        }
-
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                    jczbId = 0;
-                                }
-                            }, new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    jczbId = 0;
-                                    Toast.makeText(SecondActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
-                                }
-                            }) {
-                                @Override
-                                public Map<String, String> getHeaders() throws AuthFailureError {
-                                    HashMap<String, String> headers = new HashMap<String, String>();
-                                    headers.put("token", MainApplication.TOKEN);
-                                    return headers;
-                                }
-                            };
-                            requestQueue.add(jsonObjectRequest);
-                        }
+                    if (jsonObject.getString("code").equals(HttpConstant.CODE_SUCCESS)) {
+                        Toast.makeText(SecondActivity.this, "上传成功", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(SecondActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Toast.makeText(SecondActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
     private void saveRequest() {
-//        List<PushBean> saveList = new ArrayList<>();
-//        for (int i = 0; i < thirdList.size(); i++) {
-//            TaskBody taskBody = thirdList.get(i);
-//            for (int k = 0; k < taskBody.getTaskThemeList().size(); k++) {
-//                TaskTheme taskTheme = taskBody.getTaskThemeList().get(k);
-//                if (taskTheme.getTaskThemeId() == null)
-//                    continue;
-//                PushBean pushBean = new PushBean();
-//                pushBean.setAccord(taskTheme.isAccord());
-//                pushBean.setTaskThemeId(taskTheme.getTaskThemeId());
-//                saveList.add(pushBean);
-//            }
-//        }
-//        JSONObject jsonObject = getJson(saveList);
-//        if (jsonObject == null) {
-//            Toast.makeText(SecondActivity.this, "数据格式出错", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//        final RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-//        StringBuffer stringBuffer = new StringBuffer();
-//        stringBuffer.append(HttpConstant.REQUSET_BASE_URL).append("rule/netbook/save/task");
-//        JsonRequest<JSONObject> jsonRequest = new JsonObjectRequest(Request.Method.POST, stringBuffer.toString(), jsonObject,
-//                new Response.Listener<JSONObject>() {
-//                    @Override
-//                    public void onResponse(JSONObject response) {
-//                        try {
-//                            int code = response.getInt("code");
-//                            if (code == 200) {
-//                                Toast.makeText(SecondActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
-//                                finish();
-//                            }
-//                        } catch (Exception e) {
-//
-//                        }
-//
-//                    }
-//                }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Toast.makeText(SecondActivity.this, "网络请求失败", Toast.LENGTH_SHORT).show();
-//            }
-//        }) {
-//
-//            @Override
-//            public Map<String, String> getHeaders() {
-//                HashMap<String, String> headers = new HashMap<String, String>();
-//                headers.put("token", MainApplication.TOKEN);
-//                headers.put("Content-Type", "application/json");
-//                return headers;
-//            }
-//        };
-//        requestQueue.add(jsonRequest);
+        List<PushBean> saveList = new ArrayList<>();
+        for (int i = 0; i < thirdList.size(); i++) {
+            Jcnrfj taskBody = thirdList.get(i);
+            for (int k = 0; k < taskBody.getJczblist().size(); k++) {
+                Jczb taskTheme = taskBody.getJczblist().get(k);
+                PushBean pushBean = new PushBean();
+                pushBean.setIsHege(taskTheme.isAccord() ? 0 : 1);
+                pushBean.setJcjgJcxmid(xiangmuId);
+                pushBean.setJcjgJczbid(taskTheme.getJczbId());
+                pushBean.setJianchaqingkuang("lalala");
+                saveList.add(pushBean);
+            }
+        }
+        JSONObject jsonObject = getJson(saveList);
+        if (jsonObject == null) {
+            Toast.makeText(SecondActivity.this, "数据格式出错", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        final RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append(HttpConstant.REQUSET_BASE_URL).append("jianchazhicheng/addJianchajieguolist");
+        JsonRequest<JSONObject> jsonRequest = new JsonObjectRequest(Request.Method.POST, stringBuffer.toString(), jsonObject,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.w("lqlq", "send:" + response.toString());
+                        try {
+                            int code = response.getInt("code");
+                            if (code == 200) {
+                                Toast.makeText(SecondActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+                        } catch (Exception e) {
+
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.w("lqlq", "send:" + error.getMessage());
+                Toast.makeText(SecondActivity.this, "网络请求失败", Toast.LENGTH_SHORT).show();
+            }
+        });
+        requestQueue.add(jsonRequest);
 
     }
 
@@ -604,11 +558,15 @@ public class SecondActivity extends BaseActivity {
             JSONObject tmpObj = null;
             for (int i = 0; i < list.size(); i++) {
                 tmpObj = new JSONObject();
-                tmpObj.put("jcxmId", list.get(i).getTaskThemeId());
-                tmpObj.put("accord", list.get(i).isAccord());
+                tmpObj.put("isHege", list.get(i).getIsHege());
+                tmpObj.put("jcjgId", list.get(i).getJcjgId());
+                tmpObj.put("jcjgJcxmid", list.get(i).getJcjgJcxmid());
+                tmpObj.put("jcjgJczbid", list.get(i).getJcjgJczbid());
+                tmpObj.put("jianchaqingkuang", list.get(i).getJianchaqingkuang());
+                tmpObj.put("userId",MainApplication.userId);
                 jsonArray.put(tmpObj);
             }
-            jsonObject.put("list", jsonArray);
+            jsonObject.put("jianchajieguoBeans", jsonArray);
         } catch (Exception e) {
 
         }
@@ -616,24 +574,84 @@ public class SecondActivity extends BaseActivity {
     }
 
     public class PushBean implements Serializable {
-        public long taskThemeId;
+        public String createdTime;
 
-        public boolean accord;
+        public int isHege;
 
-        public long getTaskThemeId() {
-            return taskThemeId;
+        public long jcjgId;
+
+        public long jcjgJcxmid;
+
+        public long jcjgJczbid;
+
+        public String jianchaqingkuang;
+
+        public String updatetime;
+
+        public long userId;
+
+        public String getCreatedTime() {
+            return createdTime;
         }
 
-        public void setTaskThemeId(long taskThemeId) {
-            this.taskThemeId = taskThemeId;
+        public void setCreatedTime(String createdTime) {
+            this.createdTime = createdTime;
         }
 
-        public boolean isAccord() {
-            return accord;
+        public int getIsHege() {
+            return isHege;
         }
 
-        public void setAccord(boolean accord) {
-            this.accord = accord;
+        public void setIsHege(int isHege) {
+            this.isHege = isHege;
+        }
+
+        public long getJcjgId() {
+            return jcjgId;
+        }
+
+        public void setJcjgId(long jcjgId) {
+            this.jcjgId = jcjgId;
+        }
+
+        public long getJcjgJcxmid() {
+            return jcjgJcxmid;
+        }
+
+        public void setJcjgJcxmid(long jcjgJcxmid) {
+            this.jcjgJcxmid = jcjgJcxmid;
+        }
+
+        public long getJcjgJczbid() {
+            return jcjgJczbid;
+        }
+
+        public void setJcjgJczbid(long jcjgJczbid) {
+            this.jcjgJczbid = jcjgJczbid;
+        }
+
+        public String getJianchaqingkuang() {
+            return jianchaqingkuang;
+        }
+
+        public void setJianchaqingkuang(String jianchaqingkuang) {
+            this.jianchaqingkuang = jianchaqingkuang;
+        }
+
+        public String getUpdatetime() {
+            return updatetime;
+        }
+
+        public void setUpdatetime(String updatetime) {
+            this.updatetime = updatetime;
+        }
+
+        public long getUserId() {
+            return userId;
+        }
+
+        public void setUserId(long userId) {
+            this.userId = userId;
         }
     }
 

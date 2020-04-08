@@ -61,6 +61,7 @@ public class LoginActivity extends BaseActivity {
                         try {
                             String code = response.getString("code");
                             if (code.equals(HttpConstant.CODE_SUCCESS)) {
+                                MainApplication.userId = response.getJSONObject("data").getString("userId");
                                 SpUtils.saveSpValue(LoginActivity.this, "username", userNameET.getText().toString());
                                 SpUtils.saveSpValue(LoginActivity.this, "password", passWordET.getText().toString());
                                 MainApplication.userId = response.getJSONObject("data").getString("userId");
