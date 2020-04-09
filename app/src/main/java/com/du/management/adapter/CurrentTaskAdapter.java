@@ -110,9 +110,8 @@ public class CurrentTaskAdapter extends BaseAdapter {
                         final RequestQueue requestQueue = Volley.newRequestQueue(context);
                         final StringBuffer stringBuffer = new StringBuffer();
                         Map<String, String> params = new HashMap<>();
-                        params.put("taskId", String.valueOf(task.getRenwuId()));
-                        params.put("state", "1");
-                        stringBuffer.append(HttpConstant.REQUSET_BASE_URL).append("rule/netbook/update/task");
+                        params.put("id", String.valueOf(task.getRenwuId()));
+                        stringBuffer.append(HttpConstant.REQUSET_BASE_URL).append("jianchazhicheng/finishedShishixiangmu");
                         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT, stringBuffer.toString(), new JSONObject(params), new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {

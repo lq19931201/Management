@@ -2,7 +2,7 @@ package com.du.management.newBean;
 
 public class Jczb {
     public boolean isAdd;
-    private boolean accord;
+    public boolean isHege;
     public String nextXulieId;
     public long jczbId;
     public String jczbName;
@@ -165,11 +165,11 @@ public class Jczb {
         isAdd = add;
     }
 
-    public void setAccord(boolean accord) {
-        this.accord = accord;
+    public void setHege(boolean hege) {
+        isHege = hege;
     }
 
-    public boolean isAccord() {
-        return accord;
+    public boolean isHege() {
+        return isHege;
     }
 }

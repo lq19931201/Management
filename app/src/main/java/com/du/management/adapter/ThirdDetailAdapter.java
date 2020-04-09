@@ -114,13 +114,13 @@ public class ThirdDetailAdapter extends BaseAdapter {
             viewHolder.takePhotoIV.setVisibility(View.GONE);
             viewHolder.remarkIV.setVisibility(View.GONE);
         }
-        viewHolder.checkBox.setChecked(taskTheme.isAccord());
+        viewHolder.checkBox.setChecked(taskTheme.isHege());
         viewHolder.checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 boolean checked = viewHolder.checkBox.isChecked();
                 viewHolder.checkBox.setChecked(checked);
-                taskTheme.setAccord(viewHolder.checkBox.isChecked());
+                taskTheme.setHege(viewHolder.checkBox.isChecked());
             }
         });
         viewHolder.takePhotoIV.setTag(position);

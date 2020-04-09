@@ -21,13 +21,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.JsonRequest;
+import com.android.volley.toolbox.TestJsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.du.management.MainApplication;
 import com.du.management.R;
@@ -36,12 +34,9 @@ import com.du.management.adapter.ThirdDetailAdapter;
 import com.du.management.adapter.ThirdListAdapter;
 import com.du.management.http.HeaderStringRequest;
 import com.du.management.http.HttpConstant;
-import com.du.management.newBean.Jcnr;
 import com.du.management.newBean.Jcnrfj;
-import com.du.management.newBean.Jcxm;
 import com.du.management.newBean.Jczb;
 import com.du.management.newBean.NewContent;
-import com.du.management.newBean.ThreeData;
 import com.du.management.utils.Utils;
 import com.du.management.view.CancleDialog;
 import com.du.management.view.MyListView;
@@ -58,9 +53,7 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import okhttp3.Call;
@@ -176,7 +169,6 @@ public class SecondActivity extends BaseActivity {
             public void onResponse(String response) {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
-                    Log.w("lqlq", "二级:" + jsonObject.toString());
                     if (jsonObject.getString("code").equals(HttpConstant.CODE_SUCCESS)) {
                         JSONArray jsonArray = jsonObject.getJSONArray("data");
                         Gson gson = new Gson();
@@ -476,20 +468,20 @@ public class SecondActivity extends BaseActivity {
                 addFormDataPart("jczbId", String.valueOf(jczbId)).
                 addFormDataPart("jcjgPicFile", fileName, RequestBody.create(MediaType.parse("multipart/form-data"), new File(filePath)))
                 .build();
-        okhttp3.Request request = new okhttp3.Request.Builder().header("Authorization", "Client-ID " + UUID.randomUUID()).header("content-type", "multipart/form-data").url(url).post(requestBody).build();
+        okhttp3.Request request = new okhttp3.Request.Builder().header("Authorization", "Client-ID " + UUID.randomUUID()).url(url).post(requestBody).build();
         OkHttpClient okHttpClient = new OkHttpClient();
         Call call = okHttpClient.newCall(request);
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 Toast.makeText(SecondActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
-                Log.w("lqlq", "e===" + e.getMessage().toString());
             }
 
             @Override
             public void onResponse(Call call, okhttp3.Response response) throws IOException {
                 try {
                     JSONObject jsonObject = new JSONObject(response.body().string());
+                    Log.w("lqlqlq", jsonObject.toString());
                     if (jsonObject.getString("code").equals(HttpConstant.CODE_SUCCESS)) {
                         Toast.makeText(SecondActivity.this, "上传成功", Toast.LENGTH_SHORT).show();
                     } else {
@@ -509,14 +501,14 @@ public class SecondActivity extends BaseActivity {
             for (int k = 0; k < taskBody.getJczblist().size(); k++) {
                 Jczb taskTheme = taskBody.getJczblist().get(k);
                 PushBean pushBean = new PushBean();
-                pushBean.setIsHege(taskTheme.isAccord() ? 0 : 1);
+                pushBean.setIsHege(taskTheme.isHege() ? 0 : 1);
                 pushBean.setJcjgJcxmid(xiangmuId);
                 pushBean.setJcjgJczbid(taskTheme.getJczbId());
                 pushBean.setJianchaqingkuang("lalala");
                 saveList.add(pushBean);
             }
         }
-        JSONObject jsonObject = getJson(saveList);
+        JSONArray jsonObject = getJson(saveList);
         if (jsonObject == null) {
             Toast.makeText(SecondActivity.this, "数据格式出错", Toast.LENGTH_SHORT).show();
             return;
@@ -524,37 +516,48 @@ public class SecondActivity extends BaseActivity {
         final RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append(HttpConstant.REQUSET_BASE_URL).append("jianchazhicheng/addJianchajieguolist");
-        JsonRequest<JSONObject> jsonRequest = new JsonObjectRequest(Request.Method.POST, stringBuffer.toString(), jsonObject,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.w("lqlq", "send:" + response.toString());
-                        try {
-                            int code = response.getInt("code");
-                            if (code == 200) {
-                                Toast.makeText(SecondActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
-                                finish();
-                            }
-                        } catch (Exception e) {
-
-                        }
-
-                    }
-                }, new Response.ErrorListener() {
+        TestJsonArrayRequest jsonArrayRequest = new TestJsonArrayRequest(Request.Method.POST, stringBuffer.toString(), jsonObject, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Toast.makeText(SecondActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.w("lqlq", "send:" + error.getMessage());
                 Toast.makeText(SecondActivity.this, "网络请求失败", Toast.LENGTH_SHORT).show();
             }
         });
-        requestQueue.add(jsonRequest);
+//        JsonRequest<JSONObject> jsonRequest = new JsonObjectRequest(Request.Method.POST, stringBuffer.toString(), jsonObject,
+//                new Response.Listener<JSONObject>() {
+//                    @Override
+//                    public void onResponse(JSONObject response) {
+//                        Log.w("lqlq", "send:" + response.toString());
+//                        try {
+//                            int code = response.getInt("code");
+//                            if (code == 200) {
+//                                Toast.makeText(SecondActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
+//                                finish();
+//                            }
+//                        } catch (Exception e) {
+//
+//                        }
+//
+//                    }
+//                }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Log.w("lqlq", "send:" + error.getMessage());
+//                Toast.makeText(SecondActivity.this, "网络请求失败", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+        requestQueue.add(jsonArrayRequest);
 
     }
 
-    private JSONObject getJson(List<PushBean> list) {
-        JSONObject jsonObject = new JSONObject();
+    private JSONArray getJson(List<PushBean> list) {
+        JSONArray jsonArray = new JSONArray();
         try {
-            JSONArray jsonArray = new JSONArray();
             JSONObject tmpObj = null;
             for (int i = 0; i < list.size(); i++) {
                 tmpObj = new JSONObject();
@@ -563,14 +566,13 @@ public class SecondActivity extends BaseActivity {
                 tmpObj.put("jcjgJcxmid", list.get(i).getJcjgJcxmid());
                 tmpObj.put("jcjgJczbid", list.get(i).getJcjgJczbid());
                 tmpObj.put("jianchaqingkuang", list.get(i).getJianchaqingkuang());
-                tmpObj.put("userId",MainApplication.userId);
+                tmpObj.put("userId", MainApplication.userId);
                 jsonArray.put(tmpObj);
             }
-            jsonObject.put("jianchajieguoBeans", jsonArray);
         } catch (Exception e) {
 
         }
-        return jsonObject;
+        return jsonArray;
     }
 
     public class PushBean implements Serializable {
