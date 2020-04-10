@@ -101,6 +101,8 @@ public class SecondActivity extends BaseActivity {
 
     private LinearLayout bottomLV;
 
+    private TextView otherTitleTV;
+
     @Override
     protected int initLayoutId() {
         MIUISetStatusBarLightMode(this, true);
@@ -151,6 +153,7 @@ public class SecondActivity extends BaseActivity {
         thirdDetailListView = (MyListView) findViewById(R.id.third_detail_listview);
         cancleTV = (TextView) findViewById(R.id.cancle);
         saveTV = (TextView) findViewById(R.id.save);
+        otherTitleTV = (TextView) findViewById(R.id.other_title);
     }
 
     @Override
@@ -212,8 +215,10 @@ public class SecondActivity extends BaseActivity {
                     JSONObject jsonObject = new JSONObject(response);
                     if (jsonObject.getString("code").equals(HttpConstant.CODE_SUCCESS)) {
                         Gson gson = new Gson();
-                        JSONArray jsonArray = jsonObject.getJSONArray("data").getJSONObject(0).getJSONArray("jcxmlist");
+                        JSONArray jsonArray = jsonObject.getJSONArray("data");
+                        String otherTitleStr = null;
                         for (int i = 0; i < jsonArray.length(); i++) {
+                            otherTitleStr += jsonArray.getJSONObject(SecondCurrentPosition).getString("jcxmName");
                             JSONArray jcnrArray = jsonArray.getJSONObject(i).getJSONArray("jcnrlist");
                             for (int j = 0; j < jcnrArray.length(); j++) {
                                 JSONArray jcnrfjArray = jcnrArray.getJSONObject(j).getJSONArray("jcnrfjlist");
