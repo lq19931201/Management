@@ -67,6 +67,7 @@ public class CurrentTaskFragment extends BaseFragment {
                     JSONObject jsonObject = new JSONObject(response);
                     String code = jsonObject.getString("code");
                     if (code.equals(HttpConstant.CODE_SUCCESS)) {
+                        Log.w("CurrentTaskFragment",jsonObject.toString());
                         JSONArray jsonArray = jsonObject.getJSONArray("data");
                         Gson gson = new Gson();
                         for (int i = 0; i < jsonArray.length(); i++) {

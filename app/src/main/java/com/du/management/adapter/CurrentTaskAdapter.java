@@ -20,6 +20,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.du.management.MainApplication;
 import com.du.management.R;
+import com.du.management.activity.NewSecondActivity;
 import com.du.management.activity.SecondActivity;
 import com.du.management.bean.Content;
 import com.du.management.bean.Task;
@@ -90,9 +91,10 @@ public class CurrentTaskAdapter extends BaseAdapter {
         viewHolder.gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int i, long id) {
-                Intent intent = new Intent(context, SecondActivity.class);
+                Intent intent = new Intent(context, NewSecondActivity.class);
                 intent.putExtra("title", list.get(position).getJczcJianchashishis().get(i).getDanweiName());
                 intent.putExtra("taskId", String.valueOf(list.get(position).getRenwuId()));
+                intent.putExtra("mobanId",list.get(position).getJczcJianchashishis().get(i).getMobanId());
                 intent.putExtra("xiangmuId", list.get(position).getJczcJianchashishis().get(i).getXiangmuId());
                 context.startActivity(intent);
             }
