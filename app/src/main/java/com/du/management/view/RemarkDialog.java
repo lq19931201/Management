@@ -56,7 +56,7 @@ public class RemarkDialog extends Dialog {
                 dismiss();
             }
         });
-        getStatus(taskThemeId);
+//        getStatus(taskThemeId);
     }
 
     private void getStatus(String taskThemeId) {

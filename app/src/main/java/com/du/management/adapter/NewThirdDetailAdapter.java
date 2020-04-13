@@ -1,6 +1,7 @@
 package com.du.management.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,9 +69,10 @@ public class NewThirdDetailAdapter extends BaseAdapter {
         final Jczb jczb = list.get(position);
         viewHolder.nameTV.setText((position + 1) + "." + jczb.getJczbName());
         if (jczb.getJczcJianchajieguo() == null) {
+            Log.w("lqlqlq", "" + position);
             jczb.setJczcJianchajieguo(new jczcJianchajieguo());
         }
-        viewHolder.checkBox.setChecked(jczb.getJczcJianchajieguo().getIsHege() == 1);
+        viewHolder.checkBox.setChecked(jczb.getJczcJianchajieguo().getIsHege() == 0);
         if (NewSecondActivity.thirdForth >= 0) {
             if (NewSecondActivity.thirdForth == position && NewSecondActivity.thirdThird == jcnrfjPosition) {
                 viewHolder.operateLV.setVisibility(View.VISIBLE);
@@ -108,12 +110,15 @@ public class NewThirdDetailAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 final RemarkDialog rDialog = new RemarkDialog(context, "1");
+                if (!TextUtils.isEmpty(jczb.getJczcJianchajieguo().getJianchaqingkuang())) {
+                    rDialog.getEditText().setText(jczb.getJczcJianchajieguo().getJianchaqingkuang());
+                }
                 rDialog.show();
                 rDialog.setOnSaveClick(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         rDialog.dismiss();
-                        rDialog.getEditText();
+                        jczb.getJczcJianchajieguo().setJianchaqingkuang(rDialog.getEditText().getText().toString());
                     }
                 });
             }

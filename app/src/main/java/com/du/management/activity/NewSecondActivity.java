@@ -367,6 +367,7 @@ public class NewSecondActivity extends BaseActivity {
                 if (nextTV.getText().equals("提交")) {
 
                 } else {
+                    saveRequest(jcnrList.get(thirdSecond).getJcnrfjlist());
                     if (jcnrList.size() - 1 == thirdSecond) {
                         nextTV.setText("提交");
                     } else {
@@ -377,7 +378,6 @@ public class NewSecondActivity extends BaseActivity {
                     }
                     newThirdAdapter.setList(jcnrList.get(thirdSecond).getJcnrfjlist());
                     newThirdAdapter.notifyDataSetChanged();
-                    saveRequest(jcnrList.get(thirdSecond).getJcnrfjlist());
                 }
                 thirdForth = thirdThird = -1;
                 secondTV.setText(jcnrList.get(thirdSecond).getJcxmName() + "/" + jcnrList.get(thirdSecond).getJcnrName());
@@ -420,6 +420,7 @@ public class NewSecondActivity extends BaseActivity {
             }
         }
         JSONArray jsonObject = getJson(saveList);
+        Log.w("lqlqlq",jsonObject.toString());
         if (jsonObject == null) {
             Toast.makeText(NewSecondActivity.this, "数据格式出错", Toast.LENGTH_SHORT).show();
             return;
