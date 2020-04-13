@@ -1,6 +1,7 @@
 package com.du.management.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +21,10 @@ import java.util.List;
 public class NewThirdDetailAdapter extends BaseAdapter {
     private Context context;
     private List<Jczb> list;
+    private int jcnrfjPosition;
 
-    public NewThirdDetailAdapter(Context context, List<Jczb> list) {
+    public NewThirdDetailAdapter(int jcnrfjPosition, Context context, List<Jczb> list) {
+        this.jcnrfjPosition = jcnrfjPosition;
         this.context = context;
         this.list = list;
     }
@@ -64,7 +67,7 @@ public class NewThirdDetailAdapter extends BaseAdapter {
         viewHolder.nameTV.setText((position + 1) + "." + jczb.getJczbName());
         viewHolder.checkBox.setChecked(jczb.isHege());
         if (NewSecondActivity.thirdForth >= 0) {
-            if (NewSecondActivity.thirdForth == position) {
+            if (NewSecondActivity.thirdForth == position && NewSecondActivity.thirdThird == jcnrfjPosition) {
                 viewHolder.operateLV.setVisibility(View.VISIBLE);
                 viewHolder.chooseBox.setChecked(true);
             } else {
@@ -79,14 +82,39 @@ public class NewThirdDetailAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 if (viewHolder.chooseBox.isChecked()) {
+                    NewSecondActivity.thirdThird = jcnrfjPosition;
                     NewSecondActivity.thirdForth = position;
                 } else {
+                    NewSecondActivity.thirdThird = -1;
                     NewSecondActivity.thirdForth = -1;
                 }
                 notifyDataSetChanged();
             }
         });
+        viewHolder.takePhotoIV.setTag(position);
+        viewHolder.takePhotoIV.setOnClickListener(listener);
         return convertView;
+    }
+
+    private View.OnClickListener listener = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            if (onViewClickListener != null) {
+                onViewClickListener.onViewClick(v, jcnrfjPosition, (Integer) v.getTag());
+            }
+
+        }
+    };
+
+    private OnViewClickListener onViewClickListener;
+
+    public void setOnViewClickListener(OnViewClickListener onViewClickListener) {
+        this.onViewClickListener = onViewClickListener;
+    }
+
+    public interface OnViewClickListener {
+        void onViewClick(View view, int jcnrfjPosition, int position);
     }
 
     public class ViewHolder {

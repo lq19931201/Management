@@ -486,7 +486,6 @@ public class SecondActivity extends BaseActivity {
             public void onResponse(Call call, okhttp3.Response response) throws IOException {
                 try {
                     JSONObject jsonObject = new JSONObject(response.body().string());
-                    Log.w("lqlqlq", jsonObject.toString());
                     if (jsonObject.getString("code").equals(HttpConstant.CODE_SUCCESS)) {
                         Toast.makeText(SecondActivity.this, "上传成功", Toast.LENGTH_SHORT).show();
                     } else {

@@ -3,6 +3,8 @@ package com.du.management.newBean;
 import java.util.List;
 
 public class Jcnr {
+    public long xiangmuId;
+    public String jcxmName;
     public String id;
     public String createdBy;
     public String createdTime;
@@ -101,5 +103,21 @@ public class Jcnr {
 
     public void setJcnrfjlist(List<Jcnrfj> jcnrfjlist) {
         this.jcnrfjlist = jcnrfjlist;
+    }
+
+    public long getXiangmuId() {
+        return xiangmuId;
+    }
+
+    public void setXiangmuId(long xiangmuId) {
+        this.xiangmuId = xiangmuId;
+    }
+
+    public String getJcxmName() {
+        return jcxmName;
+    }
+
+    public void setJcxmName(String jcxmName) {
+        this.jcxmName = jcxmName;
     }
 }

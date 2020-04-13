@@ -73,18 +73,18 @@
         android:paddingBottom="10dp">
 
         <TextView
-            android:id="@+id/cancle"
+            android:id="@+id/prev"
             android:layout_width="108dp"
             android:layout_height="38dp"
             android:layout_gravity="center"
-            android:background="@drawable/second_cancle"
+            android:background="@drawable/second_save"
             android:gravity="center"
             android:text="上一项"
             android:textColor="#ffffff"
             android:textSize="17sp"></TextView>
 
         <TextView
-            android:id="@+id/save"
+            android:id="@+id/next"
             android:layout_width="108dp"
             android:layout_height="38dp"
             android:layout_gravity="center"
@@ -96,17 +96,13 @@
             android:textSize="17sp"></TextView>
     </LinearLayout>
 
-    <ScrollView
+
+    <ListView
+        android:id="@+id/third_detail_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/bottom"
         android:layout_below="@id/top"
-        android:layout_marginTop="10dp">
-
-        <ListView
-            android:id="@+id/third_detail_listview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@null"></ListView>
-    </ScrollView>
+        android:layout_marginTop="10dp"
+        android:divider="@null"></ListView>
 </RelativeLayout>

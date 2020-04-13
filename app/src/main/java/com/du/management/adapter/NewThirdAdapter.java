@@ -1,6 +1,7 @@
 package com.du.management.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,12 @@ public class NewThirdAdapter extends BaseAdapter {
         this.list = jcnrfjList;
         this.context = context;
     }
+
+    public void setList(List<Jcnrfj> list) {
+        this.list = list;
+    }
+
+    private NewThirdDetailAdapter newThirdDetailAdapter;
 
     @Override
     public long getItemId(int position) {
@@ -53,10 +60,33 @@ public class NewThirdAdapter extends BaseAdapter {
         }
         Jcnrfj jcnrfj = list.get(position);
         viewHolder.titleTV.setText((position + 1) + "." + jcnrfj.getJcnrfjName());
-        NewThirdDetailAdapter newThirdDetailAdapter = new NewThirdDetailAdapter(context, jcnrfj.getJczblist());
+        newThirdDetailAdapter = new NewThirdDetailAdapter(position, context, jcnrfj.getJczblist());
         viewHolder.myListView.setAdapter(newThirdDetailAdapter);
         newThirdDetailAdapter.notifyDataSetChanged();
+        newThirdDetailAdapter.setOnViewClickListener(new NewThirdDetailAdapter.OnViewClickListener() {
+            @Override
+            public void onViewClick(View view, int jcnrfjPosition, int position) {
+                Log.w("lqlqlq", "setOnViewClickListener");
+                if (cameraOnClick != null) {
+                    cameraOnClick.onClick(jcnrfjPosition, position);
+                }
+            }
+        });
         return convertView;
+    }
+
+    private CameraOnClick cameraOnClick;
+
+    public void setCameraOnClick(CameraOnClick cameraOnClick) {
+        this.cameraOnClick = cameraOnClick;
+    }
+
+    public interface CameraOnClick {
+        void onClick(int jcnrfjPosition, int position);
+    }
+
+    public NewThirdDetailAdapter getNewThirdDetailAdapter() {
+        return newThirdDetailAdapter;
     }
 
     private class ViewHolder {
