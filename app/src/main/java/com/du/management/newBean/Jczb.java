@@ -2,7 +2,6 @@ package com.du.management.newBean;
 
 public class Jczb {
     public boolean isAdd;
-    public boolean isHege;
     public String nextXulieId;
     public long jczbId;
     public String jczbName;
@@ -19,6 +18,7 @@ public class Jczb {
     public String jianchayiju;
     public String zhibiaofenlei;
     public String zhibiaozilei;
+    public jczcJianchajieguo jczcJianchajieguo = new jczcJianchajieguo();
     public JczcZhibiaoMoban jczcZhibiaoMobanBean;
 
     public String getNextXulieId() {
@@ -165,11 +165,11 @@ public class Jczb {
         isAdd = add;
     }
 
-    public void setHege(boolean hege) {
-        isHege = hege;
+    public void setJczcJianchajieguo(com.du.management.newBean.jczcJianchajieguo jczcJianchajieguo) {
+        this.jczcJianchajieguo = jczcJianchajieguo;
     }
 
-    public boolean isHege() {
-        return isHege;
+    public com.du.management.newBean.jczcJianchajieguo getJczcJianchajieguo() {
+        return jczcJianchajieguo;
     }
 }

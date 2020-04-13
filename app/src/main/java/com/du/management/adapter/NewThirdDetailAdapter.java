@@ -15,6 +15,8 @@ import android.widget.TextView;
 import com.du.management.R;
 import com.du.management.activity.NewSecondActivity;
 import com.du.management.newBean.Jczb;
+import com.du.management.newBean.jczcJianchajieguo;
+import com.du.management.view.RemarkDialog;
 
 import java.util.List;
 
@@ -63,9 +65,12 @@ public class NewThirdDetailAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        Jczb jczb = list.get(position);
+        final Jczb jczb = list.get(position);
         viewHolder.nameTV.setText((position + 1) + "." + jczb.getJczbName());
-        viewHolder.checkBox.setChecked(jczb.isHege());
+        if (jczb.getJczcJianchajieguo() == null) {
+            jczb.setJczcJianchajieguo(new jczcJianchajieguo());
+        }
+        viewHolder.checkBox.setChecked(jczb.getJczcJianchajieguo().getIsHege() == 1);
         if (NewSecondActivity.thirdForth >= 0) {
             if (NewSecondActivity.thirdForth == position && NewSecondActivity.thirdThird == jcnrfjPosition) {
                 viewHolder.operateLV.setVisibility(View.VISIBLE);
@@ -91,8 +96,28 @@ public class NewThirdDetailAdapter extends BaseAdapter {
                 notifyDataSetChanged();
             }
         });
+        viewHolder.checkBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                jczb.getJczcJianchajieguo().setIsHege(viewHolder.checkBox.isChecked() ? 0 : 1);
+            }
+        });
         viewHolder.takePhotoIV.setTag(position);
         viewHolder.takePhotoIV.setOnClickListener(listener);
+        viewHolder.remarkIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final RemarkDialog rDialog = new RemarkDialog(context, "1");
+                rDialog.show();
+                rDialog.setOnSaveClick(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        rDialog.dismiss();
+                        rDialog.getEditText();
+                    }
+                });
+            }
+        });
         return convertView;
     }
 

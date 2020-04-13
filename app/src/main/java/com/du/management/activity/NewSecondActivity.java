@@ -23,15 +23,18 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.TestJsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.du.management.MainApplication;
 import com.du.management.R;
 import com.du.management.adapter.NewThirdAdapter;
 import com.du.management.adapter.NewThirdDetailAdapter;
 import com.du.management.adapter.ThirdDetailAdapter;
+import com.du.management.bean.PushBean;
 import com.du.management.http.HeaderStringRequest;
 import com.du.management.http.HttpConstant;
 import com.du.management.newBean.Jcnr;
+import com.du.management.newBean.Jcnrfj;
 import com.du.management.newBean.Jcxm;
 import com.du.management.newBean.Jczb;
 import com.du.management.utils.Utils;
@@ -374,7 +377,9 @@ public class NewSecondActivity extends BaseActivity {
                     }
                     newThirdAdapter.setList(jcnrList.get(thirdSecond).getJcnrfjlist());
                     newThirdAdapter.notifyDataSetChanged();
+                    saveRequest(jcnrList.get(thirdSecond).getJcnrfjlist());
                 }
+                thirdForth = thirdThird = -1;
                 secondTV.setText(jcnrList.get(thirdSecond).getJcxmName() + "/" + jcnrList.get(thirdSecond).getJcnrName());
             }
         });
@@ -392,10 +397,67 @@ public class NewSecondActivity extends BaseActivity {
                     thirdSecond--;
                     nextTV.setText("下一項");
                 }
+                thirdForth = thirdThird = -1;
                 newThirdAdapter.setList(jcnrList.get(thirdSecond).getJcnrfjlist());
                 newThirdAdapter.notifyDataSetChanged();
                 secondTV.setText(jcnrList.get(thirdSecond).getJcxmName() + "/" + jcnrList.get(thirdSecond).getJcnrName());
             }
         });
+    }
+
+    private void saveRequest(List<Jcnrfj> list) {
+        List<PushBean> saveList = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            Jcnrfj taskBody = list.get(i);
+            for (int k = 0; k < taskBody.getJczblist().size(); k++) {
+                Jczb taskTheme = taskBody.getJczblist().get(k);
+                PushBean pushBean = new PushBean();
+                pushBean.setIsHege(taskTheme.getJczcJianchajieguo() == null ? 1 : taskTheme.getJczcJianchajieguo().getIsHege());
+                pushBean.setJcjgJcxmid(xiangmuId);
+                pushBean.setJcjgJczbid(taskTheme.getJczbId());
+                pushBean.setJianchaqingkuang(taskTheme.getJczcJianchajieguo() == null ? "" : taskTheme.getJczcJianchajieguo().getJianchaqingkuang());
+                saveList.add(pushBean);
+            }
+        }
+        JSONArray jsonObject = getJson(saveList);
+        if (jsonObject == null) {
+            Toast.makeText(NewSecondActivity.this, "数据格式出错", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        final RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append(HttpConstant.REQUSET_BASE_URL).append("jianchazhicheng/addJianchajieguolist");
+        TestJsonArrayRequest jsonArrayRequest = new TestJsonArrayRequest(Request.Method.POST, stringBuffer.toString(), jsonObject, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Toast.makeText(NewSecondActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(NewSecondActivity.this, "网络请求失败", Toast.LENGTH_SHORT).show();
+            }
+        });
+        requestQueue.add(jsonArrayRequest);
+    }
+
+    private JSONArray getJson(List<PushBean> list) {
+        JSONArray jsonArray = new JSONArray();
+        try {
+            JSONObject tmpObj = null;
+            for (int i = 0; i < list.size(); i++) {
+                tmpObj = new JSONObject();
+                tmpObj.put("isHege", list.get(i).getIsHege());
+                tmpObj.put("jcjgId", list.get(i).getJcjgId());
+                tmpObj.put("jcjgJcxmid", list.get(i).getJcjgJcxmid());
+                tmpObj.put("jcjgJczbid", list.get(i).getJcjgJczbid());
+                tmpObj.put("jianchaqingkuang", list.get(i).getJianchaqingkuang());
+                tmpObj.put("userId", MainApplication.userId);
+                jsonArray.put(tmpObj);
+            }
+        } catch (Exception e) {
+
+        }
+        return jsonArray;
     }
 }
