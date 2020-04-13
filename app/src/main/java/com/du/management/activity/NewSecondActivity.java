@@ -162,6 +162,7 @@ public class NewSecondActivity extends BaseActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append(HttpConstant.REQUSET_BASE_URL).append("jianchazhicheng/getJianchashishiMoban/").append(MainApplication.userId).append("/" + mobanId).append("/" + xiangmuId);
+        Log.w("lqlqlq", stringBuffer.toString());
         HeaderStringRequest request = new HeaderStringRequest(Request.Method.GET, stringBuffer.toString(), new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -420,7 +421,7 @@ public class NewSecondActivity extends BaseActivity {
             }
         }
         JSONArray jsonObject = getJson(saveList);
-        Log.w("lqlqlq",jsonObject.toString());
+        Log.w("lqlqlq", jsonObject.toString());
         if (jsonObject == null) {
             Toast.makeText(NewSecondActivity.this, "数据格式出错", Toast.LENGTH_SHORT).show();
             return;

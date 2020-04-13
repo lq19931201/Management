@@ -69,8 +69,8 @@ public class NewThirdDetailAdapter extends BaseAdapter {
         final Jczb jczb = list.get(position);
         viewHolder.nameTV.setText((position + 1) + "." + jczb.getJczbName());
         if (jczb.getJczcJianchajieguo() == null) {
-            Log.w("lqlqlq", "" + position);
             jczb.setJczcJianchajieguo(new jczcJianchajieguo());
+            jczb.getJczcJianchajieguo().setIsHege(1);
         }
         viewHolder.checkBox.setChecked(jczb.getJczcJianchajieguo().getIsHege() == 0);
         if (NewSecondActivity.thirdForth >= 0) {
