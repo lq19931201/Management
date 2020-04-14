@@ -78,11 +78,9 @@ public class NewSecondActivity extends BaseActivity {
 
     public static int thirdThird = -1;
 
-    public static int thirdForth = -1;
-
     private long mobanId;
 
-    private long xiangmuId;
+    public static long xiangmuId;
 
     private ListView myListView;
 
@@ -336,16 +334,16 @@ public class NewSecondActivity extends BaseActivity {
 
             @Override
             public void onResponse(Call call, okhttp3.Response response) throws IOException {
-                try {
-                    JSONObject jsonObject = new JSONObject(response.body().string());
-                    if (jsonObject.getString("code").equals(HttpConstant.CODE_SUCCESS)) {
-                        Toast.makeText(NewSecondActivity.this, "上传成功", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(NewSecondActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
-                    Toast.makeText(NewSecondActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
-                }
+//                try {
+//                    JSONObject jsonObject = new JSONObject(response.body().string());
+//                    if (jsonObject.getString("code").equals(HttpConstant.CODE_SUCCESS)) {
+//                        Toast.makeText(NewSecondActivity.this, "上传成功", Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        Toast.makeText(NewSecondActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
+//                    }
+//                } catch (Exception e) {
+//                    Toast.makeText(NewSecondActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
+//                }
             }
         });
     }
@@ -380,7 +378,6 @@ public class NewSecondActivity extends BaseActivity {
                     newThirdAdapter.setList(jcnrList.get(thirdSecond).getJcnrfjlist());
                     newThirdAdapter.notifyDataSetChanged();
                 }
-                thirdForth = thirdThird = -1;
                 secondTV.setText(jcnrList.get(thirdSecond).getJcxmName() + "/" + jcnrList.get(thirdSecond).getJcnrName());
             }
         });
@@ -398,7 +395,6 @@ public class NewSecondActivity extends BaseActivity {
                     thirdSecond--;
                     nextTV.setText("下一項");
                 }
-                thirdForth = thirdThird = -1;
                 newThirdAdapter.setList(jcnrList.get(thirdSecond).getJcnrfjlist());
                 newThirdAdapter.notifyDataSetChanged();
                 secondTV.setText(jcnrList.get(thirdSecond).getJcxmName() + "/" + jcnrList.get(thirdSecond).getJcnrName());
@@ -421,7 +417,7 @@ public class NewSecondActivity extends BaseActivity {
             }
         }
         JSONArray jsonObject = getJson(saveList);
-        Log.w("lqlqlq", jsonObject.toString());
+            Log.w("lqlqlq", jsonObject.toString());
         if (jsonObject == null) {
             Toast.makeText(NewSecondActivity.this, "数据格式出错", Toast.LENGTH_SHORT).show();
             return;

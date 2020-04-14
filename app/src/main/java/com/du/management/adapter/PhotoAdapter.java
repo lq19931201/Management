@@ -3,6 +3,7 @@ package com.du.management.adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,14 +43,17 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Glide.with(context).load(list.get(position) + "?imageView2/1/w/64/h/64").listener(new RequestListener<String, GlideDrawable>() {
+        Log.w("PhotoAdapter", list.get(position));
+        Glide.with(context).load(list.get(position)).listener(new RequestListener<String, GlideDrawable>() {
             @Override
             public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                Log.w("PhotoAdapter", "onException " + e.getMessage());
                 return false;
             }
 
             @Override
             public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                Log.w("PhotoAdapter", "onResourceReady");
                 return false;
             }
         }).into(holder.imageView);

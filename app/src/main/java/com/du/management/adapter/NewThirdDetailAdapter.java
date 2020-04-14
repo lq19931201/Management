@@ -17,6 +17,7 @@ import com.du.management.R;
 import com.du.management.activity.NewSecondActivity;
 import com.du.management.newBean.Jczb;
 import com.du.management.newBean.jczcJianchajieguo;
+import com.du.management.view.ReadDialog;
 import com.du.management.view.RemarkDialog;
 
 import java.util.List;
@@ -73,14 +74,9 @@ public class NewThirdDetailAdapter extends BaseAdapter {
             jczb.getJczcJianchajieguo().setIsHege(1);
         }
         viewHolder.checkBox.setChecked(jczb.getJczcJianchajieguo().getIsHege() == 0);
-        if (NewSecondActivity.thirdForth >= 0) {
-            if (NewSecondActivity.thirdForth == position && NewSecondActivity.thirdThird == jcnrfjPosition) {
-                viewHolder.operateLV.setVisibility(View.VISIBLE);
-                viewHolder.chooseBox.setChecked(true);
-            } else {
-                viewHolder.operateLV.setVisibility(View.GONE);
-                viewHolder.chooseBox.setChecked(false);
-            }
+        if (jczb.isAdd()) {
+            viewHolder.operateLV.setVisibility(View.VISIBLE);
+            viewHolder.chooseBox.setChecked(true);
         } else {
             viewHolder.chooseBox.setChecked(false);
             viewHolder.operateLV.setVisibility(View.GONE);
@@ -88,13 +84,7 @@ public class NewThirdDetailAdapter extends BaseAdapter {
         viewHolder.chooseBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (viewHolder.chooseBox.isChecked()) {
-                    NewSecondActivity.thirdThird = jcnrfjPosition;
-                    NewSecondActivity.thirdForth = position;
-                } else {
-                    NewSecondActivity.thirdThird = -1;
-                    NewSecondActivity.thirdForth = -1;
-                }
+                jczb.setAdd(viewHolder.chooseBox.isChecked());
                 notifyDataSetChanged();
             }
         });
@@ -121,6 +111,13 @@ public class NewThirdDetailAdapter extends BaseAdapter {
                         jczb.getJczcJianchajieguo().setJianchaqingkuang(rDialog.getEditText().getText().toString());
                     }
                 });
+            }
+        });
+        viewHolder.readTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ReadDialog readDialog = new ReadDialog(context, jczb.getJczbId(), NewSecondActivity.xiangmuId);
+                readDialog.show();
             }
         });
         return convertView;
