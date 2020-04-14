@@ -59,14 +59,13 @@ public class NewThirdAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         Jcnrfj jcnrfj = list.get(position);
-        viewHolder.titleTV.setText((position + 1) + "." + jcnrfj.getJcnrfjName());
+        viewHolder.titleTV.setText(jcnrfj.getJcnrfjName());
         newThirdDetailAdapter = new NewThirdDetailAdapter(position, context, jcnrfj.getJczblist());
         viewHolder.myListView.setAdapter(newThirdDetailAdapter);
         newThirdDetailAdapter.notifyDataSetChanged();
         newThirdDetailAdapter.setOnViewClickListener(new NewThirdDetailAdapter.OnViewClickListener() {
             @Override
             public void onViewClick(View view, int jcnrfjPosition, int position) {
-                Log.w("lqlqlq", "setOnViewClickListener");
                 if (cameraOnClick != null) {
                     cameraOnClick.onClick(jcnrfjPosition, position);
                 }

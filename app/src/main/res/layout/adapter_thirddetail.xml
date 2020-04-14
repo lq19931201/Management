@@ -31,8 +31,8 @@
 
         <ImageView
             android:id="@+id/jian"
-            android:layout_width="20dp"
-            android:layout_height="30dp"
+            android:layout_width="30dp"
+            android:layout_height="40dp"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="40dp"
             android:scaleType="center"
@@ -40,8 +40,8 @@
 
         <ImageView
             android:id="@+id/fa"
-            android:layout_width="20dp"
-            android:layout_height="30dp"
+            android:layout_width="30dp"
+            android:layout_height="40dp"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="40dp"
             android:scaleType="center"
@@ -61,14 +61,14 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="15dp"
-            android:text="不符合"
+            android:text="符合"
             android:textColor="#353535"
             android:textSize="13sp"></TextView>
 
         <ImageView
             android:id="@+id/remark"
-            android:layout_width="20dp"
-            android:layout_height="30dp"
+            android:layout_width="30dp"
+            android:layout_height="40dp"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="40dp"
             android:scaleType="center"
@@ -76,8 +76,8 @@
 
         <ImageView
             android:id="@+id/take_photo"
-            android:layout_width="20dp"
-            android:layout_height="30dp"
+            android:layout_width="30dp"
+            android:layout_height="40dp"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="40dp"
             android:scaleType="center"

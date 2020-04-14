@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -33,7 +34,9 @@ public class ReadDialog extends Dialog {
 
     private RecyclerView recyclerView;
 
-    public ReadDialog(Context context, long jczbId, long xiangmuId) {
+    private String jianchaqingkuang;
+
+    public ReadDialog(Context context, long jczbId, long xiangmuId, String jianchaqingkuang) {
         super(context, R.style.customDialog);
         setContentView(R.layout.dialog_read);
         findViewById(R.id.cancle).setOnClickListener(new View.OnClickListener() {
@@ -43,6 +46,7 @@ public class ReadDialog extends Dialog {
             }
         });
         this.context = context;
+        this.jianchaqingkuang = jianchaqingkuang;
         initView();
         getPhoto(jczbId, xiangmuId);
     }
@@ -51,6 +55,9 @@ public class ReadDialog extends Dialog {
         contentTV = (TextView) findViewById(R.id.content);
         recyclerView = (RecyclerView) findViewById(R.id.recycleView);
         recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+        if (!TextUtils.isEmpty(jianchaqingkuang)) {
+            contentTV.setText(jianchaqingkuang);
+        }
     }
 
     private void getPhoto(long jczbId, long xiangmuId) {
@@ -68,7 +75,7 @@ public class ReadDialog extends Dialog {
                         final List<String> list = new ArrayList<>();
                         for (int i = 0; i < jsonArray.length(); i++) {
                             String path = HttpConstant.REQUSET_BASE_URL + jsonArray.getJSONObject(i).getString("savepath");
-                            list.add(path.replaceAll("\\\\","/"));
+                            list.add(path.replaceAll("\\\\", "/"));
                         }
                         final PhotoAdapter adapter = new PhotoAdapter(context, list);
                         recyclerView.setAdapter(adapter);

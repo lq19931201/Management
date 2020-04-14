@@ -68,12 +68,12 @@ public class NewThirdDetailAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         final Jczb jczb = list.get(position);
-        viewHolder.nameTV.setText((position + 1) + "." + jczb.getJczbName());
+        viewHolder.nameTV.setText(jczb.getJczbName());
         if (jczb.getJczcJianchajieguo() == null) {
             jczb.setJczcJianchajieguo(new jczcJianchajieguo());
-            jczb.getJczcJianchajieguo().setIsHege(1);
+            jczb.getJczcJianchajieguo().setIsHege(0);
         }
-        viewHolder.checkBox.setChecked(jczb.getJczcJianchajieguo().getIsHege() == 0);
+        viewHolder.checkBox.setChecked(jczb.getJczcJianchajieguo().getIsHege() == 1);
         if (jczb.isAdd()) {
             viewHolder.operateLV.setVisibility(View.VISIBLE);
             viewHolder.chooseBox.setChecked(true);
@@ -91,7 +91,7 @@ public class NewThirdDetailAdapter extends BaseAdapter {
         viewHolder.checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                jczb.getJczcJianchajieguo().setIsHege(viewHolder.checkBox.isChecked() ? 0 : 1);
+                jczb.getJczcJianchajieguo().setIsHege(viewHolder.checkBox.isChecked() ? 1 : 0);
             }
         });
         viewHolder.takePhotoIV.setTag(position);
@@ -116,7 +116,7 @@ public class NewThirdDetailAdapter extends BaseAdapter {
         viewHolder.readTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ReadDialog readDialog = new ReadDialog(context, jczb.getJczbId(), NewSecondActivity.xiangmuId);
+                ReadDialog readDialog = new ReadDialog(context, jczb.getJczbId(), NewSecondActivity.xiangmuId, jczb.getJczcJianchajieguo().getJianchaqingkuang());
                 readDialog.show();
             }
         });

@@ -189,7 +189,7 @@ public class NewSecondActivity extends BaseActivity {
                         secondTV.setText(jcnrList.get(0).getJcxmName() + "/" + jcnrList.get(0).getJcnrName());
                         newThirdAdapter = new NewThirdAdapter(NewSecondActivity.this, jcnrList.get(0).getJcnrfjlist());
                         myListView.setAdapter(newThirdAdapter);
-                        if (thirdList.get(0).getJcnrlist().size() == 1) {
+                        if (thirdList.get(0).getJcnrlist().size() == 1 && thirdList.size() == 1) {
                             nextTV.setText("提交");
                         }
                         newThirdAdapter.setCameraOnClick(new NewThirdAdapter.CameraOnClick() {
@@ -439,7 +439,7 @@ public class NewSecondActivity extends BaseActivity {
             for (int k = 0; k < taskBody.getJczblist().size(); k++) {
                 Jczb taskTheme = taskBody.getJczblist().get(k);
                 PushBean pushBean = new PushBean();
-                pushBean.setIsHege(taskTheme.getJczcJianchajieguo() == null ? 1 : taskTheme.getJczcJianchajieguo().getIsHege());
+                pushBean.setIsHege(taskTheme.getJczcJianchajieguo() == null ? 0 : taskTheme.getJczcJianchajieguo().getIsHege());
                 pushBean.setJcjgJcxmid(xiangmuId);
                 pushBean.setJcjgJczbid(taskTheme.getJczbId());
                 pushBean.setJianchaqingkuang(taskTheme.getJczcJianchajieguo() == null ? "" : taskTheme.getJczcJianchajieguo().getJianchaqingkuang());
