@@ -12,6 +12,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -19,10 +20,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.TestJsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.du.management.MainApplication;
@@ -50,7 +53,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import okhttp3.Call;
@@ -76,8 +81,6 @@ public class NewSecondActivity extends BaseActivity {
 
     private int thirdSecond = 0;
 
-    public static int thirdThird = -1;
-
     private long mobanId;
 
     public static long xiangmuId;
@@ -97,6 +100,8 @@ public class NewSecondActivity extends BaseActivity {
     private static int PHOTO_REQUEST_CAREMA = 0x12;
 
     private long jczbId;
+
+    private long renwuId;
 
     @Override
     protected int initLayoutId() {
@@ -149,6 +154,7 @@ public class NewSecondActivity extends BaseActivity {
         isComplete = getIntent().getBooleanExtra("isComplete", false);
         mobanId = getIntent().getLongExtra("mobanId", 1);
         xiangmuId = getIntent().getLongExtra("xiangmuId", 1);
+        renwuId = getIntent().getLongExtra("taskId", 0);
         if (isComplete) {
             bottomLV.setVisibility(View.GONE);
         }
@@ -364,7 +370,31 @@ public class NewSecondActivity extends BaseActivity {
                     return;
                 }
                 if (nextTV.getText().equals("提交")) {
+                    RequestQueue requestQueue = Volley.newRequestQueue(NewSecondActivity.this);
+                    StringBuffer stringBuffer = new StringBuffer();
+                    Map<String, String> params = new HashMap<>();
+                    stringBuffer.append(HttpConstant.REQUSET_BASE_URL).append("jianchazhicheng/finishedShishixiangmu/").append(xiangmuId);
+                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, stringBuffer.toString(), new JSONObject(params), new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                String code = response.getString("code");
+                                if (code.equals(HttpConstant.CODE_SUCCESS)) {
+                                    Toast.makeText(NewSecondActivity.this, "任务已完成", Toast.LENGTH_SHORT).show();
+                                    finish();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
 
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(NewSecondActivity.this, "网络请求失败", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    requestQueue.add(jsonObjectRequest);
                 } else {
                     saveRequest(jcnrList.get(thirdSecond).getJcnrfjlist());
                     if (jcnrList.size() - 1 == thirdSecond) {
@@ -417,7 +447,7 @@ public class NewSecondActivity extends BaseActivity {
             }
         }
         JSONArray jsonObject = getJson(saveList);
-            Log.w("lqlqlq", jsonObject.toString());
+        Log.w("lqlqlq", jsonObject.toString());
         if (jsonObject == null) {
             Toast.makeText(NewSecondActivity.this, "数据格式出错", Toast.LENGTH_SHORT).show();
             return;
