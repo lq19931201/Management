@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -20,6 +21,9 @@ import com.du.management.newBean.jczcJianchajieguo;
 import com.du.management.view.ReadDialog;
 import com.du.management.view.RemarkDialog;
 
+import org.angmarch.views.NiceSpinner;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class NewThirdDetailAdapter extends BaseAdapter {
@@ -31,6 +35,13 @@ public class NewThirdDetailAdapter extends BaseAdapter {
         this.jcnrfjPosition = jcnrfjPosition;
         this.context = context;
         this.list = list;
+        for (Jczb jczb : list) {
+            if (jczb.getJczcJianchajieguo() != null && jczb.getJczbId() > 0) {
+                jczb.setAdd(true);
+            } else {
+                jczb.setAdd(false);
+            }
+        }
     }
 
     @Override
@@ -56,14 +67,13 @@ public class NewThirdDetailAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(context).inflate(R.layout.adapter_thirddetail, null);
             viewHolder.nameTV = (TextView) convertView.findViewById(R.id.name);
             viewHolder.chooseBox = (CheckBox) convertView.findViewById(R.id.chooseCheckBox);
+            viewHolder.niceSpinner = (NiceSpinner) convertView.findViewById(R.id.niceSpinner);
             viewHolder.jianIV = (ImageView) convertView.findViewById(R.id.jian);
-            viewHolder.faIV = (ImageView) convertView.findViewById(R.id.fa);
             viewHolder.remarkIV = (ImageView) convertView.findViewById(R.id.remark);
             viewHolder.takePhotoIV = (ImageView) convertView.findViewById(R.id.take_photo);
             viewHolder.readTV = (TextView) convertView.findViewById(R.id.read);
-            viewHolder.bufuheTV = (TextView) convertView.findViewById(R.id.bufuhe);
-            viewHolder.checkBox = (CheckBox) convertView.findViewById(R.id.checkbox);
             viewHolder.operateLV = (LinearLayout) convertView.findViewById(R.id.operate);
+            viewHolder.allLV = (LinearLayout) convertView.findViewById(R.id.all);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
@@ -71,9 +81,7 @@ public class NewThirdDetailAdapter extends BaseAdapter {
         viewHolder.nameTV.setText(jczb.getJczbName());
         if (jczb.getJczcJianchajieguo() == null) {
             jczb.setJczcJianchajieguo(new jczcJianchajieguo());
-            jczb.getJczcJianchajieguo().setIsHege(0);
         }
-        viewHolder.checkBox.setChecked(jczb.getJczcJianchajieguo().getIsHege() == 1);
         if (jczb.isAdd()) {
             viewHolder.operateLV.setVisibility(View.VISIBLE);
             viewHolder.chooseBox.setChecked(true);
@@ -81,17 +89,30 @@ public class NewThirdDetailAdapter extends BaseAdapter {
             viewHolder.chooseBox.setChecked(false);
             viewHolder.operateLV.setVisibility(View.GONE);
         }
-        viewHolder.chooseBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                jczb.setAdd(viewHolder.chooseBox.isChecked());
-                notifyDataSetChanged();
-            }
-        });
-        viewHolder.checkBox.setOnClickListener(new View.OnClickListener() {
+        List<String> list = new ArrayList<>();
+        for (com.du.management.newBean.jczcZhibiaojieguos jieguo : jczb.getJczcZhibiaojieguos()) {
+            list.add(jieguo.getJianchaqingkuang());
+        }
+        if (list.size() == 0) {
+            viewHolder.niceSpinner.setVisibility(View.INVISIBLE);
+        } else {
+            viewHolder.niceSpinner.setVisibility(View.VISIBLE);
+            viewHolder.niceSpinner.attachDataSource(list);
+            viewHolder.niceSpinner.setSelectedIndex(jczb.getJcqkPosition());
+            viewHolder.niceSpinner.addOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    jczb.setJcqkPosition(i);
+                    jczb.getJczcJianchajieguo().setJianchaqingkuang(list.get(i));
+                }
+            });
+        }
+
+        viewHolder.allLV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                jczb.getJczcJianchajieguo().setIsHege(viewHolder.checkBox.isChecked() ? 1 : 0);
+                jczb.setAdd(!jczb.isAdd());
+                notifyDataSetChanged();
             }
         });
         viewHolder.takePhotoIV.setTag(position);
@@ -147,14 +168,13 @@ public class NewThirdDetailAdapter extends BaseAdapter {
     public class ViewHolder {
         public TextView nameTV;
         public CheckBox chooseBox;
+        public NiceSpinner niceSpinner;
         public ImageView jianIV;
-        public ImageView faIV;
         public ImageView remarkIV;
         public ImageView takePhotoIV;
         public TextView readTV;
-        public TextView bufuheTV;
-        public CheckBox checkBox;
         public LinearLayout operateLV;
+        public LinearLayout allLV;
     }
 
 }

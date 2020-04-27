@@ -506,7 +506,7 @@ public class SecondActivity extends BaseActivity {
             for (int k = 0; k < taskBody.getJczblist().size(); k++) {
                 Jczb taskTheme = taskBody.getJczblist().get(k);
                 PushBean pushBean = new PushBean();
-                pushBean.setIsHege(taskTheme.getJczcJianchajieguo().getIsHege());
+                pushBean.setIsHege(0);
                 pushBean.setJcjgJcxmid(xiangmuId);
                 pushBean.setJcjgJczbid(taskTheme.getJczbId());
                 pushBean.setJianchaqingkuang("lalala");

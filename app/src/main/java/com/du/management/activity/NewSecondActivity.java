@@ -12,7 +12,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -20,7 +19,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -31,8 +29,6 @@ import com.android.volley.toolbox.Volley;
 import com.du.management.MainApplication;
 import com.du.management.R;
 import com.du.management.adapter.NewThirdAdapter;
-import com.du.management.adapter.NewThirdDetailAdapter;
-import com.du.management.adapter.ThirdDetailAdapter;
 import com.du.management.bean.PushBean;
 import com.du.management.http.HeaderStringRequest;
 import com.du.management.http.HttpConstant;
@@ -41,7 +37,6 @@ import com.du.management.newBean.Jcnrfj;
 import com.du.management.newBean.Jcxm;
 import com.du.management.newBean.Jczb;
 import com.du.management.utils.Utils;
-import com.du.management.view.MyListView;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -166,13 +161,13 @@ public class NewSecondActivity extends BaseActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append(HttpConstant.REQUSET_BASE_URL).append("jianchazhicheng/getJianchashishiMoban/").append(MainApplication.userId).append("/" + mobanId).append("/" + xiangmuId);
-        Log.w("lqlqlq", stringBuffer.toString());
         HeaderStringRequest request = new HeaderStringRequest(Request.Method.GET, stringBuffer.toString(), new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     if (jsonObject.getString("code").equals(HttpConstant.CODE_SUCCESS)) {
+                        Log.w("lqlqlq", response);
                         Gson gson = new Gson();
                         JSONArray jsonArray = jsonObject.getJSONArray("data");
                         List<Jcxm> thirdList = new ArrayList<>();
@@ -439,7 +434,7 @@ public class NewSecondActivity extends BaseActivity {
             for (int k = 0; k < taskBody.getJczblist().size(); k++) {
                 Jczb taskTheme = taskBody.getJczblist().get(k);
                 PushBean pushBean = new PushBean();
-                pushBean.setIsHege(taskTheme.getJczcJianchajieguo() == null ? 0 : taskTheme.getJczcJianchajieguo().getIsHege());
+                pushBean.setIsHege(0);
                 pushBean.setJcjgJcxmid(xiangmuId);
                 pushBean.setJcjgJczbid(taskTheme.getJczbId());
                 pushBean.setJianchaqingkuang(taskTheme.getJczcJianchajieguo() == null ? "" : taskTheme.getJczcJianchajieguo().getJianchaqingkuang());
@@ -447,7 +442,6 @@ public class NewSecondActivity extends BaseActivity {
             }
         }
         JSONArray jsonObject = getJson(saveList);
-        Log.w("lqlqlq", jsonObject.toString());
         if (jsonObject == null) {
             Toast.makeText(NewSecondActivity.this, "数据格式出错", Toast.LENGTH_SHORT).show();
             return;

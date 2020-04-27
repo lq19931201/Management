@@ -1,6 +1,9 @@
 package com.du.management.newBean;
 
+import java.util.List;
+
 public class Jczb {
+    public int jcqkPosition;
     public boolean isAdd;
     public String nextXulieId;
     public long jczbId;
@@ -20,6 +23,15 @@ public class Jczb {
     public String zhibiaozilei;
     public jczcJianchajieguo jczcJianchajieguo = new jczcJianchajieguo();
     public JczcZhibiaoMoban jczcZhibiaoMobanBean;
+    public List<jczcZhibiaojieguos> jczcZhibiaojieguos;
+
+    public void setJczcZhibiaojieguos(List<com.du.management.newBean.jczcZhibiaojieguos> jczcZhibiaojieguos) {
+        this.jczcZhibiaojieguos = jczcZhibiaojieguos;
+    }
+
+    public List<com.du.management.newBean.jczcZhibiaojieguos> getJczcZhibiaojieguos() {
+        return jczcZhibiaojieguos;
+    }
 
     public String getNextXulieId() {
         return nextXulieId;
@@ -171,5 +183,13 @@ public class Jczb {
 
     public com.du.management.newBean.jczcJianchajieguo getJczcJianchajieguo() {
         return jczcJianchajieguo;
+    }
+
+    public void setJcqkPosition(int jcqkPosition) {
+        this.jcqkPosition = jcqkPosition;
+    }
+
+    public int getJcqkPosition() {
+        return jcqkPosition;
     }
 }

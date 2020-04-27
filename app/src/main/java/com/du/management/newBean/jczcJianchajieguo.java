@@ -5,7 +5,6 @@ public class jczcJianchajieguo {
     public long jcjgJcxmid;
     public long userId;
     public long jcjgJczbid;
-    public int isHege;
     public String createdTime;
     public String updatetime;
     public String jianchaqingkuang;
@@ -40,14 +39,6 @@ public class jczcJianchajieguo {
 
     public void setJcjgJczbid(long jcjgJczbid) {
         this.jcjgJczbid = jcjgJczbid;
-    }
-
-    public int getIsHege() {
-        return isHege;
-    }
-
-    public void setIsHege(int isHege) {
-        this.isHege = isHege;
     }
 
     public String getCreatedTime() {
