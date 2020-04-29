@@ -74,6 +74,7 @@ public class NewThirdDetailAdapter extends BaseAdapter {
             viewHolder.readTV = (TextView) convertView.findViewById(R.id.read);
             viewHolder.operateLV = (LinearLayout) convertView.findViewById(R.id.operate);
             viewHolder.allLV = (LinearLayout) convertView.findViewById(R.id.all);
+            viewHolder.zhengIV = (ImageView) convertView.findViewById(R.id.zheng);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
@@ -141,6 +142,23 @@ public class NewThirdDetailAdapter extends BaseAdapter {
                 readDialog.show();
             }
         });
+        viewHolder.zhengIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final RemarkDialog rDialog = new RemarkDialog(context, "1");
+                if (!TextUtils.isEmpty(jczb.getZhenggaicuoshi())) {
+                    rDialog.getEditText().setText(jczb.getZhenggaicuoshi());
+                }
+                rDialog.show();
+                rDialog.setOnSaveClick(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        rDialog.dismiss();
+                        jczb.setZhenggaicuoshi(rDialog.getEditText().getText().toString());
+                    }
+                });
+            }
+        });
         return convertView;
     }
 
@@ -173,6 +191,7 @@ public class NewThirdDetailAdapter extends BaseAdapter {
         public ImageView remarkIV;
         public ImageView takePhotoIV;
         public TextView readTV;
+        public ImageView zhengIV;
         public LinearLayout operateLV;
         public LinearLayout allLV;
     }

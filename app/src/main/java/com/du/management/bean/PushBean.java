@@ -19,6 +19,16 @@ public class PushBean implements Serializable {
 
     public long userId;
 
+    public String zhenggaiyijian;
+
+    public void setZhenggaiyijian(String zhenggaiyijian) {
+        this.zhenggaiyijian = zhenggaiyijian;
+    }
+
+    public String getZhenggaiyijian() {
+        return zhenggaiyijian;
+    }
+
     public String getCreatedTime() {
         return createdTime;
     }

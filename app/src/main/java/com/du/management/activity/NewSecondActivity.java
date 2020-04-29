@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -96,6 +97,10 @@ public class NewSecondActivity extends BaseActivity {
 
     private long jczbId;
 
+    private boolean titleTakePhoto;
+
+    private long renwuId;
+
     @Override
     protected int initLayoutId() {
         MIUISetStatusBarLightMode(this, true);
@@ -146,6 +151,7 @@ public class NewSecondActivity extends BaseActivity {
     protected void initData() {
         isComplete = getIntent().getBooleanExtra("isComplete", false);
         mobanId = getIntent().getLongExtra("mobanId", 1);
+        renwuId = getIntent().getLongExtra("taskId", 0);
         xiangmuId = getIntent().getLongExtra("xiangmuId", 1);
         if (isComplete) {
             bottomLV.setVisibility(View.GONE);
@@ -187,7 +193,9 @@ public class NewSecondActivity extends BaseActivity {
                         newThirdAdapter.setCameraOnClick(new NewThirdAdapter.CameraOnClick() {
                             @Override
                             public void onClick(int jcnrfjPosition, int position) {
-                                openCamera(jcnrList.get(thirdSecond).getJcnrfjlist().get(jcnrfjPosition).getJczblist().get(position));
+                                titleTakePhoto = false;
+                                jczbId = jcnrList.get(thirdSecond).getJcnrfjlist().get(jcnrfjPosition).getJczblist().get(position).getJczbId();
+                                openCamera();
                             }
                         });
                     }
@@ -205,8 +213,7 @@ public class NewSecondActivity extends BaseActivity {
         requestQueue.add(request);
     }
 
-    public void openCamera(Jczb taskTheme) {
-        jczbId = taskTheme.getJczbId();
+    public void openCamera() {
         //获取系統版本
         int currentapiVersion = android.os.Build.VERSION.SDK_INT;
         // 激活相机
@@ -316,22 +323,32 @@ public class NewSecondActivity extends BaseActivity {
     }
 
     private void upload(String url, String filePath, String fileName) throws Exception {
-        RequestBody requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM).
-                addFormDataPart("xiangmuId", String.valueOf(xiangmuId)).
-                addFormDataPart("jczbId", String.valueOf(jczbId)).
-                addFormDataPart("jcjgPicFile", fileName, RequestBody.create(MediaType.parse("multipart/form-data"), new File(filePath)))
-                .build();
+        RequestBody requestBody;
+        if (titleTakePhoto) {
+            requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM).
+                    addFormDataPart("xiangmuId", String.valueOf(xiangmuId)).
+                    addFormDataPart("jcjgPicFile", fileName, RequestBody.create(MediaType.parse("multipart/form-data"), new File(filePath)))
+                    .build();
+        } else {
+            requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM).
+                    addFormDataPart("xiangmuId", String.valueOf(xiangmuId)).
+                    addFormDataPart("jczbId", String.valueOf(jczbId)).
+                    addFormDataPart("jcjgPicFile", fileName, RequestBody.create(MediaType.parse("multipart/form-data"), new File(filePath)))
+                    .build();
+        }
         okhttp3.Request request = new okhttp3.Request.Builder().header("Authorization", "Client-ID " + UUID.randomUUID()).url(url).post(requestBody).build();
         OkHttpClient okHttpClient = new OkHttpClient();
         Call call = okHttpClient.newCall(request);
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                Log.w("upload","onfail");
                 Toast.makeText(NewSecondActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onResponse(Call call, okhttp3.Response response) throws IOException {
+                Log.w("upload","onResponse");
 //                try {
 //                    JSONObject jsonObject = new JSONObject(response.body().string());
 //                    if (jsonObject.getString("code").equals(HttpConstant.CODE_SUCCESS)) {
@@ -422,6 +439,14 @@ public class NewSecondActivity extends BaseActivity {
                 secondTV.setText(jcnrList.get(thirdSecond).getJcxmName() + "/" + jcnrList.get(thirdSecond).getJcnrName());
             }
         });
+        ImageView titleIV = (ImageView) findViewById(R.id.take_photo);
+        titleIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                titleTakePhoto = true;
+                openCamera();
+            }
+        });
     }
 
     private void saveRequest(List<Jcnrfj> list) {
@@ -436,6 +461,7 @@ public class NewSecondActivity extends BaseActivity {
                     pushBean.setJcjgJcxmid(xiangmuId);
                     pushBean.setJcjgJczbid(taskTheme.getJczbId());
                     pushBean.setJianchaqingkuang(taskTheme.getJczcJianchajieguo() == null ? "" : taskTheme.getJczcJianchajieguo().getJianchaqingkuang());
+                    pushBean.setZhenggaiyijian(taskTheme.getZhenggaicuoshi());
                     saveList.add(pushBean);
                 }
             }
@@ -473,6 +499,7 @@ public class NewSecondActivity extends BaseActivity {
                 tmpObj.put("jcjgJcxmid", list.get(i).getJcjgJcxmid());
                 tmpObj.put("jcjgJczbid", list.get(i).getJcjgJczbid());
                 tmpObj.put("jianchaqingkuang", list.get(i).getJianchaqingkuang());
+                tmpObj.put("zhengaiyijian",list.get(i).getZhenggaiyijian());
                 tmpObj.put("userId", MainApplication.userId);
                 jsonArray.put(tmpObj);
             }
