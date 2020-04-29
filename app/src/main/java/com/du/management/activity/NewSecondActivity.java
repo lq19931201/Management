@@ -96,8 +96,6 @@ public class NewSecondActivity extends BaseActivity {
 
     private long jczbId;
 
-    private long renwuId;
-
     @Override
     protected int initLayoutId() {
         MIUISetStatusBarLightMode(this, true);
@@ -149,7 +147,6 @@ public class NewSecondActivity extends BaseActivity {
         isComplete = getIntent().getBooleanExtra("isComplete", false);
         mobanId = getIntent().getLongExtra("mobanId", 1);
         xiangmuId = getIntent().getLongExtra("xiangmuId", 1);
-        renwuId = getIntent().getLongExtra("taskId", 0);
         if (isComplete) {
             bottomLV.setVisibility(View.GONE);
         }
@@ -433,12 +430,14 @@ public class NewSecondActivity extends BaseActivity {
             Jcnrfj taskBody = list.get(i);
             for (int k = 0; k < taskBody.getJczblist().size(); k++) {
                 Jczb taskTheme = taskBody.getJczblist().get(k);
-                PushBean pushBean = new PushBean();
-                pushBean.setIsHege(0);
-                pushBean.setJcjgJcxmid(xiangmuId);
-                pushBean.setJcjgJczbid(taskTheme.getJczbId());
-                pushBean.setJianchaqingkuang(taskTheme.getJczcJianchajieguo() == null ? "" : taskTheme.getJczcJianchajieguo().getJianchaqingkuang());
-                saveList.add(pushBean);
+                if (taskTheme.isAdd()) {
+                    PushBean pushBean = new PushBean();
+                    pushBean.setIsHege(03);
+                    pushBean.setJcjgJcxmid(xiangmuId);
+                    pushBean.setJcjgJczbid(taskTheme.getJczbId());
+                    pushBean.setJianchaqingkuang(taskTheme.getJczcJianchajieguo() == null ? "" : taskTheme.getJczcJianchajieguo().getJianchaqingkuang());
+                    saveList.add(pushBean);
+                }
             }
         }
         JSONArray jsonObject = getJson(saveList);
