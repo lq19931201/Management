@@ -7,11 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.du.management.R;
 import com.du.management.bean.TaskThemeBasis;
+import com.du.management.newBean.Jianchayiju;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +20,9 @@ public class LawAdapter extends BaseAdapter {
 
     private Context context;
 
-    private List<TaskThemeBasis> list = new ArrayList<>();
+    private List<Jianchayiju> list = new ArrayList<>();
 
-    public LawAdapter(Context context, List<TaskThemeBasis> list) {
+    public LawAdapter(Context context, List<Jianchayiju> list) {
         this.context = context;
         this.list = list;
     }
@@ -54,19 +54,12 @@ public class LawAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        final TaskThemeBasis basis = list.get(position);
-        StringBuffer nameBuffer = new StringBuffer();
-        if (!TextUtils.isEmpty(basis.getRuleName())) {
-            nameBuffer.append("《").append(basis.getRuleName()).append("》");
+        final Jianchayiju basis = list.get(position);
+        if (!TextUtils.isEmpty(basis.getTitle())) {
+            viewHolder.titleTV.setText((position + 1) + "." + basis.getTitle());
         }
-        if (!TextUtils.isEmpty(basis.getName())) {
-            nameBuffer.append(" ").append(basis.getName());
-        }
-        if (!TextUtils.isEmpty(nameBuffer.toString())) {
-            viewHolder.titleTV.setText(nameBuffer.toString());
-        }
-        if (!TextUtils.isEmpty(basis.getText())) {
-            viewHolder.contentTV.setText(Html.fromHtml(basis.getText()));
+        if (!TextUtils.isEmpty(basis.getContent())) {
+            viewHolder.contentTV.setText(Html.fromHtml(basis.getContent()));
         }
         return convertView;
     }

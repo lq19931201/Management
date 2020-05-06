@@ -18,6 +18,7 @@ import com.du.management.R;
 import com.du.management.activity.NewSecondActivity;
 import com.du.management.newBean.Jczb;
 import com.du.management.newBean.jczcJianchajieguo;
+import com.du.management.view.LawDialog;
 import com.du.management.view.ReadDialog;
 import com.du.management.view.RemarkDialog;
 
@@ -67,6 +68,7 @@ public class NewThirdDetailAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(context).inflate(R.layout.adapter_thirddetail, null);
             viewHolder.nameTV = (TextView) convertView.findViewById(R.id.name);
             viewHolder.chooseBox = (CheckBox) convertView.findViewById(R.id.chooseCheckBox);
+            viewHolder.chooseBox.setClickable(false);
             viewHolder.niceSpinner = (NiceSpinner) convertView.findViewById(R.id.niceSpinner);
             viewHolder.jianIV = (ImageView) convertView.findViewById(R.id.jian);
             viewHolder.remarkIV = (ImageView) convertView.findViewById(R.id.remark);
@@ -108,6 +110,14 @@ public class NewThirdDetailAdapter extends BaseAdapter {
                 }
             });
         }
+
+        viewHolder.jianIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LawDialog lawDialog = new LawDialog(context, jczb.getJianchayiju());
+                lawDialog.show();
+            }
+        });
 
         viewHolder.allLV.setOnClickListener(new View.OnClickListener() {
             @Override

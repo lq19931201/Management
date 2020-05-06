@@ -18,9 +18,7 @@ public class Jczb {
     public String zhenggaicuoshi;
     public String shishifenleifirst;
     public String shishifenleisecond;
-    public String jianchayiju;
-    public String zhibiaofenlei;
-    public String zhibiaozilei;
+    public List<Jianchayiju> jianchayiju;
     public jczcJianchajieguo jczcJianchajieguo = new jczcJianchajieguo();
     public JczcZhibiaoMoban jczcZhibiaoMobanBean;
     public List<jczcZhibiaojieguos> jczcZhibiaojieguos;
@@ -137,30 +135,6 @@ public class Jczb {
         this.shishifenleisecond = shishifenleisecond;
     }
 
-    public String getJianchayiju() {
-        return jianchayiju;
-    }
-
-    public void setJianchayiju(String jianchayiju) {
-        this.jianchayiju = jianchayiju;
-    }
-
-    public String getZhibiaofenlei() {
-        return zhibiaofenlei;
-    }
-
-    public void setZhibiaofenlei(String zhibiaofenlei) {
-        this.zhibiaofenlei = zhibiaofenlei;
-    }
-
-    public String getZhibiaozilei() {
-        return zhibiaozilei;
-    }
-
-    public void setZhibiaozilei(String zhibiaozilei) {
-        this.zhibiaozilei = zhibiaozilei;
-    }
-
     public JczcZhibiaoMoban getJczcZhibiaoMobanBean() {
         return jczcZhibiaoMobanBean;
     }
@@ -191,5 +165,13 @@ public class Jczb {
 
     public int getJcqkPosition() {
         return jcqkPosition;
+    }
+
+    public void setJianchayiju(List<Jianchayiju> jianchayiju) {
+        this.jianchayiju = jianchayiju;
+    }
+
+    public List<Jianchayiju> getJianchayiju() {
+        return jianchayiju;
     }
 }
