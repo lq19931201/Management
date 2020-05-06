@@ -314,7 +314,11 @@ public class NewSecondActivity extends BaseActivity {
             saveBitmap(bitmap, new File(filePath));
             try {
                 File realFile = new File(filePath);
-                upload(HttpConstant.REQUSET_BASE_URL + "/jianchazhicheng/upLoadJianchaPic", realFile.getAbsolutePath(), realFile.getName());
+                if (titleTakePhoto) {
+                    upload(HttpConstant.REQUSET_BASE_URL + "/jianchazhicheng/upLoadDanweiPic", realFile.getAbsolutePath(), realFile.getName());
+                } else {
+                    upload(HttpConstant.REQUSET_BASE_URL + "/jianchazhicheng/upLoadJianchaPic", realFile.getAbsolutePath(), realFile.getName());
+                }
             } catch (Exception e) {
 
             }
@@ -342,13 +346,13 @@ public class NewSecondActivity extends BaseActivity {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.w("upload","onfail");
+                Log.w("upload", "onfail");
                 Toast.makeText(NewSecondActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onResponse(Call call, okhttp3.Response response) throws IOException {
-                Log.w("upload","onResponse");
+                Log.w("upload", "onResponse");
 //                try {
 //                    JSONObject jsonObject = new JSONObject(response.body().string());
 //                    if (jsonObject.getString("code").equals(HttpConstant.CODE_SUCCESS)) {
@@ -499,7 +503,7 @@ public class NewSecondActivity extends BaseActivity {
                 tmpObj.put("jcjgJcxmid", list.get(i).getJcjgJcxmid());
                 tmpObj.put("jcjgJczbid", list.get(i).getJcjgJczbid());
                 tmpObj.put("jianchaqingkuang", list.get(i).getJianchaqingkuang());
-                tmpObj.put("zhengaiyijian",list.get(i).getZhenggaiyijian());
+                tmpObj.put("zhengaiyijian", list.get(i).getZhenggaiyijian());
                 tmpObj.put("userId", MainApplication.userId);
                 jsonArray.put(tmpObj);
             }

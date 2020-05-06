@@ -37,7 +37,7 @@ public class NewThirdDetailAdapter extends BaseAdapter {
         this.context = context;
         this.list = list;
         for (Jczb jczb : list) {
-            if (jczb.getJczcJianchajieguo() != null && jczb.getJczbId() > 0) {
+            if (jczb.getJczcJianchajieguo() != null && jczb.getJczcJianchajieguo().getJcjgId() > 0) {
                 jczb.setAdd(true);
             } else {
                 jczb.setAdd(false);
