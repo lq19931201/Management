@@ -383,6 +383,7 @@ public class NewSecondActivity extends BaseActivity {
                     return;
                 }
                 if (nextTV.getText().equals("提交")) {
+                    saveRequest(jcnrList.get(jcnrList.size() - 1).getJcnrfjlist());
                     RequestQueue requestQueue = Volley.newRequestQueue(NewSecondActivity.this);
                     StringBuffer stringBuffer = new StringBuffer();
                     Map<String, String> params = new HashMap<>();
