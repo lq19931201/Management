@@ -12,6 +12,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -277,9 +278,8 @@ public class NewSecondActivity extends BaseActivity {
             be = 1;
         newOpts.inSampleSize = be;//设置采样率
 //        newOpts.inPreferredConfig = Config.ARGB_8888;//该模式是默认的,可不设
-        newOpts.inPurgeable = true;// 同时设置才会有效
-        newOpts.inInputShareable = true;//。当系统内存不够时候图片自动被回收
         bitmap = BitmapFactory.decodeFile(srcPath, newOpts);
+        Log.w("lqlqlq", String.valueOf(bitmap.getAllocationByteCount()));
         return bitmap;
     }
 
@@ -309,7 +309,7 @@ public class NewSecondActivity extends BaseActivity {
             Log.e("lqlq", "exists");
             Log.e("lqlq", "tempFile.length()" + tempFile.length());
             String filePath = tempFile.getAbsolutePath();
-            Bitmap bitmap = compressImageFromFile(filePath, 1024f);
+            Bitmap bitmap = compressImageFromFile(filePath, 512f);
             new File(filePath).delete();
             saveBitmap(bitmap, new File(filePath));
             try {
@@ -462,11 +462,16 @@ public class NewSecondActivity extends BaseActivity {
                 Jczb taskTheme = taskBody.getJczblist().get(k);
                 if (taskTheme.isAdd()) {
                     PushBean pushBean = new PushBean();
-                    pushBean.setIsHege(03);
+                    pushBean.setZbjgId(taskTheme.getZbjgId());
+                    pushBean.setIsHege(0);
                     pushBean.setJcjgJcxmid(xiangmuId);
                     pushBean.setJcjgJczbid(taskTheme.getJczbId());
                     pushBean.setJianchaqingkuang(taskTheme.getJczcJianchajieguo() == null ? "" : taskTheme.getJczcJianchajieguo().getJianchaqingkuang());
-                    pushBean.setZhenggaiyijian(taskTheme.getZhenggaicuoshi());
+                    if (taskTheme.getJczcJianchajieguo() != null && !TextUtils.isEmpty(taskTheme.getJczcJianchajieguo().getZhenggaijianyi())) {
+                        pushBean.setZhenggaiyijian(taskTheme.getJczcJianchajieguo().getZhenggaijianyi());
+                    } else {
+                        pushBean.setZhenggaiyijian(taskTheme.getZhenggaicuoshi());
+                    }
                     saveList.add(pushBean);
                 }
             }
@@ -504,13 +509,15 @@ public class NewSecondActivity extends BaseActivity {
                 tmpObj.put("jcjgJcxmid", list.get(i).getJcjgJcxmid());
                 tmpObj.put("jcjgJczbid", list.get(i).getJcjgJczbid());
                 tmpObj.put("jianchaqingkuang", list.get(i).getJianchaqingkuang());
-                tmpObj.put("zhengaiyijian", list.get(i).getZhenggaiyijian());
+                tmpObj.put("zhenggaijianyi", list.get(i).getZhenggaiyijian());
+                tmpObj.put("zbjgId", list.get(i).getZbjgId());
                 tmpObj.put("userId", MainApplication.userId);
                 jsonArray.put(tmpObj);
             }
         } catch (Exception e) {
 
         }
+        Log.w("lqlqlq", jsonArray.toString());
         return jsonArray;
     }
 }

@@ -60,7 +60,7 @@
                 android:layout_width="30dp"
                 android:layout_height="40dp"
                 android:layout_marginLeft="60dp"
-                android:scaleType="center"
+                android:scaleType="fitXY"
                 android:src="@mipmap/write"></ImageView>
         </LinearLayout>
 
@@ -76,7 +76,7 @@
                 android:layout_width="30dp"
                 android:layout_height="40dp"
                 android:layout_marginLeft="30dp"
-                android:scaleType="center"
+                android:scaleType="fitXY"
                 android:src="@mipmap/write_two"></ImageView>
         </LinearLayout>
 

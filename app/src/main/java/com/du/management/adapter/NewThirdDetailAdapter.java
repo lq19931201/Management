@@ -42,6 +42,9 @@ public class NewThirdDetailAdapter extends BaseAdapter {
             } else {
                 jczb.setAdd(false);
             }
+            if (jczb.getJczcZhibiaojieguos() != null && jczb.getJczcZhibiaojieguos().size() > 0) {
+                jczb.setZbjgId(jczb.getJczcZhibiaojieguos().get(0).getZbjgId());
+            }
         }
     }
 
@@ -107,6 +110,7 @@ public class NewThirdDetailAdapter extends BaseAdapter {
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     jczb.setJcqkPosition(i);
                     jczb.getJczcJianchajieguo().setJianchaqingkuang(list.get(i));
+                    jczb.setZbjgId(jczb.getJczcZhibiaojieguos().get(i).getZbjgId());
                 }
             });
         }
@@ -156,7 +160,9 @@ public class NewThirdDetailAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 final RemarkDialog rDialog = new RemarkDialog(context, "1");
-                if (!TextUtils.isEmpty(jczb.getZhenggaicuoshi())) {
+                if (jczb.getJczcJianchajieguo() != null && !TextUtils.isEmpty(jczb.getJczcJianchajieguo().getZhenggaijianyi())) {
+                    rDialog.getEditText().setText(jczb.getJczcJianchajieguo().getZhenggaijianyi());
+                } else if (!TextUtils.isEmpty(jczb.getZhenggaicuoshi())) {
                     rDialog.getEditText().setText(jczb.getZhenggaicuoshi());
                 }
                 rDialog.show();
@@ -164,7 +170,11 @@ public class NewThirdDetailAdapter extends BaseAdapter {
                     @Override
                     public void onClick(View v) {
                         rDialog.dismiss();
-                        jczb.setZhenggaicuoshi(rDialog.getEditText().getText().toString());
+                        if (jczb.getJczcJianchajieguo() != null) {
+                            jczb.getJczcJianchajieguo().setZhenggaijianyi(rDialog.getEditText().getText().toString());
+                        } else {
+                            jczb.setZhenggaicuoshi(rDialog.getEditText().getText().toString());
+                        }
                     }
                 });
             }

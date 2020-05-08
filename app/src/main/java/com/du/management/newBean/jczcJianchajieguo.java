@@ -8,6 +8,15 @@ public class jczcJianchajieguo {
     public String createdTime;
     public String updatetime;
     public String jianchaqingkuang;
+    public String zhenggaijianyi;
+
+    public void setZhenggaijianyi(String zhenggaijianyi) {
+        this.zhenggaijianyi = zhenggaijianyi;
+    }
+
+    public String getZhenggaijianyi() {
+        return zhenggaijianyi;
+    }
 
     public long getJcjgId() {
         return jcjgId;

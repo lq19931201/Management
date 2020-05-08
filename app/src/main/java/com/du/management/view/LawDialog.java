@@ -19,8 +19,10 @@ public class LawDialog extends Dialog {
         super(context, R.style.customDialog);
         setContentView(R.layout.dialog_law);
         listView = (MyListView) findViewById(R.id.listview);
-        LawAdapter adapter = new LawAdapter(context, list);
-        listView.setAdapter(adapter);
+        if (list != null) {
+            LawAdapter adapter = new LawAdapter(context, list);
+            listView.setAdapter(adapter);
+        }
         findViewById(R.id.cancle).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

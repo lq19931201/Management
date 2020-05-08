@@ -22,6 +22,15 @@ public class Jczb {
     public jczcJianchajieguo jczcJianchajieguo = new jczcJianchajieguo();
     public JczcZhibiaoMoban jczcZhibiaoMobanBean;
     public List<jczcZhibiaojieguos> jczcZhibiaojieguos;
+    public long zbjgId;
+
+    public void setZbjgId(long zbjgId) {
+        this.zbjgId = zbjgId;
+    }
+
+    public long getZbjgId() {
+        return zbjgId;
+    }
 
     public void setJczcZhibiaojieguos(List<com.du.management.newBean.jczcZhibiaojieguos> jczcZhibiaojieguos) {
         this.jczcZhibiaojieguos = jczcZhibiaojieguos;

@@ -13,6 +13,8 @@ public class PushBean implements Serializable {
 
     public long jcjgJczbid;
 
+    public long zbjgId;
+
     public String jianchaqingkuang;
 
     public String updatetime;
@@ -91,5 +93,13 @@ public class PushBean implements Serializable {
 
     public void setUserId(long userId) {
         this.userId = userId;
+    }
+
+    public void setZbjgId(long zbjgId) {
+        this.zbjgId = zbjgId;
+    }
+
+    public long getZbjgId() {
+        return zbjgId;
     }
 }
