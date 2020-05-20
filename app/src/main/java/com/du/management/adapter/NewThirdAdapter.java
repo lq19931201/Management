@@ -59,7 +59,7 @@ public class NewThirdAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         Jcnrfj jcnrfj = list.get(position);
-        viewHolder.titleTV.setText(jcnrfj.getJcnrfjName());
+        viewHolder.titleTV.setText((position + 1) + "、" + jcnrfj.getJcnrfjName());
         newThirdDetailAdapter = new NewThirdDetailAdapter(position, context, jcnrfj.getJczblist());
         viewHolder.myListView.setAdapter(newThirdDetailAdapter);
         newThirdDetailAdapter.notifyDataSetChanged();

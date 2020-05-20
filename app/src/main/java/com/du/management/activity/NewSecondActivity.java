@@ -185,7 +185,7 @@ public class NewSecondActivity extends BaseActivity {
                             }
                             jcnrList.addAll(thirdList.get(i).getJcnrlist());
                         }
-                        secondTV.setText(jcnrList.get(0).getJcxmName() + "/" + jcnrList.get(0).getJcnrName());
+                        secondTV.setText((thirdSecond + 1) + "、" + jcnrList.get(0).getJcxmName() + "/" + jcnrList.get(0).getJcnrName());
                         newThirdAdapter = new NewThirdAdapter(NewSecondActivity.this, jcnrList.get(0).getJcnrfjlist());
                         myListView.setAdapter(newThirdAdapter);
                         if (thirdList.get(0).getJcnrlist().size() == 1 && thirdList.size() == 1) {
@@ -422,7 +422,7 @@ public class NewSecondActivity extends BaseActivity {
                     newThirdAdapter.setList(jcnrList.get(thirdSecond).getJcnrfjlist());
                     newThirdAdapter.notifyDataSetChanged();
                 }
-                secondTV.setText(jcnrList.get(thirdSecond).getJcxmName() + "/" + jcnrList.get(thirdSecond).getJcnrName());
+                secondTV.setText((thirdSecond + 1) + "、" + jcnrList.get(thirdSecond).getJcxmName() + "/" + jcnrList.get(thirdSecond).getJcnrName());
             }
         });
         prevTV.setOnClickListener(new View.OnClickListener() {
@@ -441,7 +441,7 @@ public class NewSecondActivity extends BaseActivity {
                 }
                 newThirdAdapter.setList(jcnrList.get(thirdSecond).getJcnrfjlist());
                 newThirdAdapter.notifyDataSetChanged();
-                secondTV.setText(jcnrList.get(thirdSecond).getJcxmName() + "/" + jcnrList.get(thirdSecond).getJcnrName());
+                secondTV.setText((thirdSecond + 1) + "、" + jcnrList.get(thirdSecond).getJcxmName() + "/" + jcnrList.get(thirdSecond).getJcnrName());
             }
         });
         ImageView titleIV = (ImageView) findViewById(R.id.take_photo);

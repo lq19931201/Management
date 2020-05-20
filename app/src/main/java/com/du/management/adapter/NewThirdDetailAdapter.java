@@ -84,7 +84,7 @@ public class NewThirdDetailAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         final Jczb jczb = list.get(position);
-        viewHolder.nameTV.setText(jczb.getJczbName());
+        viewHolder.nameTV.setText((position + 1) + "、" + jczb.getJczbName());
         if (jczb.getJczcJianchajieguo() == null) {
             jczb.setJczcJianchajieguo(new jczcJianchajieguo());
         }
