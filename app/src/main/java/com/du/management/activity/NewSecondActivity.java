@@ -512,6 +512,9 @@ public class NewSecondActivity extends BaseActivity {
                     pushBean.setJcjgJcxmid(xiangmuId);
                     pushBean.setJcjgJczbid(taskTheme.getJczbId());
                     pushBean.setJianchaqingkuang(taskTheme.getJczcJianchajieguo() == null ? "" : taskTheme.getJczcJianchajieguo().getJianchaqingkuang());
+                    if (taskTheme.getOptions() != null) {
+                        pushBean.setOption(taskTheme.getOptions());
+                    }
                     if (taskTheme.getJczcJianchajieguo() != null && !TextUtils.isEmpty(taskTheme.getJczcJianchajieguo().getZhenggaijianyi())) {
                         pushBean.setZhenggaiyijian(taskTheme.getJczcJianchajieguo().getZhenggaijianyi());
                     } else {
@@ -557,6 +560,7 @@ public class NewSecondActivity extends BaseActivity {
                 tmpObj.put("zhenggaijianyi", list.get(i).getZhenggaiyijian());
                 tmpObj.put("zbjgId", list.get(i).getZbjgId());
                 tmpObj.put("userId", MainApplication.userId);
+                tmpObj.put("options", list.get(i).getOption());
                 jsonArray.put(tmpObj);
             }
         } catch (Exception e) {

@@ -1,9 +1,12 @@
 package com.du.management.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -17,6 +20,7 @@ import android.widget.TextView;
 import com.du.management.R;
 import com.du.management.activity.NewSecondActivity;
 import com.du.management.newBean.Jczb;
+import com.du.management.newBean.JczbNew;
 import com.du.management.newBean.jczcJianchajieguo;
 import com.du.management.view.JCfunctionDialog;
 import com.du.management.view.LawDialog;
@@ -111,23 +115,42 @@ public class NewThirdDetailAdapter extends BaseAdapter {
             viewHolder.operateLV.setVisibility(View.GONE);
         }
         List<String> list = new ArrayList<>();
-        for (com.du.management.newBean.jczcZhibiaojieguos jieguo : jczb.getJczcZhibiaojieguos()) {
-            list.add(jieguo.getJianchaqingkuang());
+        if (jczb.getZhibiaotype() == 0) {
+            for (com.du.management.newBean.jczcZhibiaojieguos jieguo : jczb.getJczcZhibiaojieguos()) {
+                list.add(jieguo.getJianchaqingkuang());
+            }
+        } else {
+            for (JczbNew jczbNew : jczb.getJczblist()) {
+                list.add(jczbNew.getJczbName());
+            }
         }
+
         if (list.size() == 0) {
             viewHolder.niceSpinner.setVisibility(View.INVISIBLE);
         } else {
             viewHolder.niceSpinner.setVisibility(View.VISIBLE);
             viewHolder.niceSpinner.attachDataSource(list);
-            viewHolder.niceSpinner.setSelectedIndex(jczb.getJcqkPosition());
-            viewHolder.niceSpinner.addOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    jczb.setJcqkPosition(i);
-                    jczb.getJczcJianchajieguo().setJianchaqingkuang(list.get(i));
-                    jczb.setZbjgId(jczb.getJczcZhibiaojieguos().get(i).getZbjgId());
-                }
-            });
+            if (jczb.getZhibiaotype() == 0) {
+                viewHolder.niceSpinner.setSelectedIndex(jczb.getJcqkPosition());
+                viewHolder.niceSpinner.addOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        jczb.setJcqkPosition(i);
+                        jczb.getJczcJianchajieguo().setJianchaqingkuang(list.get(i));
+                        jczb.setZbjgId(jczb.getJczcZhibiaojieguos().get(i).getZbjgId());
+                    }
+                });
+            } else {
+                viewHolder.niceSpinner.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                            showMutilAlertDialog(jczb, jczb.getJczblist());
+                        }
+                        return true;
+                    }
+                });
+            }
         }
 
         viewHolder.jianIV.setOnClickListener(new View.OnClickListener() {
@@ -211,6 +234,54 @@ public class NewThirdDetailAdapter extends BaseAdapter {
             }
         });
         return convertView;
+    }
+
+    AlertDialog alertDialog = null;
+
+    public void showMutilAlertDialog(Jczb jczb, List<JczbNew> list) {
+        final String[] items = new String[list.size()];
+        List<Long> options = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            items[i] = list.get(i).getJczbName();
+        }
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
+        alertBuilder.setTitle("这是多选框");
+        /**
+         *第一个参数:弹出框的消息集合，一般为字符串集合
+         * 第二个参数：默认被选中的，布尔类数组
+         * 第三个参数：勾选事件监听
+         */
+        alertBuilder.setMultiChoiceItems(items, null, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i, boolean isChecked) {
+                if (options.contains(list.get(i).getJczbId())) {
+                    options.remove(list.get(i).getJczbId());
+                } else {
+                    options.add(list.get(i).getJczbId());
+                }
+            }
+        });
+        alertBuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                alertDialog.dismiss();
+                long option[] = new long[options.size()];
+                for (int k = 0; i < options.size(); k++) {
+                    option[k] = options.get(k);
+                }
+                jczb.setOptions(option);
+            }
+        });
+
+        alertBuilder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                alertDialog.dismiss();
+            }
+        });
+
+        alertDialog = alertBuilder.create();
+        alertDialog.show();
     }
 
     private View.OnClickListener listener = new View.OnClickListener() {

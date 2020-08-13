@@ -23,9 +23,36 @@ public class Jczb {
     public jczcJianchajieguo jczcJianchajieguo = new jczcJianchajieguo();
     public JczcZhibiaoMoban jczcZhibiaoMobanBean;
     public List<jczcZhibiaojieguos> jczcZhibiaojieguos;
+    public List<JczbNew> jczblist;
+    public long options[];
     public long zbjgId;
     public boolean visible = true;
     public String inspectionmethod;
+    public int zhibiaotype;
+
+    public void setOptions(long[] options) {
+        this.options = options;
+    }
+
+    public long[] getOptions() {
+        return options;
+    }
+
+    public void setJczblist(List<JczbNew> jczblist) {
+        this.jczblist = jczblist;
+    }
+
+    public List<JczbNew> getJczblist() {
+        return jczblist;
+    }
+
+    public void setZhibiaotype(int zhibiaotype) {
+        this.zhibiaotype = zhibiaotype;
+    }
+
+    public int getZhibiaotype() {
+        return zhibiaotype;
+    }
 
     public void setInspectionmethod(String inspectionmethod) {
         this.inspectionmethod = inspectionmethod;

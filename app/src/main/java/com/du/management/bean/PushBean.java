@@ -23,6 +23,16 @@ public class PushBean implements Serializable {
 
     public String zhenggaiyijian;
 
+    public long option[];
+
+    public void setOption(long[] option) {
+        this.option = option;
+    }
+
+    public long[] getOption() {
+        return option;
+    }
+
     public void setZhenggaiyijian(String zhenggaiyijian) {
         this.zhenggaiyijian = zhenggaiyijian;
     }
