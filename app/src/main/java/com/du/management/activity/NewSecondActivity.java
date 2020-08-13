@@ -15,6 +15,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -39,6 +40,9 @@ import com.du.management.newBean.Jcnrfj;
 import com.du.management.newBean.Jcxm;
 import com.du.management.newBean.Jczb;
 import com.du.management.utils.Utils;
+import com.du.management.view.CameraPhotoDialog;
+import com.du.management.view.PhotoDialog;
+import com.du.management.view.SecondTitleDialog;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -105,6 +109,7 @@ public class NewSecondActivity extends BaseActivity {
     @Override
     protected int initLayoutId() {
         MIUISetStatusBarLightMode(this, true);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         return R.layout.activity_newsecond;
     }
 
@@ -171,7 +176,6 @@ public class NewSecondActivity extends BaseActivity {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     if (jsonObject.getString("code").equals(HttpConstant.CODE_SUCCESS)) {
-                        Log.w("lqlqlq", response);
                         Gson gson = new Gson();
                         JSONArray jsonArray = jsonObject.getJSONArray("data");
                         List<Jcxm> thirdList = new ArrayList<>();
@@ -179,13 +183,14 @@ public class NewSecondActivity extends BaseActivity {
                             thirdList.add(gson.fromJson(jsonArray.getJSONObject(i).toString(), Jcxm.class));
                         }
                         for (int i = 0; i < thirdList.size(); i++) {
+                            Log.w("lqlqlq", response);
                             for (int j = 0; j < thirdList.get(i).getJcnrlist().size(); j++) {
                                 thirdList.get(i).getJcnrlist().get(j).setXiangmuId(thirdList.get(i).getJcxmId());
-                                thirdList.get(i).getJcnrlist().get(j).setJcxmName(thirdList.get(i).getJcxmName());
+                                thirdList.get(i).getJcnrlist().get(j).setJcxmName((i + 1) + "、" + thirdList.get(i).getJcxmName() + "/" + (j + 1) + "、");
                             }
                             jcnrList.addAll(thirdList.get(i).getJcnrlist());
                         }
-                        secondTV.setText((thirdSecond + 1) + "、" + jcnrList.get(0).getJcxmName() + "/" + jcnrList.get(0).getJcnrName());
+                        secondTV.setText(jcnrList.get(0).getJcxmName() + jcnrList.get(0).getJcnrName());
                         newThirdAdapter = new NewThirdAdapter(NewSecondActivity.this, jcnrList.get(0).getJcnrfjlist());
                         myListView.setAdapter(newThirdAdapter);
                         if (thirdList.get(0).getJcnrlist().size() == 1 && thirdList.size() == 1) {
@@ -422,7 +427,7 @@ public class NewSecondActivity extends BaseActivity {
                     newThirdAdapter.setList(jcnrList.get(thirdSecond).getJcnrfjlist());
                     newThirdAdapter.notifyDataSetChanged();
                 }
-                secondTV.setText((thirdSecond + 1) + "、" + jcnrList.get(thirdSecond).getJcxmName() + "/" + jcnrList.get(thirdSecond).getJcnrName());
+                secondTV.setText(jcnrList.get(thirdSecond).getJcxmName() + jcnrList.get(thirdSecond).getJcnrName());
             }
         });
         prevTV.setOnClickListener(new View.OnClickListener() {
@@ -441,15 +446,55 @@ public class NewSecondActivity extends BaseActivity {
                 }
                 newThirdAdapter.setList(jcnrList.get(thirdSecond).getJcnrfjlist());
                 newThirdAdapter.notifyDataSetChanged();
-                secondTV.setText((thirdSecond + 1) + "、" + jcnrList.get(thirdSecond).getJcxmName() + "/" + jcnrList.get(thirdSecond).getJcnrName());
+                secondTV.setText(jcnrList.get(thirdSecond).getJcxmName() + jcnrList.get(thirdSecond).getJcnrName());
             }
         });
         ImageView titleIV = (ImageView) findViewById(R.id.take_photo);
         titleIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                titleTakePhoto = true;
-                openCamera();
+                final CameraPhotoDialog dialog = new CameraPhotoDialog(NewSecondActivity.this);
+                dialog.show();
+                dialog.setCallBack(new CameraPhotoDialog.CallBack() {
+                    @Override
+                    public void onMessage(int position) {
+                        dialog.dismiss();
+                        if (position == 0) {
+                            titleTakePhoto = true;
+                            openCamera();
+                        } else {
+                            PhotoDialog photoDialog = new PhotoDialog(NewSecondActivity.this);
+                            photoDialog.show();
+                        }
+                    }
+                });
+            }
+        });
+
+        secondTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                List<String> list = new ArrayList<>();
+                for (int i = 0; i < jcnrList.size(); i++) {
+                    list.add(jcnrList.get(i).getJcxmName() + jcnrList.get(i).getJcnrName());
+                }
+                final SecondTitleDialog dialog = new SecondTitleDialog(NewSecondActivity.this, list);
+                dialog.show();
+                dialog.setOnItemClickListener(new SecondTitleDialog.CallBack() {
+                    @Override
+                    public void onItemClick(int position) {
+                        thirdSecond = position;
+                        if (jcnrList.size() - 1 == thirdSecond) {
+                            nextTV.setText("提交");
+                        } else {
+                            nextTV.setText("下一項");
+                        }
+                        newThirdAdapter.setList(jcnrList.get(thirdSecond).getJcnrfjlist());
+                        newThirdAdapter.notifyDataSetChanged();
+                        secondTV.setText(jcnrList.get(thirdSecond).getJcxmName() + jcnrList.get(thirdSecond).getJcnrName());
+                        dialog.dismiss();
+                    }
+                });
             }
         });
     }

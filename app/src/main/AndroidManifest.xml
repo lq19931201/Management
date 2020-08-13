@@ -32,7 +32,7 @@
         <activity
             android:name=".activity.SecondActivity"
             android:screenOrientation="landscape"
-            android:windowSoftInputMode="stateHidden|adjustResize"></activity>
+            android:windowSoftInputMode="stateHidden|adjustNothing"></activity>
         <activity
             android:name=".activity.NewSecondActivity"
             android:screenOrientation="landscape"

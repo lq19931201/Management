@@ -4,7 +4,7 @@ public class Jianchayiju {
     private long jcyjId;
     private long jczbId;
     private String title;
-    private long itemId;
+    private String itemId;
     private String content;
 
     public long getJcyjId() {
@@ -31,11 +31,11 @@ public class Jianchayiju {
         this.title = title;
     }
 
-    public long getItemId() {
+    public String getItemId() {
         return itemId;
     }
 
-    public void setItemId(long itemId) {
+    public void setItemId(String itemId) {
         this.itemId = itemId;
     }
 

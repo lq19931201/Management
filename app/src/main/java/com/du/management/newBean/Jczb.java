@@ -7,6 +7,7 @@ public class Jczb {
     public boolean isAdd;
     public String nextXulieId;
     public long jczbId;
+    public long zilianjieid;
     public String jczbName;
     public String jczbdeleted;
     public String jczbparentId;
@@ -23,6 +24,24 @@ public class Jczb {
     public JczcZhibiaoMoban jczcZhibiaoMobanBean;
     public List<jczcZhibiaojieguos> jczcZhibiaojieguos;
     public long zbjgId;
+    public boolean visible = true;
+    public String inspectionmethod;
+
+    public void setInspectionmethod(String inspectionmethod) {
+        this.inspectionmethod = inspectionmethod;
+    }
+
+    public String getInspectionmethod() {
+        return inspectionmethod;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
 
     public void setZbjgId(long zbjgId) {
         this.zbjgId = zbjgId;
@@ -182,5 +201,13 @@ public class Jczb {
 
     public List<Jianchayiju> getJianchayiju() {
         return jianchayiju;
+    }
+
+    public void setZilianjieid(long zilianjieid) {
+        this.zilianjieid = zilianjieid;
+    }
+
+    public long getZilianjieid() {
+        return zilianjieid;
     }
 }

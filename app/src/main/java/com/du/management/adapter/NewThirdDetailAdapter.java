@@ -18,6 +18,7 @@ import com.du.management.R;
 import com.du.management.activity.NewSecondActivity;
 import com.du.management.newBean.Jczb;
 import com.du.management.newBean.jczcJianchajieguo;
+import com.du.management.view.JCfunctionDialog;
 import com.du.management.view.LawDialog;
 import com.du.management.view.ReadDialog;
 import com.du.management.view.RemarkDialog;
@@ -71,7 +72,6 @@ public class NewThirdDetailAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(context).inflate(R.layout.adapter_thirddetail, null);
             viewHolder.nameTV = (TextView) convertView.findViewById(R.id.name);
             viewHolder.chooseBox = (CheckBox) convertView.findViewById(R.id.chooseCheckBox);
-            viewHolder.chooseBox.setClickable(false);
             viewHolder.niceSpinner = (NiceSpinner) convertView.findViewById(R.id.niceSpinner);
             viewHolder.jianIV = (ImageView) convertView.findViewById(R.id.jian);
             viewHolder.remarkIV = (ImageView) convertView.findViewById(R.id.remark);
@@ -80,10 +80,25 @@ public class NewThirdDetailAdapter extends BaseAdapter {
             viewHolder.operateLV = (LinearLayout) convertView.findViewById(R.id.operate);
             viewHolder.allLV = (LinearLayout) convertView.findViewById(R.id.all);
             viewHolder.zhengIV = (ImageView) convertView.findViewById(R.id.zheng);
+            viewHolder.keyboardIV = (ImageView) convertView.findViewById(R.id.keyboard);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         final Jczb jczb = list.get(position);
+        if (jczb.isAdd()) {
+            for (Jczb jczb1 : list) {
+                if (jczb1.getZilianjieid() == jczb.getJczbId()) {
+                    jczb1.setVisible(false);
+                } else {
+                    jczb1.setVisible(true);
+                }
+            }
+        }
+        if (jczb.isVisible()) {
+            viewHolder.allLV.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.allLV.setVisibility(View.GONE);
+        }
         viewHolder.nameTV.setText((position + 1) + "、" + jczb.getJczbName());
         if (jczb.getJczcJianchajieguo() == null) {
             jczb.setJczcJianchajieguo(new jczcJianchajieguo());
@@ -123,13 +138,22 @@ public class NewThirdDetailAdapter extends BaseAdapter {
             }
         });
 
-        viewHolder.allLV.setOnClickListener(new View.OnClickListener() {
+        viewHolder.nameTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 jczb.setAdd(!jczb.isAdd());
                 notifyDataSetChanged();
             }
         });
+
+        viewHolder.chooseBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                jczb.setAdd(!jczb.isAdd());
+                notifyDataSetChanged();
+            }
+        });
+
         viewHolder.takePhotoIV.setTag(position);
         viewHolder.takePhotoIV.setOnClickListener(listener);
         viewHolder.remarkIV.setOnClickListener(new View.OnClickListener() {
@@ -179,6 +203,13 @@ public class NewThirdDetailAdapter extends BaseAdapter {
                 });
             }
         });
+        viewHolder.keyboardIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                JCfunctionDialog dialog = new JCfunctionDialog(context, jczb.getInspectionmethod());
+                dialog.show();
+            }
+        });
         return convertView;
     }
 
@@ -214,6 +245,7 @@ public class NewThirdDetailAdapter extends BaseAdapter {
         public ImageView zhengIV;
         public LinearLayout operateLV;
         public LinearLayout allLV;
+        public ImageView keyboardIV;
     }
 
 }
