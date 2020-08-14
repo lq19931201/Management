@@ -7,7 +7,7 @@ public class Jczb {
     public boolean isAdd;
     public String nextXulieId;
     public long jczbId;
-    public long zilianjieid;
+    public long zilianjieId;
     public String jczbName;
     public String jczbdeleted;
     public String jczbparentId;
@@ -230,11 +230,11 @@ public class Jczb {
         return jianchayiju;
     }
 
-    public void setZilianjieid(long zilianjieid) {
-        this.zilianjieid = zilianjieid;
+    public void setZilianjieId(long zilianjieId) {
+        this.zilianjieId = zilianjieId;
     }
 
-    public long getZilianjieid() {
-        return zilianjieid;
+    public long getZilianjieId() {
+        return zilianjieId;
     }
 }

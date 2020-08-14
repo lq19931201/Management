@@ -41,16 +41,6 @@ public class NewThirdDetailAdapter extends BaseAdapter {
         this.jcnrfjPosition = jcnrfjPosition;
         this.context = context;
         this.list = list;
-        for (Jczb jczb : list) {
-            if (jczb.getJczcJianchajieguo() != null && jczb.getJczcJianchajieguo().getJcjgId() > 0) {
-                jczb.setAdd(true);
-            } else {
-                jczb.setAdd(false);
-            }
-            if (jczb.getJczcZhibiaojieguos() != null && jczb.getJczcZhibiaojieguos().size() > 0) {
-                jczb.setZbjgId(jczb.getJczcZhibiaojieguos().get(0).getZbjgId());
-            }
-        }
     }
 
     @Override
@@ -89,15 +79,6 @@ public class NewThirdDetailAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         final Jczb jczb = list.get(position);
-        if (jczb.isAdd()) {
-            for (Jczb jczb1 : list) {
-                if (jczb1.getZilianjieid() == jczb.getJczbId()) {
-                    jczb1.setVisible(false);
-                } else {
-                    jczb1.setVisible(true);
-                }
-            }
-        }
         if (jczb.isVisible()) {
             viewHolder.allLV.setVisibility(View.VISIBLE);
         } else {
@@ -240,10 +221,13 @@ public class NewThirdDetailAdapter extends BaseAdapter {
 
     public void showMutilAlertDialog(Jczb jczb, List<JczbNew> list) {
         final String[] items = new String[list.size()];
+        boolean checkItems[] = new boolean[list.size()];
         List<Long> options = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             items[i] = list.get(i).getJczbName();
+            checkItems[i] = list.get(i).isChecked();
         }
+
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
         alertBuilder.setTitle("这是多选框");
         /**
@@ -251,7 +235,7 @@ public class NewThirdDetailAdapter extends BaseAdapter {
          * 第二个参数：默认被选中的，布尔类数组
          * 第三个参数：勾选事件监听
          */
-        alertBuilder.setMultiChoiceItems(items, null, new DialogInterface.OnMultiChoiceClickListener() {
+        alertBuilder.setMultiChoiceItems(items, checkItems, new DialogInterface.OnMultiChoiceClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i, boolean isChecked) {
                 if (options.contains(list.get(i).getJczbId())) {
@@ -259,6 +243,7 @@ public class NewThirdDetailAdapter extends BaseAdapter {
                 } else {
                     options.add(list.get(i).getJczbId());
                 }
+                list.get(i).setChecked(isChecked);
             }
         });
         alertBuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -266,7 +251,7 @@ public class NewThirdDetailAdapter extends BaseAdapter {
             public void onClick(DialogInterface dialogInterface, int i) {
                 alertDialog.dismiss();
                 long option[] = new long[options.size()];
-                for (int k = 0; i < options.size(); k++) {
+                for (int k = 0; k < options.size(); k++) {
                     option[k] = options.get(k);
                 }
                 jczb.setOptions(option);
@@ -318,5 +303,4 @@ public class NewThirdDetailAdapter extends BaseAdapter {
         public LinearLayout allLV;
         public ImageView keyboardIV;
     }
-
 }

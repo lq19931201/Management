@@ -1,8 +1,19 @@
 package com.du.management.newBean;
 
+import android.support.annotation.Nullable;
+
 public class JczbNew {
     public long jczbId;
     public String jczbName;
+    public boolean checked;
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
 
     public void setJczbId(long jczbId) {
         this.jczbId = jczbId;
@@ -18,5 +29,10 @@ public class JczbNew {
 
     public String getJczbName() {
         return jczbName;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return ((JczbNew) obj).getJczbId() == getJczbId();
     }
 }
