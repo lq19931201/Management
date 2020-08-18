@@ -560,11 +560,22 @@ public class NewSecondActivity extends BaseActivity {
                 tmpObj.put("zhenggaijianyi", list.get(i).getZhenggaiyijian());
                 tmpObj.put("zbjgId", list.get(i).getZbjgId());
                 tmpObj.put("userId", MainApplication.userId);
-                tmpObj.put("options", list.get(i).getOption());
+
+                if (list.get(i).getOption() != null && list.get(i).getOption().length > 0) {
+                    StringBuilder stringBuilder = new StringBuilder();
+                    stringBuilder.append("[");
+                    for (int k = 0; k < list.get(i).getOption().length; k++) {
+                        stringBuilder.append(list.get(i).getOption()[k]).append(",");
+                    }
+                    String s = stringBuilder.toString().substring(0, stringBuilder.toString().length() - 1);
+                    s = s + "]";
+                    tmpObj.put("options", s);
+                }
+
                 jsonArray.put(tmpObj);
             }
         } catch (Exception e) {
-
+            Log.w("lqlqlq", e.getMessage());
         }
         Log.w("lqlqlq", jsonArray.toString());
         return jsonArray;
