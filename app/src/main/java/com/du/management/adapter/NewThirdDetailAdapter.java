@@ -30,17 +30,43 @@ import com.du.management.view.RemarkDialog;
 import org.angmarch.views.NiceSpinner;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class NewThirdDetailAdapter extends BaseAdapter {
     private Context context;
     private List<Jczb> list;
     private int jcnrfjPosition;
+    private boolean loop;
 
     public NewThirdDetailAdapter(int jcnrfjPosition, Context context, List<Jczb> list) {
         this.jcnrfjPosition = jcnrfjPosition;
         this.context = context;
         this.list = list;
+        for (Jczb jczb : list) {
+            if (jczb.getJczcJianchajieguo() != null && jczb.getJczcJianchajieguo().getJcjgId() > 0) {
+                jczb.setAdd(true);
+            } else {
+                jczb.setAdd(false);
+            }
+            if (jczb.getJczcZhibiaojieguos() != null && jczb.getJczcZhibiaojieguos().size() > 0) {
+                jczb.setZbjgId(jczb.getJczcZhibiaojieguos().get(0).getZbjgId());
+            }
+            if (!TextUtils.isEmpty(jczb.getJczcJianchajieguo().getOptions())) {
+                Log.w("NewThirdDetailAdapter", jczb.getJczcJianchajieguo().getOptions());
+                String[] strings = jczb.getJczcJianchajieguo().getOptions().split(",");
+                for (JczbNew jczbNew : jczb.getJczblist()) {
+                    for (int i = 0; i < strings.length; i++) {
+                        if (jczbNew.getJczbId() == Long.valueOf(strings[i])) {
+                            jczbNew.setChecked(true);
+                        } else {
+                            jczbNew.setChecked(false);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -79,10 +105,14 @@ public class NewThirdDetailAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         final Jczb jczb = list.get(position);
-        if (jczb.isVisible()) {
-            viewHolder.allLV.setVisibility(View.VISIBLE);
+        if (loop) {
+            if (jczb.isVisible()) {
+                viewHolder.allLV.setVisibility(View.VISIBLE);
+            } else {
+                viewHolder.allLV.setVisibility(View.GONE);
+            }
         } else {
-            viewHolder.allLV.setVisibility(View.GONE);
+            viewHolder.allLV.setVisibility(View.VISIBLE);
         }
         viewHolder.nameTV.setText((position + 1) + "、" + jczb.getJczbName());
         if (jczb.getJczcJianchajieguo() == null) {
@@ -146,6 +176,7 @@ public class NewThirdDetailAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 jczb.setAdd(!jczb.isAdd());
+                loop();
                 notifyDataSetChanged();
             }
         });
@@ -154,6 +185,7 @@ public class NewThirdDetailAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 jczb.setAdd(!jczb.isAdd());
+                loop();
                 notifyDataSetChanged();
             }
         });
@@ -250,11 +282,11 @@ public class NewThirdDetailAdapter extends BaseAdapter {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 alertDialog.dismiss();
-                long option[] = new long[options.size()];
+                StringBuilder stringBuilder = new StringBuilder();
                 for (int k = 0; k < options.size(); k++) {
-                    option[k] = options.get(k);
+                    stringBuilder.append(options.get(k)).append(",");
                 }
-                jczb.setOptions(option);
+                jczb.getJczcJianchajieguo().setOptions(stringBuilder.toString());
             }
         });
 
@@ -302,5 +334,30 @@ public class NewThirdDetailAdapter extends BaseAdapter {
         public LinearLayout operateLV;
         public LinearLayout allLV;
         public ImageView keyboardIV;
+    }
+
+    private void loop() {
+        loop = true;
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).isAdd()) {
+                for (int k = 0; k < list.size(); k++) {
+                    if (list.get(i).getJczbId() == list.get(k).getZilianjieId()) {
+                        list.get(k).setVisible(false);
+                    } else {
+                        list.get(k).setVisible(true);
+                    }
+                }
+            }
+        }
+        Collections.sort(list, new Comparator<Jczb>() {
+            @Override
+            public int compare(Jczb jczb, Jczb t1) {
+                if (jczb.isVisible() ^ t1.isVisible()) {
+                    return jczb.isVisible() ? -1 : 1;
+                } else {
+                    return 0;
+                }
+            }
+        });
     }
 }

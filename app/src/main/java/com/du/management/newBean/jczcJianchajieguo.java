@@ -9,6 +9,15 @@ public class jczcJianchajieguo {
     public String updatetime;
     public String jianchaqingkuang;
     public String zhenggaijianyi;
+    public String options;
+
+    public void setOptions(String options) {
+        this.options = options;
+    }
+
+    public String getOptions() {
+        return options;
+    }
 
     public void setZhenggaijianyi(String zhenggaijianyi) {
         this.zhenggaijianyi = zhenggaijianyi;

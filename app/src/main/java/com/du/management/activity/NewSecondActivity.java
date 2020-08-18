@@ -512,8 +512,8 @@ public class NewSecondActivity extends BaseActivity {
                     pushBean.setJcjgJcxmid(xiangmuId);
                     pushBean.setJcjgJczbid(taskTheme.getJczbId());
                     pushBean.setJianchaqingkuang(taskTheme.getJczcJianchajieguo() == null ? "" : taskTheme.getJczcJianchajieguo().getJianchaqingkuang());
-                    if (taskTheme.getOptions() != null) {
-                        pushBean.setOption(taskTheme.getOptions());
+                    if (!TextUtils.isEmpty(taskTheme.getJczcJianchajieguo().getOptions())) {
+                        pushBean.setOption(taskTheme.getJczcJianchajieguo().getOptions());
                     }
                     if (taskTheme.getJczcJianchajieguo() != null && !TextUtils.isEmpty(taskTheme.getJczcJianchajieguo().getZhenggaijianyi())) {
                         pushBean.setZhenggaiyijian(taskTheme.getJczcJianchajieguo().getZhenggaijianyi());
@@ -561,15 +561,8 @@ public class NewSecondActivity extends BaseActivity {
                 tmpObj.put("zbjgId", list.get(i).getZbjgId());
                 tmpObj.put("userId", MainApplication.userId);
 
-                if (list.get(i).getOption() != null && list.get(i).getOption().length > 0) {
-                    StringBuilder stringBuilder = new StringBuilder();
-                    stringBuilder.append("[");
-                    for (int k = 0; k < list.get(i).getOption().length; k++) {
-                        stringBuilder.append(list.get(i).getOption()[k]).append(",");
-                    }
-                    String s = stringBuilder.toString().substring(0, stringBuilder.toString().length() - 1);
-                    s = s + "]";
-                    tmpObj.put("options", s);
+                if (list.get(i).getOption() != null && !TextUtils.isEmpty(list.get(i).getOption())) {
+                    tmpObj.put("options", list.get(i).getOption());
                 }
 
                 jsonArray.put(tmpObj);

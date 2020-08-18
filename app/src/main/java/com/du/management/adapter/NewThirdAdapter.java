@@ -14,6 +14,8 @@ import com.du.management.newBean.Jczb;
 import com.du.management.view.MyListView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class NewThirdAdapter extends BaseAdapter {
@@ -62,7 +64,6 @@ public class NewThirdAdapter extends BaseAdapter {
         }
         Jcnrfj jcnrfj = list.get(position);
         viewHolder.titleTV.setText((position + 1) + "、" + jcnrfj.getJcnrfjName());
-        loop(jcnrfj.getJczblist());
         newThirdDetailAdapter = new NewThirdDetailAdapter(position, context, jcnrfj.getJczblist());
         viewHolder.myListView.setAdapter(newThirdDetailAdapter);
         newThirdDetailAdapter.notifyDataSetChanged();
@@ -75,30 +76,6 @@ public class NewThirdAdapter extends BaseAdapter {
             }
         });
         return convertView;
-    }
-
-    private void loop(List<Jczb> jczbList) {
-        for (Jczb jczb : jczbList) {
-            if (jczb.getJczcJianchajieguo() != null && jczb.getJczcJianchajieguo().getJcjgId() > 0) {
-                jczb.setAdd(true);
-            } else {
-                jczb.setAdd(false);
-            }
-            if (jczb.getJczcZhibiaojieguos() != null && jczb.getJczcZhibiaojieguos().size() > 0) {
-                jczb.setZbjgId(jczb.getJczcZhibiaojieguos().get(0).getZbjgId());
-            }
-        }
-        List<Jczb> integerList = new ArrayList<>();
-        for (int i = 0; i < jczbList.size(); i++) {
-            if (jczbList.get(i).isAdd()) {
-                for (int k = 0; k < jczbList.size(); k++) {
-                    if (jczbList.get(i).getJczbId() == jczbList.get(k).getZilianjieId()) {
-                        integerList.add(jczbList.get(k));
-                    }
-                }
-            }
-        }
-        jczbList.removeAll(integerList);
     }
 
     private CameraOnClick cameraOnClick;

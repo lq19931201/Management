@@ -23,13 +23,13 @@ public class PushBean implements Serializable {
 
     public String zhenggaiyijian;
 
-    public long option[];
+    public String option;
 
-    public void setOption(long[] option) {
+    public void setOption(String option) {
         this.option = option;
     }
 
-    public long[] getOption() {
+    public String getOption() {
         return option;
     }
 
