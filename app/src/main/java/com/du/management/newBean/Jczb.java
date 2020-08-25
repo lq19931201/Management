@@ -28,6 +28,15 @@ public class Jczb {
     public boolean visible = true;
     public String inspectionmethod;
     public int zhibiaotype;
+    public int position;
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public int getPosition() {
+        return position;
+    }
 
     public void setJczblist(List<JczbNew> jczblist) {
         this.jczblist = jczblist;
