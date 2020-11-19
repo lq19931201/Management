@@ -83,7 +83,9 @@ public class NewThirdAdapter extends BaseAdapter {
                 @Override
                 public void onClick() {
                     notify = false;
-                    newThirdDetailAdapter.notifyDataSetInvalidated();
+//                    newThirdDetailAdapter.notifyDataSetInvalidated();
+//                    notifyDataSetChanged();
+                    notifyDataSetInvalidated();
                 }
             });
         } else {

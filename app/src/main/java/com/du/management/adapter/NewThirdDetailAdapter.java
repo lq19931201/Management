@@ -105,6 +105,7 @@ public class NewThirdDetailAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
+        Log.w("NewThirdDetailAdapter", "getView");
         final Jczb jczb = list.get(position);
         if (loop) {
             if (jczb.isVisible()) {
