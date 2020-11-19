@@ -115,13 +115,13 @@
 
     <HorizontalScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_above="@id/bottom"
         android:layout_below="@id/top">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <LinearLayout
@@ -189,11 +189,11 @@
                 </RelativeLayout>
             </LinearLayout>
 
-            <ListView
+            <com.du.management.view.MyListView
                 android:id="@+id/third_detail_listview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:divider="@null"></ListView>
+                android:divider="@null"></com.du.management.view.MyListView>
         </LinearLayout>
     </HorizontalScrollView>
 </RelativeLayout>

@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.du.management.R;
@@ -59,40 +61,57 @@ public class NewThirdAdapter extends BaseAdapter {
             viewHolder = new ViewHolder();
             convertView = LayoutInflater.from(context).inflate(R.layout.adapter_third, null);
             viewHolder.titleTV = (TextView) convertView.findViewById(R.id.title);
-            viewHolder.myListView = (MyListView) convertView.findViewById(R.id.myList);
+            viewHolder.myListView = (ListView) convertView.findViewById(R.id.myList);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        if (notify) {
-            Jcnrfj jcnrfj = list.get(position);
-            viewHolder.titleTV.setText((position + 1) + "、" + jcnrfj.getJcnrfjName());
-            Log.w("NewThirdAdapter", "getView");
-            newThirdDetailAdapter = new NewThirdDetailAdapter(position, context, jcnrfj.getJczblist());
-            viewHolder.myListView.setAdapter(newThirdDetailAdapter);
-            newThirdDetailAdapter.notifyDataSetChanged();
-            newThirdDetailAdapter.setOnViewClickListener(new NewThirdDetailAdapter.OnViewClickListener() {
-                @Override
-                public void onViewClick(View view, int jcnrfjPosition, int position) {
-                    if (cameraOnClick != null) {
-                        cameraOnClick.onClick(jcnrfjPosition, position);
-                    }
-                }
-            });
-            newThirdDetailAdapter.setOnCheckBoxClick(new NewThirdDetailAdapter.onCheckBoxClick() {
-                @Override
-                public void onClick() {
-                    notify = false;
-//                    newThirdDetailAdapter.notifyDataSetInvalidated();
-//                    notifyDataSetChanged();
-                    notifyDataSetInvalidated();
-                }
-            });
-        } else {
-            notify = true;
+        if (parent instanceof MyListView) {
+            if (((MyListView) parent).isOnMeasure) {
+                return convertView;
+            }
         }
+        Jcnrfj jcnrfj = list.get(position);
+        viewHolder.titleTV.setText((position + 1) + "、" + jcnrfj.getJcnrfjName());
+        Log.w("NewThirdAdapter", "getView");
+        newThirdDetailAdapter = new NewThirdDetailAdapter(position, context, jcnrfj.getJczblist());
+        viewHolder.myListView.setAdapter(newThirdDetailAdapter);
+        newThirdDetailAdapter.notifyDataSetChanged();
+        setListViewHeightBasedOnChildren(viewHolder.myListView);
+        newThirdDetailAdapter.setOnViewClickListener(new NewThirdDetailAdapter.OnViewClickListener() {
+            @Override
+            public void onViewClick(View view, int jcnrfjPosition, int position) {
+                if (cameraOnClick != null) {
+                    cameraOnClick.onClick(jcnrfjPosition, position);
+                }
+            }
+        });
 
         return convertView;
+    }
+
+    public void setListViewHeightBasedOnChildren(ListView listView) {
+        // 获取ListView对应的Adapter
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            return;
+        }
+
+        int totalHeight = 0;
+        for (int i = 0, len = listAdapter.getCount(); i < len; i++) {
+            // listAdapter.getCount()返回数据项的数目
+            View listItem = listAdapter.getView(i, null, listView);
+            // 计算子项View 的宽高
+            listItem.measure(0, 0);
+            // 统计所有子项的总高度
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight+ (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        // listView.getDividerHeight()获取子项间分隔符占用的高度
+        // params.height最后得到整个ListView完整显示需要的高度
+        listView.setLayoutParams(params);
     }
 
     private CameraOnClick cameraOnClick;
@@ -111,6 +130,6 @@ public class NewThirdAdapter extends BaseAdapter {
 
     private class ViewHolder {
         private TextView titleTV;
-        private MyListView myListView;
+        private ListView myListView;
     }
 }

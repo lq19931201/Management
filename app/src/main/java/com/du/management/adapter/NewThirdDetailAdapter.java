@@ -24,6 +24,7 @@ import com.du.management.newBean.JczbNew;
 import com.du.management.newBean.jczcJianchajieguo;
 import com.du.management.view.JCfunctionDialog;
 import com.du.management.view.LawDialog;
+import com.du.management.view.MyListView;
 import com.du.management.view.ReadDialog;
 import com.du.management.view.RemarkDialog;
 
@@ -106,6 +107,7 @@ public class NewThirdDetailAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         Log.w("NewThirdDetailAdapter", "getView");
+        //关键代码
         final Jczb jczb = list.get(position);
         if (loop) {
             if (jczb.isVisible()) {
@@ -179,10 +181,7 @@ public class NewThirdDetailAdapter extends BaseAdapter {
             public void onClick(View view) {
                 jczb.setAdd(!jczb.isAdd());
                 loop();
-                if (onCheckBoxClick != null) {
-                    onCheckBoxClick.onClick();
-                }
-//                notifyDataSetChanged();
+                notifyDataSetChanged();
             }
         });
 
@@ -191,7 +190,7 @@ public class NewThirdDetailAdapter extends BaseAdapter {
             public void onClick(View view) {
                 jczb.setAdd(!jczb.isAdd());
                 loop();
-//                notifyDataSetChanged();
+                notifyDataSetChanged();
             }
         });
 
