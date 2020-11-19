@@ -178,7 +178,10 @@ public class NewThirdDetailAdapter extends BaseAdapter {
             public void onClick(View view) {
                 jczb.setAdd(!jczb.isAdd());
                 loop();
-                notifyDataSetChanged();
+                if (onCheckBoxClick != null) {
+                    onCheckBoxClick.onClick();
+                }
+//                notifyDataSetChanged();
             }
         });
 
@@ -187,7 +190,7 @@ public class NewThirdDetailAdapter extends BaseAdapter {
             public void onClick(View view) {
                 jczb.setAdd(!jczb.isAdd());
                 loop();
-                notifyDataSetChanged();
+//                notifyDataSetChanged();
             }
         });
 
@@ -367,5 +370,15 @@ public class NewThirdDetailAdapter extends BaseAdapter {
                 }
             }
         });
+    }
+
+    public void setOnCheckBoxClick(NewThirdDetailAdapter.onCheckBoxClick onCheckBoxClick) {
+        this.onCheckBoxClick = onCheckBoxClick;
+    }
+
+    public onCheckBoxClick onCheckBoxClick;
+
+    public interface onCheckBoxClick {
+        void onClick();
     }
 }

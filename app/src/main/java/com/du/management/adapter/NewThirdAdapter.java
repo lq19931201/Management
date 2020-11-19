@@ -24,6 +24,8 @@ public class NewThirdAdapter extends BaseAdapter {
 
     private Context context;
 
+    private boolean notify = true;
+
     public NewThirdAdapter(Context context, List<Jcnrfj> jcnrfjList) {
         this.list = jcnrfjList;
         this.context = context;
@@ -62,19 +64,32 @@ public class NewThirdAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        Jcnrfj jcnrfj = list.get(position);
-        viewHolder.titleTV.setText((position + 1) + "、" + jcnrfj.getJcnrfjName());
-        newThirdDetailAdapter = new NewThirdDetailAdapter(position, context, jcnrfj.getJczblist());
-        viewHolder.myListView.setAdapter(newThirdDetailAdapter);
-        newThirdDetailAdapter.notifyDataSetChanged();
-        newThirdDetailAdapter.setOnViewClickListener(new NewThirdDetailAdapter.OnViewClickListener() {
-            @Override
-            public void onViewClick(View view, int jcnrfjPosition, int position) {
-                if (cameraOnClick != null) {
-                    cameraOnClick.onClick(jcnrfjPosition, position);
+        if (notify) {
+            Jcnrfj jcnrfj = list.get(position);
+            viewHolder.titleTV.setText((position + 1) + "、" + jcnrfj.getJcnrfjName());
+            Log.w("NewThirdAdapter", "getView");
+            newThirdDetailAdapter = new NewThirdDetailAdapter(position, context, jcnrfj.getJczblist());
+            viewHolder.myListView.setAdapter(newThirdDetailAdapter);
+            newThirdDetailAdapter.notifyDataSetChanged();
+            newThirdDetailAdapter.setOnViewClickListener(new NewThirdDetailAdapter.OnViewClickListener() {
+                @Override
+                public void onViewClick(View view, int jcnrfjPosition, int position) {
+                    if (cameraOnClick != null) {
+                        cameraOnClick.onClick(jcnrfjPosition, position);
+                    }
                 }
-            }
-        });
+            });
+            newThirdDetailAdapter.setOnCheckBoxClick(new NewThirdDetailAdapter.onCheckBoxClick() {
+                @Override
+                public void onClick() {
+                    notify = false;
+                    newThirdDetailAdapter.notifyDataSetInvalidated();
+                }
+            });
+        } else {
+            notify = true;
+        }
+
         return convertView;
     }
 
