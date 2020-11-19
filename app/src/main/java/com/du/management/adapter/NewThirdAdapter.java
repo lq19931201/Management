@@ -61,7 +61,7 @@ public class NewThirdAdapter extends BaseAdapter {
             viewHolder = new ViewHolder();
             convertView = LayoutInflater.from(context).inflate(R.layout.adapter_third, null);
             viewHolder.titleTV = (TextView) convertView.findViewById(R.id.title);
-            viewHolder.myListView = (ListView) convertView.findViewById(R.id.myList);
+            viewHolder.myListView = (MyListView) convertView.findViewById(R.id.myList);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -76,7 +76,6 @@ public class NewThirdAdapter extends BaseAdapter {
         Log.w("NewThirdAdapter", "getView");
         newThirdDetailAdapter = new NewThirdDetailAdapter(position, context, jcnrfj.getJczblist());
         viewHolder.myListView.setAdapter(newThirdDetailAdapter);
-        newThirdDetailAdapter.notifyDataSetChanged();
         setListViewHeightBasedOnChildren(viewHolder.myListView);
         newThirdDetailAdapter.setOnViewClickListener(new NewThirdDetailAdapter.OnViewClickListener() {
             @Override
@@ -108,7 +107,9 @@ public class NewThirdAdapter extends BaseAdapter {
         }
 
         ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight+ (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        int height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        Log.w("NewThirdAdapter", "height = " + height);
+        params.height = height;
         // listView.getDividerHeight()获取子项间分隔符占用的高度
         // params.height最后得到整个ListView完整显示需要的高度
         listView.setLayoutParams(params);
@@ -130,6 +131,6 @@ public class NewThirdAdapter extends BaseAdapter {
 
     private class ViewHolder {
         private TextView titleTV;
-        private ListView myListView;
+        private MyListView myListView;
     }
 }
