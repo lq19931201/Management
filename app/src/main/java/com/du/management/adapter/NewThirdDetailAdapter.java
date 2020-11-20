@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -24,7 +23,6 @@ import com.du.management.newBean.JczbNew;
 import com.du.management.newBean.jczcJianchajieguo;
 import com.du.management.view.JCfunctionDialog;
 import com.du.management.view.LawDialog;
-import com.du.management.view.MyListView;
 import com.du.management.view.ReadDialog;
 import com.du.management.view.RemarkDialog;
 
@@ -199,15 +197,14 @@ public class NewThirdDetailAdapter extends BaseAdapter {
         viewHolder.remarkIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final RemarkDialog rDialog = new RemarkDialog(context, "1");
+                final RemarkDialog rDialog = new RemarkDialog(context, jczb.getJczbId());
                 if (!TextUtils.isEmpty(jczb.getJczcJianchajieguo().getJianchaqingkuang())) {
                     rDialog.getEditText().setText(jczb.getJczcJianchajieguo().getJianchaqingkuang());
                 }
                 rDialog.show();
-                rDialog.setOnSaveClick(new View.OnClickListener() {
+                rDialog.setOnSaveListener(new RemarkDialog.onSaveListener() {
                     @Override
-                    public void onClick(View v) {
-                        rDialog.dismiss();
+                    public void onClick() {
                         jczb.getJczcJianchajieguo().setJianchaqingkuang(rDialog.getEditText().getText().toString());
                     }
                 });
@@ -223,17 +220,16 @@ public class NewThirdDetailAdapter extends BaseAdapter {
         viewHolder.zhengIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final RemarkDialog rDialog = new RemarkDialog(context, "1");
+                final RemarkDialog rDialog = new RemarkDialog(context, 1);
                 if (jczb.getJczcJianchajieguo() != null && !TextUtils.isEmpty(jczb.getJczcJianchajieguo().getZhenggaijianyi())) {
                     rDialog.getEditText().setText(jczb.getJczcJianchajieguo().getZhenggaijianyi());
                 } else if (!TextUtils.isEmpty(jczb.getZhenggaicuoshi())) {
                     rDialog.getEditText().setText(jczb.getZhenggaicuoshi());
                 }
                 rDialog.show();
-                rDialog.setOnSaveClick(new View.OnClickListener() {
+                rDialog.setOnSaveListener(new RemarkDialog.onSaveListener() {
                     @Override
-                    public void onClick(View v) {
-                        rDialog.dismiss();
+                    public void onClick() {
                         if (jczb.getJczcJianchajieguo() != null) {
                             jczb.getJczcJianchajieguo().setZhenggaijianyi(rDialog.getEditText().getText().toString());
                         } else {

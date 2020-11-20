@@ -5,8 +5,8 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="440dp"
-        android:layout_height="224dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_gravity="center"
         android:background="#ffffff"
@@ -39,8 +39,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="40dp"
                 android:layout_marginTop="22dp"
+                android:layout_marginRight="40dp"
                 android:src="@mipmap/icon_baocun"></ImageView>
 
         </RelativeLayout>
@@ -52,14 +52,21 @@
 
         <EditText
             android:id="@+id/edit"
-            android:layout_width="413dp"
-            android:layout_height="120dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="11dp"
             android:background="@drawable/remark_edit"
             android:gravity="top"
             android:hint="请输入"
+            android:imeOptions="flagNoExtractUi"
             android:padding="10dp"></EditText>
 
     </LinearLayout>
+
+    <com.du.management.view.MyListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </com.du.management.view.MyListView>
 </LinearLayout>
