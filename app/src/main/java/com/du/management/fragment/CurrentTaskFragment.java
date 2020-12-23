@@ -41,7 +41,7 @@ public class CurrentTaskFragment extends BaseFragment {
     protected View initView(ViewGroup container) {
         EventBus.getDefault().register(this);
         View view = View.inflate(getActivity(), R.layout.fragment_current, null);
-        listView = (ListView) view.findViewById(R.id.list);
+        listView =  view.findViewById(R.id.list);
         return view;
     }
 
@@ -64,6 +64,7 @@ public class CurrentTaskFragment extends BaseFragment {
             @Override
             public void onResponse(String response) {
                 try {
+                    Log.w("CurrentTaskFragment",response);
                     JSONObject jsonObject = new JSONObject(response);
                     String code = jsonObject.getString("code");
                     if (code.equals(HttpConstant.CODE_SUCCESS)) {

@@ -38,8 +38,7 @@ import java.util.Map;
 
 public class CompleteTaskAdapter extends BaseAdapter {
     private Context context;
-    private List<Task> list = new ArrayList<>();
-    private int status;
+    private List<Task> list;
 
     public CompleteTaskAdapter(Context context, List<Task> list) {
         this.context = context;
@@ -67,11 +66,6 @@ public class CompleteTaskAdapter extends BaseAdapter {
         if (convertView == null || convertView.getTag() == null) {
             viewHolder = new ViewHolder();
             convertView = LayoutInflater.from(context).inflate(R.layout.adapter_current_task, null);
-            viewHolder.taskNameTV = (TextView) convertView.findViewById(R.id.task_name);
-            viewHolder.commitTV = (TextView) convertView.findViewById(R.id.commit);
-            viewHolder.gridView = (MyGridView) convertView.findViewById(R.id.gridview);
-            viewHolder.endTimeTV = (TextView) convertView.findViewById(R.id.end_time);
-            viewHolder.companyTV = (TextView) convertView.findViewById(R.id.company_name);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -79,9 +73,6 @@ public class CompleteTaskAdapter extends BaseAdapter {
         final Task task = list.get(position);
         if (!TextUtils.isEmpty(task.getTaskName()))
             viewHolder.taskNameTV.setText(task.getTaskName());
-        if (!TextUtils.isEmpty(task.getName()))
-            viewHolder.companyTV.setText(task.getName());
-        viewHolder.endTimeTV.setText(Utils.changeTime(task.getEndTime()) + "截止");
         GridAdapter adapter = new GridAdapter(task.getContentList());
         viewHolder.gridView.setAdapter(adapter);
         viewHolder.gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -95,20 +86,13 @@ public class CompleteTaskAdapter extends BaseAdapter {
                 context.startActivity(intent);
             }
         });
-        viewHolder.commitTV.setText("已提交");
         return convertView;
     }
 
     public class ViewHolder {
         public TextView taskNameTV;
 
-        public TextView commitTV;
-
-        public TextView endTimeTV;
-
         public MyGridView gridView;
-
-        public TextView companyTV;
 
     }
 

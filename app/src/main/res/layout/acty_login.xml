@@ -11,8 +11,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="交通运输企业安全生产云服务平台"
-        android:textSize="24sp"></TextView>
+        android:text="安全辅助检查平台"
+        android:textSize="24sp"
+        android:textColor="@color/black"></TextView>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -66,12 +67,13 @@
 
     <TextView
         android:id="@+id/login_button"
-        android:layout_width="220dp"
+        android:layout_width="60dp"
         android:layout_height="29dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="47dp"
         android:background="@drawable/login_button"
         android:gravity="center"
         android:text="登录"
-        android:textSize="14sp"></TextView>
+        android:textSize="14sp"
+        android:textColor="@color/white"></TextView>
 </LinearLayout>

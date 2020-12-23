@@ -20,8 +20,6 @@ public class MainActivity extends BaseActivity {
 
     private RadioButton currentRadioButton;
 
-    private RadioButton completeRadioButton;
-
     private RadioButton mineRadioButton;
 
 
@@ -36,14 +34,12 @@ public class MainActivity extends BaseActivity {
         radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         currentRadioButton = (RadioButton) findViewById(R.id.button_one);
-        completeRadioButton = (RadioButton) findViewById(R.id.button_two);
         mineRadioButton = (RadioButton) findViewById(R.id.button_three);
     }
 
     @Override
     protected void initData() {
         final CurrentTaskFragment currentTaskFragment = new CurrentTaskFragment();
-        final CompleteTaskFragment completeTaskFragment = new CompleteTaskFragment();
         final MineFragment mineFragment = new MineFragment();
 
         viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
@@ -53,8 +49,6 @@ public class MainActivity extends BaseActivity {
                     case 0:
                         return currentTaskFragment;
                     case 1:
-                        return completeTaskFragment;
-                    case 2:
                         return mineFragment;
                 }
                 return null;
@@ -62,7 +56,7 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public int getCount() {
-                return 3;
+                return 2;
             }
         });
         viewPager.addOnPageChangeListener(new MyPageChangeListener());
@@ -79,11 +73,8 @@ public class MainActivity extends BaseActivity {
                 case R.id.button_one:
                     viewPager.setCurrentItem(0);
                     break;
-                case R.id.button_two:
-                    viewPager.setCurrentItem(1);
-                    break;
                 case R.id.button_three:
-                    viewPager.setCurrentItem(2);
+                    viewPager.setCurrentItem(1);
                     break;
             }
         }
@@ -108,9 +99,6 @@ public class MainActivity extends BaseActivity {
                     currentRadioButton.setChecked(true);
                     break;
                 case 1:
-                    completeRadioButton.setChecked(true);
-                    break;
-                case 2:
                     mineRadioButton.setChecked(true);
                     break;
             }

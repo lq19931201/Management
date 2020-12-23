@@ -13,7 +13,7 @@
         android:layout_height="44dp"
         android:background="#1165B1"
         android:gravity="center"
-        android:text="交通运输企业安全生产云服务平台"
+        android:text="安全辅助检查APP"
         android:textColor="#ffffff"
         android:textSize="17sp"></TextView>
 
@@ -36,20 +36,6 @@
             android:drawableTop="@drawable/selector_current_icon"
             android:gravity="center"
             android:text="当前任务"
-            android:textColor="@drawable/selector_current_text"
-            android:textSize="10sp"></RadioButton>
-
-        <RadioButton
-            android:id="@+id/button_two"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:button="@null"
-            android:drawablePadding="3dp"
-            android:drawableTop="@drawable/selector_complete_icon"
-            android:gravity="center"
-            android:text="完成任务"
             android:textColor="@drawable/selector_current_text"
             android:textSize="10sp"></RadioButton>
 

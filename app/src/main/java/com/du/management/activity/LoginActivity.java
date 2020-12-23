@@ -106,13 +106,9 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        TextView titleTV = (TextView) findViewById(R.id.title);
-        LinearGradient linearGradient = new LinearGradient(0, 0, 0, titleTV.getPaint().getTextSize(), new int[]{getResources().getColor(R.color.title_one),
-                getResources().getColor(R.color.title_two), getResources().getColor(R.color.title_three)}, null, Shader.TileMode.CLAMP);
-        titleTV.getPaint().setShader(linearGradient);
-        userNameET = (EditText) findViewById(R.id.userName);
-        passWordET = (EditText) findViewById(R.id.passWord);
-        loginTV = (TextView) findViewById(R.id.login_button);
+        userNameET = findViewById(R.id.userName);
+        passWordET =  findViewById(R.id.passWord);
+        loginTV = findViewById(R.id.login_button);
         try {
             String userName = SpUtils.getSpValue(this, "username");
             if (!TextUtils.isEmpty(userName)) {
