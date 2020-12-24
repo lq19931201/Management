@@ -86,6 +86,7 @@ public class NewThirdDetailAdapter extends BaseAdapter {
         viewHolder.nameTV.setText((position + 1) + "、" + jczb.getJczbName());
         if (jczb.getJczcJianchajieguo() == null) {
             jczb.setJczcJianchajieguo(new jczcJianchajieguo());
+            jczb.getJczcJianchajieguo().setIsHege(1);
         }
         /*jczb.getJczcJianchajieguo().getIsHege()
          * 0时是异常状态,
