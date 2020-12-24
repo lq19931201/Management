@@ -4,7 +4,6 @@ import java.util.List;
 
 public class Jczb {
     public int jcqkPosition;
-    public boolean isAdd;
     public String nextXulieId;
     public long jczbId;
     public long zilianjieId;
@@ -196,14 +195,6 @@ public class Jczb {
 
     public void setJczcZhibiaoMobanBean(JczcZhibiaoMoban jczcZhibiaoMobanBean) {
         this.jczcZhibiaoMobanBean = jczcZhibiaoMobanBean;
-    }
-
-    public boolean isAdd() {
-        return isAdd;
-    }
-
-    public void setAdd(boolean add) {
-        isAdd = add;
     }
 
     public void setJczcJianchajieguo(com.du.management.newBean.jczcJianchajieguo jczcJianchajieguo) {

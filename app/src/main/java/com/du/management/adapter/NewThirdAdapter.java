@@ -26,8 +26,6 @@ public class NewThirdAdapter extends BaseAdapter {
 
     private Context context;
 
-    private boolean notify = true;
-
     public NewThirdAdapter(Context context, List<Jcnrfj> jcnrfjList) {
         this.list = jcnrfjList;
         this.context = context;
@@ -60,8 +58,8 @@ public class NewThirdAdapter extends BaseAdapter {
         if (convertView == null || convertView.getTag() == null) {
             viewHolder = new ViewHolder();
             convertView = LayoutInflater.from(context).inflate(R.layout.adapter_third, null);
-            viewHolder.titleTV = (TextView) convertView.findViewById(R.id.title);
-            viewHolder.myListView = (MyListView) convertView.findViewById(R.id.myList);
+            viewHolder.titleTV = convertView.findViewById(R.id.title);
+            viewHolder.myListView = convertView.findViewById(R.id.myList);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -77,12 +75,9 @@ public class NewThirdAdapter extends BaseAdapter {
         newThirdDetailAdapter = new NewThirdDetailAdapter(position, context, jcnrfj.getJczblist());
         viewHolder.myListView.setAdapter(newThirdDetailAdapter);
         setListViewHeightBasedOnChildren(viewHolder.myListView);
-        newThirdDetailAdapter.setOnViewClickListener(new NewThirdDetailAdapter.OnViewClickListener() {
-            @Override
-            public void onViewClick(View view, int jcnrfjPosition, int position) {
-                if (cameraOnClick != null) {
-                    cameraOnClick.onClick(jcnrfjPosition, position);
-                }
+        newThirdDetailAdapter.setOnViewClickListener((view, jcnrfjPosition, position1) -> {
+            if (cameraOnClick != null) {
+                cameraOnClick.onClick(jcnrfjPosition, position1);
             }
         });
 

@@ -7,76 +7,38 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:paddingRight="10dp">
 
-        <LinearLayout
+        <ImageView
             android:id="@+id/back"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center_vertical">
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@mipmap/icon_fanhui"></ImageView>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/icon_fanhui"></ImageView>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/firstTV"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_gravity="center"
+            android:textColor="#000000"
+            android:textSize="12sp" />
 
-            <TextView
-                android:id="@+id/firstTV"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:padding="20dp"
-                android:textColor="#000000"
-                android:textSize="14sp" />
+        <TextView
+            android:id="@+id/secondTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:textColor="#000000"
+            android:textSize="12sp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/secondTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:gravity="center"
-                    android:padding="20dp"
-                    android:textColor="#000000"
-                    android:textSize="14sp" />
-
-                <ImageView
-                    android:id="@+id/take_photo"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="60dp"
-                    android:scaleType="center"
-                    android:src="@mipmap/icon_take_photo"></ImageView>
-            </LinearLayout>
-        </LinearLayout>
-
-
-    </LinearLayout>
-
-    <View
-        android:id="@+id/top_line"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@id/top"
-        android:background="#cccccc"></View>
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/bottom"
@@ -90,26 +52,26 @@
 
         <TextView
             android:id="@+id/prev"
-            android:layout_width="108dp"
-            android:layout_height="38dp"
+            android:layout_width="80dp"
+            android:layout_height="30dp"
             android:layout_gravity="center"
             android:background="@drawable/second_save"
             android:gravity="center"
             android:text="上一项"
             android:textColor="#ffffff"
-            android:textSize="17sp"></TextView>
+            android:textSize="12sp"></TextView>
 
         <TextView
             android:id="@+id/next"
-            android:layout_width="108dp"
-            android:layout_height="38dp"
+            android:layout_width="80dp"
+            android:layout_height="30dp"
             android:layout_gravity="center"
             android:layout_marginLeft="65dp"
             android:background="@drawable/second_save"
             android:gravity="center"
             android:text="下一项"
             android:textColor="#ffffff"
-            android:textSize="17sp"></TextView>
+            android:textSize="12sp"></TextView>
     </LinearLayout>
 
 
@@ -117,7 +79,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/bottom"
-        android:layout_below="@id/top">
+        android:layout_below="@id/top"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -141,27 +104,13 @@
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:text="检查情况"
-                        android:textColor="@color/green"
-                        android:textSize="14sp"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
                         android:textStyle="bold"></TextView>
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:layout_width="90dp"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:text="整改建议"
-                        android:textColor="@color/green"
-                        android:textSize="14sp"
-                        android:textStyle="bold"></TextView>
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="90dp"
+                    android:layout_width="300dp"
                     android:layout_height="wrap_content">
 
                     <TextView
@@ -169,22 +118,8 @@
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:text="详情"
-                        android:textColor="@color/green"
-                        android:textSize="14sp"
-                        android:textStyle="bold"></TextView>
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="155dp"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:text="方法依据"
-                        android:textColor="@color/green"
-                        android:textSize="14sp"
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
                         android:textStyle="bold"></TextView>
                 </RelativeLayout>
             </LinearLayout>
