@@ -101,7 +101,6 @@ public class NewSecondActivity extends BaseActivity {
 
     @Override
     protected int initLayoutId() {
-        Log.w("LQLQ", "onCreate");
         MIUISetStatusBarLightMode(this, true);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         return R.layout.activity_newsecond;
@@ -461,7 +460,7 @@ public class NewSecondActivity extends BaseActivity {
                 Jczb taskTheme = taskBody.getJczblist().get(k);
                 PushBean pushBean = new PushBean();
                 pushBean.setZbjgId(taskTheme.getZbjgId());
-                pushBean.setIsHege(0);
+                pushBean.setIsHege(taskTheme.getJczcJianchajieguo().getIsHege());
                 pushBean.setJcjgJcxmid(xiangmuId);
                 pushBean.setJcjgJczbid(taskTheme.getJczbId());
                 pushBean.setJianchaqingkuang(taskTheme.getJczcJianchajieguo() == null ? "" : taskTheme.getJczcJianchajieguo().getJianchaqingkuang());

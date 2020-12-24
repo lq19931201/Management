@@ -10,6 +10,15 @@ public class jczcJianchajieguo {
     public String jianchaqingkuang;
     public String zhenggaijianyi;
     public String options;
+    public int isHege;
+
+    public void setIsHege(int isHege) {
+        this.isHege = isHege;
+    }
+
+    public int getIsHege() {
+        return isHege;
+    }
 
     public void setOptions(String options) {
         this.options = options;

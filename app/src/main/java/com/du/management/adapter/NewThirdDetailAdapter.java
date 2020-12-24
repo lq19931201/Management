@@ -87,6 +87,20 @@ public class NewThirdDetailAdapter extends BaseAdapter {
         if (jczb.getJczcJianchajieguo() == null) {
             jczb.setJczcJianchajieguo(new jczcJianchajieguo());
         }
+        /*jczb.getJczcJianchajieguo().getIsHege()
+         * 0时是异常状态,
+         * 2是优秀,
+         * 1是正常状态*/
+        if (jczb.getJczcJianchajieguo().getIsHege() == 0) {
+            viewHolder.nameTV.setTextColor(context.getResources().getColor(R.color.ishege_red));
+            viewHolder.operateLV.setVisibility(View.VISIBLE);
+        } else if (jczb.getJczcJianchajieguo().getIsHege() == 2) {
+            viewHolder.nameTV.setTextColor(context.getResources().getColor(R.color.ishege_blue));
+            viewHolder.operateLV.setVisibility(View.VISIBLE);
+        } else if (jczb.getJczcJianchajieguo().getIsHege() == 1) {
+            viewHolder.nameTV.setTextColor(context.getResources().getColor(R.color.black));
+            viewHolder.operateLV.setVisibility(View.GONE);
+        }
         List<String> list = new ArrayList<>();
         if (jczb.getZhibiaotype() == 0) {
             for (com.du.management.newBean.jczcZhibiaojieguos jieguo : jczb.getJczcZhibiaojieguos()) {
@@ -112,8 +126,18 @@ public class NewThirdDetailAdapter extends BaseAdapter {
             readDialog.show();
         });
         viewHolder.detailTV.setOnClickListener(v -> {
-            DetailDialog detailDialog = new DetailDialog(context,jczb.getEligibilityCriteria(),jczb.getJczcJianchajieguo().getZhenggaijianyi(),jczb.getInspectionmethod(),jczb.getJianchayiju(),jczb.getChufayijus());
+            DetailDialog detailDialog = new DetailDialog(context, jczb.getEligibilityCriteria(), jczb.getJczcJianchajieguo().getZhenggaijianyi(), jczb.getInspectionmethod(), jczb.getJianchayiju(), jczb.getChufayijus());
             detailDialog.show();
+        });
+        viewHolder.nameTV.setOnClickListener(v -> {
+            if (jczb.getJczcJianchajieguo().getIsHege() == 0) {
+                jczb.getJczcJianchajieguo().setIsHege(2);
+            } else if (jczb.getJczcJianchajieguo().getIsHege() == 2) {
+                jczb.getJczcJianchajieguo().setIsHege(1);
+            } else if (jczb.getJczcJianchajieguo().getIsHege() == 1) {
+                jczb.getJczcJianchajieguo().setIsHege(0);
+            }
+            notifyDataSetChanged();
         });
 //        viewHolder.zhengIV.setOnClickListener(new View.OnClickListener() {
 //            @Override
