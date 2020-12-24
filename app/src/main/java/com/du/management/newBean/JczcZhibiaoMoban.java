@@ -1,7 +1,5 @@
 package com.du.management.newBean;
 
-import java.util.List;
-
 public class JczcZhibiaoMoban {
     public String lianId;
     public String jcmbId;

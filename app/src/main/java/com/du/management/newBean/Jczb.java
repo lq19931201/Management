@@ -28,6 +28,24 @@ public class Jczb {
     public String inspectionmethod;
     public int zhibiaotype;
     public int position;
+    public String eligibilityCriteria;
+    public List<Chufayijus> chufayijus;
+
+    public void setChufayijus(List<Chufayijus> chufayijus) {
+        this.chufayijus = chufayijus;
+    }
+
+    public List<Chufayijus> getChufayijus() {
+        return chufayijus;
+    }
+
+    public void setEligibilityCriteria(String eligibilityCriteria) {
+        this.eligibilityCriteria = eligibilityCriteria;
+    }
+
+    public String getEligibilityCriteria() {
+        return eligibilityCriteria;
+    }
 
     public void setPosition(int position) {
         this.position = position;

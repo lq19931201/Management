@@ -6,14 +6,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.du.management.R;
 import com.du.management.adapter.PhotoAdapter;
@@ -39,12 +36,7 @@ public class ReadDialog extends Dialog {
     public ReadDialog(Context context, long jczbId, long xiangmuId, String jianchaqingkuang) {
         super(context, R.style.customDialog);
         setContentView(R.layout.dialog_read);
-        findViewById(R.id.cancle).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
+        findViewById(R.id.cancle).setOnClickListener(v -> dismiss());
         this.context = context;
         this.jianchaqingkuang = jianchaqingkuang;
         initView();
@@ -52,8 +44,8 @@ public class ReadDialog extends Dialog {
     }
 
     private void initView() {
-        contentTV = (TextView) findViewById(R.id.content);
-        recyclerView = (RecyclerView) findViewById(R.id.recycleView);
+        contentTV = findViewById(R.id.content);
+        recyclerView = findViewById(R.id.recycleView);
         recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
         if (!TextUtils.isEmpty(jianchaqingkuang)) {
             contentTV.setText(jianchaqingkuang);
@@ -65,124 +57,32 @@ public class ReadDialog extends Dialog {
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append(HttpConstant.REQUSET_BASE_URL).append("jianchazhicheng/getJianchaPic/").append(jczbId).append("/" + xiangmuId);
 
-        HeaderStringRequest request = new HeaderStringRequest(Request.Method.GET, stringBuffer.toString(), new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    if (jsonObject.getString("code").equals(HttpConstant.CODE_SUCCESS)) {
-                        JSONArray jsonArray = jsonObject.getJSONArray("data");
-                        final List<String> list = new ArrayList<>();
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            String path = HttpConstant.REQUSET_BASE_URL + jsonArray.getJSONObject(i).getString("savepath");
-                            list.add(path.replaceAll("\\\\", "/"));
-                        }
-                        final PhotoAdapter adapter = new PhotoAdapter(context, list);
-                        recyclerView.setAdapter(adapter);
-                        adapter.setOnItemClickListener(new PhotoAdapter.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(View view, int postion) {
-                                BigPhotoDialog dialog = new BigPhotoDialog(context, list.get(postion));
-                                dialog.show();
-                            }
-                        });
+        Log.w("ReadDialog", stringBuffer.toString());
+        HeaderStringRequest request = new HeaderStringRequest(Request.Method.GET, stringBuffer.toString(), response -> {
+            try {
+                Log.w("ReadDialog", response);
+                JSONObject jsonObject = new JSONObject(response);
+                if (jsonObject.getString("code").equals(HttpConstant.CODE_SUCCESS)) {
+                    JSONArray jsonArray = jsonObject.getJSONArray("data");
+                    final List<String> list = new ArrayList<>();
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        String path = HttpConstant.REQUSET_BASE_URL + jsonArray.getJSONObject(i).getString("savepath");
+                        list.add(path.replaceAll("\\\\", "/"));
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    final PhotoAdapter adapter = new PhotoAdapter(context, list);
+                    recyclerView.setAdapter(adapter);
+                    adapter.setOnItemClickListener((view, postion) -> {
+                        BigPhotoDialog dialog = new BigPhotoDialog(context, list.get(postion));
+                        dialog.show();
+                    });
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, "网络请求失败", Toast.LENGTH_SHORT).show();
-            }
+        }, error -> {
+            Log.w("ReadDialog", error.getMessage());
+            Toast.makeText(context, "网络请求失败", Toast.LENGTH_SHORT).show();
         });
-//        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, stringBuffer.toString(), new JSONObject(params), new Response.Listener<JSONObject>() {
-//            @Override
-//            public void onResponse(JSONObject response) {
-//                try {
-//                    if (response.getInt("code") == 200) {
-//                        try {
-//                            final List<String> list = new ArrayList<>();
-//                            final JSONArray jsonArray = response.getJSONArray("data");
-//                            for (int i = 0; i < jsonArray.length(); i++) {
-//                                StringBuffer icon = new StringBuffer();
-//                                icon.append(jsonArray.getJSONObject(i).getString("url"));
-//                                list.add(icon.toString());
-//                            }
-//                            final PhotoAdapter adapter = new PhotoAdapter(context, list);
-//                            recyclerView.setAdapter(adapter);
-//                            adapter.setOnItemLongClickListener(new PhotoAdapter.OnItemLongClickListener() {
-//                                @Override
-//                                public void onItemLongClick(View view, final int postion) {
-//                                    final DeleteDialog deleteDialog = new DeleteDialog(context);
-//                                    deleteDialog.show();
-//                                    deleteDialog.setOnConfirmClick(new View.OnClickListener() {
-//                                        @Override
-//                                        public void onClick(View v) {
-//                                            try {
-//                                                deleteDialog.dismiss();
-//                                                String url = new StringBuffer().append(HttpConstant.REQUSET_BASE_URL).append("rule/netbook/deleteTaskThemeImg/").append(jsonArray.getJSONObject(postion).getString("themeFileId")).toString();
-//                                                RequestQueue requestQueue = Volley.newRequestQueue(context);
-//                                                HeaderStringRequest request = new HeaderStringRequest(Request.Method.DELETE, url, new Response.Listener<String>() {
-//                                                    @Override
-//                                                    public void onResponse(String response) {
-//                                                        try {
-//                                                            JSONObject jsonObject = new JSONObject(response);
-//                                                            int code = jsonObject.getInt("code");
-//                                                            if (code == 200) {
-//                                                                list.remove(postion);
-//                                                                adapter.notifyDataSetChanged();
-//                                                            }
-//                                                        } catch (Exception e) {
-//                                                            e.printStackTrace();
-//                                                        }
-//                                                    }
-//                                                }, new Response.ErrorListener() {
-//                                                    @Override
-//                                                    public void onErrorResponse(VolleyError error) {
-//                                                        Toast.makeText(context, "网络请求失败", Toast.LENGTH_SHORT).show();
-//                                                    }
-//                                                });
-//                                                requestQueue.add(request);
-//                                            } catch (Exception e) {
-//                                                e.printStackTrace();
-//                                            }
-//                                        }
-//                                    });
-//                                }
-//                            });
-//                            adapter.setOnItemClickListener(new PhotoAdapter.OnItemClickListener() {
-//                                @Override
-//                                public void onItemClick(View view, int postion) {
-//                                    BigPhotoDialog dialog = new BigPhotoDialog(context, list.get(postion));
-//                                    dialog.show();
-//                                }
-//                            });
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//
-//                    }
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Toast.makeText(context, "网络请求失败", Toast.LENGTH_SHORT).show();
-//            }
-//        }) {
-//            @Override
-//            public Map<String, String> getHeaders() throws AuthFailureError {
-//                HashMap<String, String> headers = new HashMap<String, String>();
-//                headers.put("token", MainApplication.TOKEN);
-//                return headers;
-//            }
-//        };
         requestQueue.add(request);
     }
 

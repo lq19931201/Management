@@ -15,19 +15,17 @@ import com.du.management.activity.NewSecondActivity;
 import com.du.management.newBean.Jczb;
 import com.du.management.newBean.JczbNew;
 import com.du.management.newBean.jczcJianchajieguo;
+import com.du.management.view.DetailDialog;
 import com.du.management.view.ReadDialog;
 import com.du.management.view.RemarkDialog;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class NewThirdDetailAdapter extends BaseAdapter {
     private Context context;
     private List<Jczb> list;
     private int jcnrfjPosition;
-    private boolean loop;
 
     public NewThirdDetailAdapter(int jcnrfjPosition, Context context, List<Jczb> list) {
         this.jcnrfjPosition = jcnrfjPosition;
@@ -79,20 +77,12 @@ public class NewThirdDetailAdapter extends BaseAdapter {
             viewHolder.readTV = convertView.findViewById(R.id.read);
             viewHolder.operateLV = convertView.findViewById(R.id.operate);
             viewHolder.allLV = convertView.findViewById(R.id.all);
+            viewHolder.detailTV = convertView.findViewById(R.id.detail);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         //关键代码
         final Jczb jczb = list.get(position);
-        if (loop) {
-            if (jczb.isVisible()) {
-                viewHolder.allLV.setVisibility(View.VISIBLE);
-            } else {
-                viewHolder.allLV.setVisibility(View.GONE);
-            }
-        } else {
-            viewHolder.allLV.setVisibility(View.VISIBLE);
-        }
         viewHolder.nameTV.setText((position + 1) + "、" + jczb.getJczbName());
         if (jczb.getJczcJianchajieguo() == null) {
             jczb.setJczcJianchajieguo(new jczcJianchajieguo());
@@ -109,23 +99,21 @@ public class NewThirdDetailAdapter extends BaseAdapter {
         }
         viewHolder.takePhotoIV.setTag(position);
         viewHolder.takePhotoIV.setOnClickListener(listener);
-        viewHolder.remarkIV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final RemarkDialog rDialog = new RemarkDialog(context, jczb.getJczbId());
-                if (!TextUtils.isEmpty(jczb.getJczcJianchajieguo().getJianchaqingkuang())) {
-                    rDialog.getEditText().setText(jczb.getJczcJianchajieguo().getJianchaqingkuang());
-                }
-                rDialog.show();
-                rDialog.setOnSaveListener(() -> jczb.getJczcJianchajieguo().setJianchaqingkuang(rDialog.getEditText().getText().toString()));
+        viewHolder.remarkIV.setOnClickListener(v -> {
+            final RemarkDialog rDialog = new RemarkDialog(context, jczb.getJczbId());
+            if (!TextUtils.isEmpty(jczb.getJczcJianchajieguo().getJianchaqingkuang())) {
+                rDialog.getEditText().setText(jczb.getJczcJianchajieguo().getJianchaqingkuang());
             }
+            rDialog.show();
+            rDialog.setOnSaveListener(() -> jczb.getJczcJianchajieguo().setJianchaqingkuang(rDialog.getEditText().getText().toString()));
         });
-        viewHolder.readTV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ReadDialog readDialog = new ReadDialog(context, jczb.getJczbId(), NewSecondActivity.xiangmuId, jczb.getJczcJianchajieguo().getJianchaqingkuang());
-                readDialog.show();
-            }
+        viewHolder.readTV.setOnClickListener(v -> {
+            ReadDialog readDialog = new ReadDialog(context, jczb.getJczbId(), NewSecondActivity.xiangmuId, jczb.getJczcJianchajieguo().getJianchaqingkuang());
+            readDialog.show();
+        });
+        viewHolder.detailTV.setOnClickListener(v -> {
+            DetailDialog detailDialog = new DetailDialog(context,jczb.getEligibilityCriteria(),jczb.getJczcJianchajieguo().getZhenggaijianyi(),jczb.getInspectionmethod(),jczb.getJianchayiju(),jczb.getChufayijus());
+            detailDialog.show();
         });
 //        viewHolder.zhengIV.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -180,5 +168,6 @@ public class NewThirdDetailAdapter extends BaseAdapter {
         public TextView readTV;
         public LinearLayout operateLV;
         public LinearLayout allLV;
+        public ImageView detailTV;
     }
 }

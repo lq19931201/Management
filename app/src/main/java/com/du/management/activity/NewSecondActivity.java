@@ -1,13 +1,20 @@
 package com.du.management.activity;
 
 import android.Manifest;
+import android.content.ContentValues;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,8 +22,6 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.TestJsonArrayRequest;
 import com.android.volley.toolbox.Volley;
@@ -30,6 +35,7 @@ import com.du.management.newBean.Jcnr;
 import com.du.management.newBean.Jcnrfj;
 import com.du.management.newBean.Jcxm;
 import com.du.management.newBean.Jczb;
+import com.du.management.utils.Utils;
 import com.du.management.view.MyListView;
 import com.du.management.view.SecondTitleDialog;
 import com.google.gson.Gson;
@@ -37,10 +43,23 @@ import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 
 public class NewSecondActivity extends BaseActivity {
 
@@ -68,14 +87,23 @@ public class NewSecondActivity extends BaseActivity {
 
     private NewThirdAdapter newThirdAdapter;
 
+    public static File tempFile;
+
+    private Uri imageUri;
+
+    private static int PHOTO_REQUEST_CAREMA = 0x12;
+
     private long jczbId;
+
+    private boolean titleTakePhoto;
 
     private long renwuId;
 
     @Override
     protected int initLayoutId() {
-        requestWindowFeature(Window.FEATURE_NO_TITLE);//隐藏标题栏
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//隐藏状态栏
+        Log.w("LQLQ", "onCreate");
+        MIUISetStatusBarLightMode(this, true);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         return R.layout.activity_newsecond;
     }
 
@@ -110,12 +138,12 @@ public class NewSecondActivity extends BaseActivity {
     @Override
     protected void initView() {
         requestPremission();
-        bottomLV = findViewById(R.id.bottom);
-        firstTV = findViewById(R.id.firstTV);
-        secondTV = findViewById(R.id.secondTV);
-        myListView = findViewById(R.id.third_detail_listview);
-        prevTV = findViewById(R.id.prev);
-        nextTV = findViewById(R.id.next);
+        bottomLV = (LinearLayout) findViewById(R.id.bottom);
+        firstTV = (TextView) findViewById(R.id.firstTV);
+        secondTV = (TextView) findViewById(R.id.secondTV);
+        myListView = (MyListView) findViewById(R.id.third_detail_listview);
+        prevTV = (TextView) findViewById(R.id.prev);
+        nextTV = (TextView) findViewById(R.id.next);
     }
 
     @Override
@@ -162,7 +190,9 @@ public class NewSecondActivity extends BaseActivity {
                     newThirdAdapter.setCameraOnClick(new NewThirdAdapter.CameraOnClick() {
                         @Override
                         public void onClick(int jcnrfjPosition, int position) {
+                            titleTakePhoto = false;
                             jczbId = jcnrList.get(thirdSecond).getJcnrfjlist().get(jcnrfjPosition).getJczblist().get(position).getJczbId();
+                            openCamera();
                         }
                     });
                 }
@@ -172,6 +202,150 @@ public class NewSecondActivity extends BaseActivity {
 
         }, error -> Toast.makeText(NewSecondActivity.this, "网络请求失败", Toast.LENGTH_SHORT).show());
         requestQueue.add(request);
+    }
+
+    public void openCamera() {
+        //获取系統版本
+        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+        // 激活相机
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // 判断存储卡是否可以用，可用进行存储
+        if (hasSdcard()) {
+            SimpleDateFormat timeStampFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+            String filename = timeStampFormat.format(new Date());
+            tempFile = new File(Utils.getLocalPath(NewSecondActivity.this), filename + ".jpg");
+            if (currentapiVersion < 24) {
+                // 从文件中创建uri
+                imageUri = Uri.fromFile(tempFile);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+            } else {
+                //兼容android7.0 使用共享文件的形式
+                ContentValues contentValues = new ContentValues(1);
+                contentValues.put(MediaStore.Images.Media.DATA, tempFile.getAbsolutePath());
+                //检查是否有存储权限，以免崩溃
+                if (ContextCompat.checkSelfPermission(NewSecondActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    //申请WRITE_EXTERNAL_STORAGE权限
+                    Toast.makeText(NewSecondActivity.this, "请开启存储权限", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (ContextCompat.checkSelfPermission(NewSecondActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(NewSecondActivity.this, "请开启相机权限", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+            }
+        }
+        // 开启一个带有返回值的Activity，请求码为PHOTO_REQUEST_CAREMA
+        startActivityForResult(intent, PHOTO_REQUEST_CAREMA);
+    }
+
+
+    /**
+     * 按尺寸压缩图片
+     *
+     * @param srcPath  图片路径
+     * @param desWidth 压缩的图片宽度
+     * @return Bitmap 对象
+     */
+
+    public static Bitmap compressImageFromFile(String srcPath, float desWidth) {
+        BitmapFactory.Options newOpts = new BitmapFactory.Options();
+        newOpts.inJustDecodeBounds = true;//只读边,不读内容
+        Bitmap bitmap = BitmapFactory.decodeFile(srcPath, newOpts);
+        newOpts.inJustDecodeBounds = false;
+        int w = newOpts.outWidth;
+        int h = newOpts.outHeight;
+        float desHeight = desWidth * h / w;
+        int be = 1;
+        if (w > h && w > desWidth) {
+            be = (int) (newOpts.outWidth / desWidth);
+        } else if (w < h && h > desHeight) {
+            be = (int) (newOpts.outHeight / desHeight);
+        }
+        if (be <= 0)
+            be = 1;
+        newOpts.inSampleSize = be;//设置采样率
+//        newOpts.inPreferredConfig = Config.ARGB_8888;//该模式是默认的,可不设
+        bitmap = BitmapFactory.decodeFile(srcPath, newOpts);
+        Log.w("lqlqlq", String.valueOf(bitmap.getAllocationByteCount()));
+        return bitmap;
+    }
+
+    public static void saveBitmap(Bitmap mBitmap, File file) {
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
+            fos.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    /*
+     * 判断sdcard是否被挂载
+     */
+    public static boolean hasSdcard() {
+        return Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (tempFile.exists()) {
+            Log.e("lqlq", "exists");
+            Log.e("lqlq", "tempFile.length()" + tempFile.length());
+            String filePath = tempFile.getAbsolutePath();
+            Bitmap bitmap = compressImageFromFile(filePath, 1024f);
+            new File(filePath).delete();
+            saveBitmap(bitmap, new File(filePath));
+            try {
+                File realFile = new File(filePath);
+                if (titleTakePhoto) {
+                    upload(HttpConstant.REQUSET_BASE_URL + "/jianchazhicheng/upLoadDanweiPic", realFile.getAbsolutePath(), realFile.getName());
+                } else {
+                    upload(HttpConstant.REQUSET_BASE_URL + "/jianchazhicheng/upLoadJianchaPic", realFile.getAbsolutePath(), realFile.getName());
+                }
+            } catch (Exception e) {
+
+            }
+        }
+    }
+
+    private void upload(String url, String filePath, String fileName) throws Exception {
+        RequestBody requestBody;
+        if (titleTakePhoto) {
+            requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM).
+                    addFormDataPart("xiangmuId", String.valueOf(xiangmuId)).
+                    addFormDataPart("jcjgPicFile", fileName, RequestBody.create(MediaType.parse("multipart/form-data"), new File(filePath)))
+                    .build();
+        } else {
+            requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM).
+                    addFormDataPart("xiangmuId", String.valueOf(xiangmuId)).
+                    addFormDataPart("jczbId", String.valueOf(jczbId)).
+                    addFormDataPart("jcjgPicFile", fileName, RequestBody.create(MediaType.parse("multipart/form-data"), new File(filePath)))
+                    .build();
+        }
+        okhttp3.Request request = new okhttp3.Request.Builder().header("Authorization", "Client-ID " + UUID.randomUUID()).url(url).post(requestBody).build();
+        OkHttpClient okHttpClient = new OkHttpClient();
+        Call call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.w("upload", "onfail");
+                tempFile = null;
+                Toast.makeText(NewSecondActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onResponse(Call call, okhttp3.Response response) throws IOException {
+                Log.w("upload", "onResponse");
+                tempFile = null;
+            }
+        });
     }
 
     @Override
@@ -232,6 +406,28 @@ public class NewSecondActivity extends BaseActivity {
             newThirdAdapter.notifyDataSetChanged();
             secondTV.setText(jcnrList.get(thirdSecond).getJcxmName() + jcnrList.get(thirdSecond).getJcnrName());
         });
+//        ImageView titleIV = (ImageView) findViewById(R.id.take_photo);
+//        titleIV.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                final CameraPhotoDialog dialog = new CameraPhotoDialog(NewSecondActivity.this);
+//                dialog.show();
+//                dialog.setCallBack(new CameraPhotoDialog.CallBack() {
+//                    @Override
+//                    public void onMessage(int position) {
+//                        dialog.dismiss();
+//                        if (position == 0) {
+//                            titleTakePhoto = true;
+//                            openCamera();
+//                        } else {
+//                            PhotoDialog photoDialog = new PhotoDialog(NewSecondActivity.this);
+//                            photoDialog.show();
+//                        }
+//                    }
+//                });
+//            }
+//        });
+
         secondTV.setOnClickListener(v -> {
             List<String> list = new ArrayList<>();
             for (int i = 0; i < jcnrList.size(); i++) {
@@ -239,17 +435,20 @@ public class NewSecondActivity extends BaseActivity {
             }
             final SecondTitleDialog dialog = new SecondTitleDialog(NewSecondActivity.this, list);
             dialog.show();
-            dialog.setOnItemClickListener(position -> {
-                thirdSecond = position;
-                if (jcnrList.size() - 1 == thirdSecond) {
-                    nextTV.setText("提交");
-                } else {
-                    nextTV.setText("下一項");
+            dialog.setOnItemClickListener(new SecondTitleDialog.CallBack() {
+                @Override
+                public void onItemClick(int position) {
+                    thirdSecond = position;
+                    if (jcnrList.size() - 1 == thirdSecond) {
+                        nextTV.setText("提交");
+                    } else {
+                        nextTV.setText("下一項");
+                    }
+                    newThirdAdapter.setList(jcnrList.get(thirdSecond).getJcnrfjlist());
+                    newThirdAdapter.notifyDataSetChanged();
+                    secondTV.setText(jcnrList.get(thirdSecond).getJcxmName() + jcnrList.get(thirdSecond).getJcnrName());
+                    dialog.dismiss();
                 }
-                newThirdAdapter.setList(jcnrList.get(thirdSecond).getJcnrfjlist());
-                newThirdAdapter.notifyDataSetChanged();
-                secondTV.setText(jcnrList.get(thirdSecond).getJcxmName() + jcnrList.get(thirdSecond).getJcnrName());
-                dialog.dismiss();
             });
         });
     }
