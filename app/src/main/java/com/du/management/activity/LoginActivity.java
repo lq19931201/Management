@@ -54,35 +54,29 @@ public class LoginActivity extends BaseActivity {
                 params.put("password", passWordET.getText().toString());
                 JsonObjectRequest newMissRequest = new JsonObjectRequest(
                         Request.Method.GET, new StringBuffer().append(HttpConstant.REQUSET_BASE_URL).append("jianchauser/login/").append(userNameET.getText().toString()).append("/").append(passWordET.getText().toString()).toString(),
-                        new JSONObject(params), new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            String code = response.getString("code");
-                            if (code.equals(HttpConstant.CODE_SUCCESS)) {
-                                MainApplication.userId = response.getJSONObject("data").getString("userId");
-                                SpUtils.saveSpValue(LoginActivity.this, "username", userNameET.getText().toString());
-                                SpUtils.saveSpValue(LoginActivity.this, "password", passWordET.getText().toString());
-                                MainApplication.userId = response.getJSONObject("data").getString("userId");
-//                                if (!TextUtils.isEmpty(response.getString("data"))) {
-//                                    MainApplication.TOKEN = response.getString("data");
-//                                }
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                startActivity(intent);
-                            } else {
+                        new JSONObject(params), response -> {
+                            try {
+                                String code = response.getString("code");
+                                if (code.equals(HttpConstant.CODE_SUCCESS)) {
+                                    MainApplication.userId = response.getJSONObject("data").getString("userId");
+                                    SpUtils.saveSpValue(LoginActivity.this, "username", userNameET.getText().toString());
+                                    SpUtils.saveSpValue(LoginActivity.this, "password", passWordET.getText().toString());
+                                    MainApplication.userId = response.getJSONObject("data").getString("userId");
+    //                                if (!TextUtils.isEmpty(response.getString("data"))) {
+    //                                    MainApplication.TOKEN = response.getString("data");
+    //                                }
+                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                    startActivity(intent);
+                                } else {
+                                    Toast.makeText(LoginActivity.this, "请联系管理员", Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (Exception e) {
                                 Toast.makeText(LoginActivity.this, "请联系管理员", Toast.LENGTH_SHORT).show();
                             }
-                        } catch (Exception e) {
-                            Toast.makeText(LoginActivity.this, "请联系管理员", Toast.LENGTH_SHORT).show();
-                        }
-                        loginTV.setEnabled(true);
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        loginTV.setEnabled(true);
-                        Toast.makeText(LoginActivity.this, "网络请求失败", Toast.LENGTH_SHORT).show();
-                    }
+                            loginTV.setEnabled(true);
+                        }, error -> {
+                    loginTV.setEnabled(true);
+                    Toast.makeText(LoginActivity.this, "网络请求失败", Toast.LENGTH_SHORT).show();
                 }) {
                     @Override
                     public Map<String, String> getHeaders() throws AuthFailureError {

@@ -6,39 +6,17 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-import com.du.management.MainApplication;
 import com.du.management.R;
+import com.du.management.activity.DanweiActivity;
 import com.du.management.activity.NewSecondActivity;
-import com.du.management.activity.SecondActivity;
-import com.du.management.bean.Content;
-import com.du.management.bean.Task;
-import com.du.management.http.HttpConstant;
 import com.du.management.newBean.NewContent;
 import com.du.management.newBean.NewTask;
-import com.du.management.utils.Utils;
-import com.du.management.view.CommitDialog;
-import com.du.management.view.MyGridView;
-import com.du.management.view.MyListView;
+import com.du.management.view.NewMyListView;
 
-import org.greenrobot.eventbus.EventBus;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class CurrentTaskAdapter extends BaseAdapter {
 
@@ -81,12 +59,80 @@ public class CurrentTaskAdapter extends BaseAdapter {
         if (!TextUtils.isEmpty(task.getRenwuname())) {
             viewHolder.taskNameTV.setText(task.getRenwuname());
         }
+        DanweiAdapter adapter = new DanweiAdapter(task.getJczcJianchashishis(), task.getRenwuId());
+        viewHolder.myListView.setAdapter(adapter);
         return convertView;
     }
 
     public class ViewHolder {
         public TextView taskNameTV;
-        public MyListView myListView;
+        public NewMyListView myListView;
     }
 
+
+    public class DanweiAdapter extends BaseAdapter {
+
+        private List<NewContent> list;
+
+        private long renwuId;
+
+        public DanweiAdapter(List<NewContent> list, long renwuId) {
+            this.list = list;
+            this.renwuId = renwuId;
+        }
+
+        @Override
+        public int getCount() {
+            return list.size();
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return list.get(i);
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return i;
+        }
+
+        @Override
+        public View getView(int i, View convertView, ViewGroup viewGroup) {
+            DanweiHolder viewHolder;
+            if (convertView == null || convertView.getTag() == null) {
+                viewHolder = new DanweiHolder();
+                convertView = LayoutInflater.from(context).inflate(R.layout.adapter_danwei, null);
+                viewHolder.nameTV = convertView.findViewById(R.id.name);
+                viewHolder.danweiTV = convertView.findViewById(R.id.danwei);
+                viewHolder.jianchaTV = convertView.findViewById(R.id.jiancha);
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (DanweiHolder) convertView.getTag();
+            }
+            final NewContent newContent = list.get(i);
+            viewHolder.nameTV.setText(newContent.getDanweiName());
+            viewHolder.danweiTV.setOnClickListener(v -> {
+                Intent intent = new Intent(context, DanweiActivity.class);
+                intent.putExtra("name", newContent.getDanweiName());
+                context.startActivity(intent);
+            });
+            viewHolder.jianchaTV.setOnClickListener(v -> {
+                Intent intent = new Intent(context, NewSecondActivity.class);
+                intent.putExtra("title", list.get(i).getDanweiName());
+                intent.putExtra("taskId", renwuId);
+                intent.putExtra("mobanId", list.get(i).getMobanId());
+                intent.putExtra("xiangmuId", list.get(i).getXiangmuId());
+                context.startActivity(intent);
+            });
+            return convertView;
+        }
+
+        public class DanweiHolder {
+            public TextView nameTV;
+
+            public TextView danweiTV;
+
+            public TextView jianchaTV;
+        }
+    }
 }

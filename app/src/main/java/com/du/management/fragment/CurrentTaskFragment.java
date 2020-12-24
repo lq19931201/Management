@@ -1,7 +1,6 @@
 package com.du.management.fragment;
 
 
-import android.util.EventLog;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +14,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.du.management.MainApplication;
 import com.du.management.R;
-import com.du.management.activity.SecondActivity;
 import com.du.management.adapter.CurrentTaskAdapter;
-import com.du.management.bean.Task;
 import com.du.management.http.HeaderStringRequest;
 import com.du.management.http.HttpConstant;
 import com.du.management.newBean.NewTask;
@@ -60,34 +57,26 @@ public class CurrentTaskFragment extends BaseFragment {
     protected void initData() {
         String url = new StringBuffer().append(HttpConstant.REQUSET_BASE_URL).append("jianchazhicheng/getJiancharenwu/").append(MainApplication.userId).toString();
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-        HeaderStringRequest request = new HeaderStringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    Log.w("CurrentTaskFragment",response);
-                    JSONObject jsonObject = new JSONObject(response);
-                    String code = jsonObject.getString("code");
-                    if (code.equals(HttpConstant.CODE_SUCCESS)) {
-                        Log.w("CurrentTaskFragment",jsonObject.toString());
-                        JSONArray jsonArray = jsonObject.getJSONArray("data");
-                        Gson gson = new Gson();
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            NewTask task = gson.fromJson(jsonArray.getJSONObject(i).toString(), NewTask.class);
-                            list.add(task);
-                        }
-                        CurrentTaskAdapter adapter = new CurrentTaskAdapter(getActivity(), list);
-                        listView.setAdapter(adapter);
+        HeaderStringRequest request = new HeaderStringRequest(Request.Method.GET, url, response -> {
+            try {
+                Log.w("CurrentTaskFragment",response);
+                JSONObject jsonObject = new JSONObject(response);
+                String code = jsonObject.getString("code");
+                if (code.equals(HttpConstant.CODE_SUCCESS)) {
+                    Log.w("CurrentTaskFragment",jsonObject.toString());
+                    JSONArray jsonArray = jsonObject.getJSONArray("data");
+                    Gson gson = new Gson();
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        NewTask task = gson.fromJson(jsonArray.getJSONObject(i).toString(), NewTask.class);
+                        list.add(task);
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    CurrentTaskAdapter adapter = new CurrentTaskAdapter(getActivity(), list);
+                    listView.setAdapter(adapter);
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getActivity(), "网络请求失败", Toast.LENGTH_SHORT).show();
-            }
-        });
+        }, error -> Toast.makeText(getActivity(), "网络请求失败", Toast.LENGTH_SHORT).show());
         requestQueue.add(request);
     }
 

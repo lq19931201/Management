@@ -7,8 +7,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.du.management.R;
-import com.du.management.activity.BaseActivity;
-import com.du.management.fragment.CompleteTaskFragment;
 import com.du.management.fragment.CurrentTaskFragment;
 import com.du.management.fragment.MineFragment;
 
@@ -31,10 +29,10 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
-        currentRadioButton = (RadioButton) findViewById(R.id.button_one);
-        mineRadioButton = (RadioButton) findViewById(R.id.button_three);
+        radioGroup = findViewById(R.id.radioGroup);
+        viewPager = findViewById(R.id.viewPager);
+        currentRadioButton = findViewById(R.id.button_one);
+        mineRadioButton = findViewById(R.id.button_three);
     }
 
     @Override
