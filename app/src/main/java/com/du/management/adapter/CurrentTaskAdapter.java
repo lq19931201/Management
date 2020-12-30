@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.du.management.R;
 import com.du.management.activity.DanweiActivity;
 import com.du.management.activity.NewSecondActivity;
+import com.du.management.activity.NewSecondTwoActivity;
 import com.du.management.newBean.NewContent;
 import com.du.management.newBean.NewTask;
 import com.du.management.view.NewMyListView;
@@ -118,7 +119,7 @@ public class CurrentTaskAdapter extends BaseAdapter {
                 context.startActivity(intent);
             });
             viewHolder.jianchaTV.setOnClickListener(v -> {
-                Intent intent = new Intent(context, NewSecondActivity.class);
+                Intent intent = new Intent(context, NewSecondTwoActivity.class);
                 intent.putExtra("title", list.get(i).getDanweiName());
                 intent.putExtra("taskId", renwuId);
                 intent.putExtra("mobanId", list.get(i).getMobanId());

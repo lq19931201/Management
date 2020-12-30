@@ -49,6 +49,11 @@
             android:screenOrientation="landscape"
             android:windowSoftInputMode="stateHidden|adjustResize"></activity>
         <activity
+            android:name=".activity.NewSecondTwoActivity"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateHidden|adjustResize"></activity>
+        <activity
             android:name=".activity.BigPhotoActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="landscape"

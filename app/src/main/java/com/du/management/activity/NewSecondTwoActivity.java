@@ -22,7 +22,6 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.TestJsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.du.management.MainApplication;
@@ -37,7 +36,6 @@ import com.du.management.newBean.Jcxm;
 import com.du.management.newBean.Jczb;
 import com.du.management.utils.Utils;
 import com.du.management.view.MyListView;
-import com.du.management.view.SecondTitleDialog;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -49,9 +47,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import okhttp3.Call;
@@ -61,7 +57,7 @@ import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 
-public class NewSecondActivity extends BaseActivity {
+public class NewSecondTwoActivity extends BaseActivity {
 
     private LinearLayout bottomLV;
 
@@ -81,10 +77,6 @@ public class NewSecondActivity extends BaseActivity {
 
     private MyListView myListView;
 
-    private TextView prevTV;
-
-    private TextView nextTV;
-
     private NewThirdAdapter newThirdAdapter;
 
     public static File tempFile;
@@ -103,7 +95,7 @@ public class NewSecondActivity extends BaseActivity {
     protected int initLayoutId() {
         MIUISetStatusBarLightMode(this, true);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
-        return R.layout.activity_newsecond;
+        return R.layout.activity_newsecond_two;
     }
 
     private void requestPremission() {
@@ -130,7 +122,7 @@ public class NewSecondActivity extends BaseActivity {
             }
         }
         if (refuse) {
-            Toast.makeText(NewSecondActivity.this, "拒绝申请会导致下载功能无法正常使用哦", Toast.LENGTH_SHORT).show();
+            Toast.makeText(NewSecondTwoActivity.this, "拒绝申请会导致下载功能无法正常使用哦", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -141,8 +133,6 @@ public class NewSecondActivity extends BaseActivity {
         firstTV = (TextView) findViewById(R.id.firstTV);
         secondTV = (TextView) findViewById(R.id.secondTV);
         myListView = (MyListView) findViewById(R.id.third_detail_listview);
-        prevTV = (TextView) findViewById(R.id.prev);
-        nextTV = (TextView) findViewById(R.id.next);
     }
 
     @Override
@@ -155,10 +145,16 @@ public class NewSecondActivity extends BaseActivity {
             bottomLV.setVisibility(View.GONE);
         }
         firstTV.setText(getIntent().getStringExtra("title"));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         requestThirdList(mobanId, xiangmuId);
     }
 
     private void requestThirdList(long mobanId, long xiangmuId) {
+        jcnrList.clear();
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append(HttpConstant.REQUSET_BASE_URL).append("jianchazhicheng/getJianchashishiMoban/").append(MainApplication.userId).append("/" + mobanId).append("/" + xiangmuId);
@@ -181,11 +177,8 @@ public class NewSecondActivity extends BaseActivity {
                         jcnrList.addAll(thirdList.get(i).getJcnrlist());
                     }
                     secondTV.setText(jcnrList.get(0).getJcxmName() + jcnrList.get(0).getJcnrName());
-                    newThirdAdapter = new NewThirdAdapter(NewSecondActivity.this, jcnrList.get(0).getJcnrfjlist());
+                    newThirdAdapter = new NewThirdAdapter(NewSecondTwoActivity.this, jcnrList.get(0).getJcnrfjlist());
                     myListView.setAdapter(newThirdAdapter);
-                    if (thirdList.get(0).getJcnrlist().size() == 1 && thirdList.size() == 1) {
-                        nextTV.setText("提交");
-                    }
                     newThirdAdapter.setCameraOnClick(new NewThirdAdapter.CameraOnClick() {
                         @Override
                         public void onClick(int jcnrfjPosition, int position) {
@@ -199,7 +192,7 @@ public class NewSecondActivity extends BaseActivity {
                 e.printStackTrace();
             }
 
-        }, error -> Toast.makeText(NewSecondActivity.this, "网络请求失败", Toast.LENGTH_SHORT).show());
+        }, error -> Toast.makeText(NewSecondTwoActivity.this, "网络请求失败", Toast.LENGTH_SHORT).show());
         requestQueue.add(request);
     }
 
@@ -212,7 +205,7 @@ public class NewSecondActivity extends BaseActivity {
         if (hasSdcard()) {
             SimpleDateFormat timeStampFormat = new SimpleDateFormat("yyyyMMddHHmmss");
             String filename = timeStampFormat.format(new Date());
-            tempFile = new File(Utils.getLocalPath(NewSecondActivity.this), filename + ".jpg");
+            tempFile = new File(Utils.getLocalPath(NewSecondTwoActivity.this), filename + ".jpg");
             if (currentapiVersion < 24) {
                 // 从文件中创建uri
                 imageUri = Uri.fromFile(tempFile);
@@ -222,14 +215,14 @@ public class NewSecondActivity extends BaseActivity {
                 ContentValues contentValues = new ContentValues(1);
                 contentValues.put(MediaStore.Images.Media.DATA, tempFile.getAbsolutePath());
                 //检查是否有存储权限，以免崩溃
-                if (ContextCompat.checkSelfPermission(NewSecondActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                if (ContextCompat.checkSelfPermission(NewSecondTwoActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         != PackageManager.PERMISSION_GRANTED) {
                     //申请WRITE_EXTERNAL_STORAGE权限
-                    Toast.makeText(NewSecondActivity.this, "请开启存储权限", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(NewSecondTwoActivity.this, "请开启存储权限", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (ContextCompat.checkSelfPermission(NewSecondActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(NewSecondActivity.this, "请开启相机权限", Toast.LENGTH_SHORT).show();
+                if (ContextCompat.checkSelfPermission(NewSecondTwoActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(NewSecondTwoActivity.this, "请开启相机权限", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
@@ -339,7 +332,7 @@ public class NewSecondActivity extends BaseActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(NewSecondActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(NewSecondTwoActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -351,7 +344,7 @@ public class NewSecondActivity extends BaseActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(NewSecondActivity.this, "上传成功", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(NewSecondTwoActivity.this, "上传成功", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -361,105 +354,22 @@ public class NewSecondActivity extends BaseActivity {
     @Override
     protected void onclick() {
         findViewById(R.id.back).setOnClickListener(v -> finish());
-        nextTV.setOnClickListener(v -> {
-            if (jcnrList.size() == 0) {
-                Toast.makeText(NewSecondActivity.this, "当前无有效列表", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            if (nextTV.getText().equals("提交")) {
-                saveRequest(jcnrList.get(jcnrList.size() - 1).getJcnrfjlist());
-                RequestQueue requestQueue = Volley.newRequestQueue(NewSecondActivity.this);
-                StringBuffer stringBuffer = new StringBuffer();
-                Map<String, String> params = new HashMap<>();
-                stringBuffer.append(HttpConstant.REQUSET_BASE_URL).append("jianchazhicheng/finishedShishixiangmu/").append(xiangmuId);
-                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, stringBuffer.toString(), new JSONObject(params), response -> {
-                    try {
-                        String code = response.getString("code");
-                        if (code.equals(HttpConstant.CODE_SUCCESS)) {
-                            Toast.makeText(NewSecondActivity.this, "任务已完成", Toast.LENGTH_SHORT).show();
-                            finish();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                }, error -> Toast.makeText(NewSecondActivity.this, "网络请求失败", Toast.LENGTH_SHORT).show());
-                requestQueue.add(jsonObjectRequest);
-            } else {
-                saveRequest(jcnrList.get(thirdSecond).getJcnrfjlist());
-                if (jcnrList.size() - 1 == thirdSecond) {
-                    nextTV.setText("提交");
-                } else {
-                    thirdSecond++;
-                }
-                if (jcnrList.size() - 1 == thirdSecond) {
-                    nextTV.setText("提交");
-                }
-                newThirdAdapter.setList(jcnrList.get(thirdSecond).getJcnrfjlist());
-                newThirdAdapter.notifyDataSetChanged();
-            }
-            secondTV.setText(jcnrList.get(thirdSecond).getJcxmName() + jcnrList.get(thirdSecond).getJcnrName());
-        });
-        prevTV.setOnClickListener(v -> {
-            if (jcnrList.size() == 0) {
-                Toast.makeText(NewSecondActivity.this, "当前无有效列表", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            if (thirdSecond == 0) {
-                Toast.makeText(NewSecondActivity.this, "已经是第一个项了", Toast.LENGTH_SHORT).show();
-                return;
-            } else {
-                thirdSecond--;
-                nextTV.setText("下一項");
-            }
-            newThirdAdapter.setList(jcnrList.get(thirdSecond).getJcnrfjlist());
-            newThirdAdapter.notifyDataSetChanged();
-            secondTV.setText(jcnrList.get(thirdSecond).getJcxmName() + jcnrList.get(thirdSecond).getJcnrName());
-        });
-//        ImageView titleIV = (ImageView) findViewById(R.id.take_photo);
-//        titleIV.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                final CameraPhotoDialog dialog = new CameraPhotoDialog(NewSecondActivity.this);
-//                dialog.show();
-//                dialog.setCallBack(new CameraPhotoDialog.CallBack() {
-//                    @Override
-//                    public void onMessage(int position) {
-//                        dialog.dismiss();
-//                        if (position == 0) {
-//                            titleTakePhoto = true;
-//                            openCamera();
-//                        } else {
-//                            PhotoDialog photoDialog = new PhotoDialog(NewSecondActivity.this);
-//                            photoDialog.show();
-//                        }
-//                    }
-//                });
-//            }
-//        });
 
         secondTV.setOnClickListener(v -> {
-            List<String> list = new ArrayList<>();
-            for (int i = 0; i < jcnrList.size(); i++) {
-                list.add(jcnrList.get(i).getJcxmName() + jcnrList.get(i).getJcnrName());
+            Intent intent = new Intent(this, NewSecondActivity.class);
+            intent.putExtra("title", firstTV.getText().toString());
+            intent.putExtra("taskId", renwuId);
+            intent.putExtra("mobanId", mobanId);
+            intent.putExtra("xiangmuId", xiangmuId);
+            startActivity(intent);
+        });
+
+        findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveRequest(jcnrList.get(thirdSecond).getJcnrfjlist());
+                finish();
             }
-            final SecondTitleDialog dialog = new SecondTitleDialog(NewSecondActivity.this, list);
-            dialog.show();
-            dialog.setOnItemClickListener(new SecondTitleDialog.CallBack() {
-                @Override
-                public void onItemClick(int position) {
-                    thirdSecond = position;
-                    if (jcnrList.size() - 1 == thirdSecond) {
-                        nextTV.setText("提交");
-                    } else {
-                        nextTV.setText("下一項");
-                    }
-                    newThirdAdapter.setList(jcnrList.get(thirdSecond).getJcnrfjlist());
-                    newThirdAdapter.notifyDataSetChanged();
-                    secondTV.setText(jcnrList.get(thirdSecond).getJcxmName() + jcnrList.get(thirdSecond).getJcnrName());
-                    dialog.dismiss();
-                }
-            });
         });
     }
 
@@ -488,13 +398,13 @@ public class NewSecondActivity extends BaseActivity {
         }
         JSONArray jsonObject = getJson(saveList);
         if (jsonObject == null) {
-            Toast.makeText(NewSecondActivity.this, "数据格式出错", Toast.LENGTH_SHORT).show();
+            Toast.makeText(NewSecondTwoActivity.this, "数据格式出错", Toast.LENGTH_SHORT).show();
             return;
         }
         final RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append(HttpConstant.REQUSET_BASE_URL).append("jianchazhicheng/addJianchajieguolist");
-        TestJsonArrayRequest jsonArrayRequest = new TestJsonArrayRequest(Request.Method.POST, stringBuffer.toString(), jsonObject, response -> Toast.makeText(NewSecondActivity.this, "保存成功", Toast.LENGTH_SHORT).show(), error -> Toast.makeText(NewSecondActivity.this, "网络请求失败", Toast.LENGTH_SHORT).show());
+        TestJsonArrayRequest jsonArrayRequest = new TestJsonArrayRequest(Request.Method.POST, stringBuffer.toString(), jsonObject, response -> Toast.makeText(NewSecondTwoActivity.this, "保存成功", Toast.LENGTH_SHORT).show(), error -> Toast.makeText(NewSecondTwoActivity.this, "网络请求失败", Toast.LENGTH_SHORT).show());
         requestQueue.add(jsonArrayRequest);
     }
 
