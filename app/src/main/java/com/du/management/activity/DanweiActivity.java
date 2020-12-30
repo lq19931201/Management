@@ -7,9 +7,11 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
@@ -85,6 +87,35 @@ public class DanweiActivity extends BaseActivity {
         MIUISetStatusBarLightMode(this, true);
         return R.layout.activity_danwei;
     }
+
+    private void requestPremission() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            int read = checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
+            int write = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            int camera = checkSelfPermission(Manifest.permission.CAMERA);
+            if (write != PackageManager.PERMISSION_GRANTED || read != PackageManager.PERMISSION_GRANTED || camera != PackageManager.PERMISSION_DENIED) {
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
+                        1);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        boolean refuse = false;
+        if (requestCode == 1) {
+            for (int i = 0; i < permissions.length; i++) {
+                if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                    refuse = true;
+                }
+            }
+        }
+        if (refuse) {
+            Toast.makeText(this, "拒绝申请会导致下载功能无法正常使用哦", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     @Override
     protected void initData() {
@@ -176,6 +207,7 @@ public class DanweiActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        requestPremission();
         ((TextView) findViewById(R.id.title)).setText(getIntent().getStringExtra("name"));
         photo = findViewById(R.id.photo);
         baocun = findViewById(R.id.baocun);
@@ -387,6 +419,12 @@ public class DanweiActivity extends BaseActivity {
 
             @Override
             public void onResponse(Call call, okhttp3.Response response) throws IOException {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(DanweiActivity.this, "上传成功", Toast.LENGTH_SHORT).show();
+                    }
+                });
                 Log.w("DanweiActivity", "upload -> onResponse");
                 tempFile = null;
             }
