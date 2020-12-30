@@ -114,6 +114,7 @@ public class CurrentTaskAdapter extends BaseAdapter {
             viewHolder.danweiTV.setOnClickListener(v -> {
                 Intent intent = new Intent(context, DanweiActivity.class);
                 intent.putExtra("name", newContent.getDanweiName());
+                intent.putExtra("xiangmuId", newContent.getXiangmuId());
                 context.startActivity(intent);
             });
             viewHolder.jianchaTV.setOnClickListener(v -> {
