@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
@@ -374,14 +375,19 @@ public class DanweiActivity extends BaseActivity {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.w("upload", "onfail");
+                Log.w("DanweiActivity", "upload->" + e.getMessage());
                 tempFile = null;
-                Toast.makeText(DanweiActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(DanweiActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override
             public void onResponse(Call call, okhttp3.Response response) throws IOException {
-                Log.w("upload", "onResponse");
+                Log.w("DanweiActivity", "upload -> onResponse");
                 tempFile = null;
             }
         });
