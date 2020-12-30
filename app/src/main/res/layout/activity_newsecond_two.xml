@@ -26,27 +26,26 @@
             android:id="@+id/firstTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/back"
             android:textColor="#000000"
             android:textSize="12sp" />
-
-
 
         <ImageView
             android:id="@+id/save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/icon_save"
-            android:layout_alignParentRight="true"></ImageView>
+            android:layout_alignParentRight="true"
+            android:src="@mipmap/icon_save"></ImageView>
 
         <TextView
             android:id="@+id/secondTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#000000"
-            android:textSize="12sp"
+            android:layout_marginRight="10dp"
             android:layout_toLeftOf="@id/save"
-            android:layout_marginRight="10dp"/>
+            android:textColor="#000000"
+            android:textSize="12sp" />
 
     </RelativeLayout>
 

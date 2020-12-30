@@ -1,6 +1,8 @@
 package com.du.management.newBean;
 
-public class jczcJianchajieguo {
+import java.io.Serializable;
+
+public class jczcJianchajieguo implements Serializable {
     public long jcjgId;
     public long jcjgJcxmid;
     public long userId;

@@ -1,6 +1,8 @@
 package com.du.management.newBean;
 
-public class Chufayijus {
+import java.io.Serializable;
+
+public class Chufayijus implements Serializable {
     private String content;
 
     public void setContent(String content) {

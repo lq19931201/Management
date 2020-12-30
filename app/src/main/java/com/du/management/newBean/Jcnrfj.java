@@ -1,8 +1,9 @@
 package com.du.management.newBean;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Jcnrfj {
+public class Jcnrfj implements Serializable {
     public String id;
     public String createdBy;
     public String createdTime;

@@ -1,5 +1,7 @@
 package com.du.management.newBean;
 
+import android.support.annotation.Nullable;
+
 public class UnitInformations {
     public long infoId;
     public long typeId;
@@ -54,5 +56,14 @@ public class UnitInformations {
 
     public void setUnitId(long unitId) {
         this.unitId = unitId;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (obj instanceof UnitInformations) {
+            UnitInformations u = (UnitInformations) obj;
+            return this.fieldId == u.fieldId;
+        }
+        return super.equals(obj);
     }
 }

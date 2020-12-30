@@ -46,6 +46,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -92,6 +93,8 @@ public class NewSecondActivity extends BaseActivity {
     private Uri imageUri;
 
     private static int PHOTO_REQUEST_CAREMA = 0x12;
+
+    private static int NEWSECONDTWO = 0x13;
 
     private long jczbId;
 
@@ -161,7 +164,8 @@ public class NewSecondActivity extends BaseActivity {
     private void requestThirdList(long mobanId, long xiangmuId) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(HttpConstant.REQUSET_BASE_URL).append("jianchazhicheng/getJianchashishiMoban/").append(MainApplication.userId).append("/" + mobanId).append("/" + xiangmuId);
+//        stringBuffer.append(HttpConstant.REQUSET_BASE_URL).append("jianchazhicheng/getJianchashishiMoban/").append(MainApplication.userId).append("/" + mobanId).append("/" + xiangmuId);
+        stringBuffer.append(HttpConstant.REQUSET_BASE_URL).append("jianchazhicheng/listSanjirenwu/").append(MainApplication.userId).append("/" + mobanId).append("/" + xiangmuId);
         HeaderStringRequest request = new HeaderStringRequest(Request.Method.GET, stringBuffer.toString(), response -> {
             try {
                 JSONObject jsonObject = new JSONObject(response);
@@ -294,24 +298,35 @@ public class NewSecondActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (tempFile.exists()) {
-            Log.e("lqlq", "exists");
-            Log.e("lqlq", "tempFile.length()" + tempFile.length());
-            String filePath = tempFile.getAbsolutePath();
-            Bitmap bitmap = compressImageFromFile(filePath, 1024f);
-            new File(filePath).delete();
-            saveBitmap(bitmap, new File(filePath));
-            try {
-                File realFile = new File(filePath);
-                if (titleTakePhoto) {
-                    upload(HttpConstant.REQUSET_BASE_URL + "/jianchazhicheng/upLoadDanweiPic", realFile.getAbsolutePath(), realFile.getName());
-                } else {
-                    upload(HttpConstant.REQUSET_BASE_URL + "/jianchazhicheng/upLoadJianchaPic", realFile.getAbsolutePath(), realFile.getName());
-                }
-            } catch (Exception e) {
+        if (requestCode == NEWSECONDTWO) {
+            Jcnr jcnr = (Jcnr) data.getSerializableExtra("data");
+            if (jcnr != null) {
+                jcnrList.set(thirdSecond, jcnr);
+                newThirdAdapter.setList(jcnrList.get(thirdSecond).getJcnrfjlist());
+                newThirdAdapter.notifyDataSetChanged();
+            }
+        } else {
+            if (tempFile.exists()) {
+                Log.e("lqlq", "exists");
+                Log.e("lqlq", "tempFile.length()" + tempFile.length());
+                String filePath = tempFile.getAbsolutePath();
+                Bitmap bitmap = compressImageFromFile(filePath, 1024f);
+                new File(filePath).delete();
+                saveBitmap(bitmap, new File(filePath));
+                try {
 
+                    File realFile = new File(filePath);
+                    if (titleTakePhoto) {
+                        upload(HttpConstant.REQUSET_BASE_URL + "/jianchazhicheng/upLoadDanweiPic", realFile.getAbsolutePath(), realFile.getName());
+                    } else {
+                        upload(HttpConstant.REQUSET_BASE_URL + "/jianchazhicheng/upLoadJianchaPic", realFile.getAbsolutePath(), realFile.getName());
+                    }
+                } catch (Exception e) {
+
+                }
             }
         }
+
     }
 
     private void upload(String url, String filePath, String fileName) throws Exception {
@@ -439,27 +454,34 @@ public class NewSecondActivity extends BaseActivity {
 //        });
 
         secondTV.setOnClickListener(v -> {
-            List<String> list = new ArrayList<>();
-            for (int i = 0; i < jcnrList.size(); i++) {
-                list.add(jcnrList.get(i).getJcxmName() + jcnrList.get(i).getJcnrName());
-            }
-            final SecondTitleDialog dialog = new SecondTitleDialog(NewSecondActivity.this, list);
-            dialog.show();
-            dialog.setOnItemClickListener(new SecondTitleDialog.CallBack() {
-                @Override
-                public void onItemClick(int position) {
-                    thirdSecond = position;
-                    if (jcnrList.size() - 1 == thirdSecond) {
-                        nextTV.setText("提交");
-                    } else {
-                        nextTV.setText("下一項");
-                    }
-                    newThirdAdapter.setList(jcnrList.get(thirdSecond).getJcnrfjlist());
-                    newThirdAdapter.notifyDataSetChanged();
-                    secondTV.setText(jcnrList.get(thirdSecond).getJcxmName() + jcnrList.get(thirdSecond).getJcnrName());
-                    dialog.dismiss();
-                }
-            });
+//            List<String> list = new ArrayList<>();
+////            for (int i = 0; i < jcnrList.size(); i++) {
+////                list.add(jcnrList.get(i).getJcxmName() + jcnrList.get(i).getJcnrName());
+////            }
+////            final SecondTitleDialog dialog = new SecondTitleDialog(NewSecondActivity.this, list);
+////            dialog.show();
+////            dialog.setOnItemClickListener(new SecondTitleDialog.CallBack() {
+////                @Override
+////                public void onItemClick(int position) {
+////                    thirdSecond = position;
+////                    if (jcnrList.size() - 1 == thirdSecond) {
+////                        nextTV.setText("提交");
+////                    } else {
+////                        nextTV.setText("下一項");
+////                    }
+////                    newThirdAdapter.setList(jcnrList.get(thirdSecond).getJcnrfjlist());
+////                    newThirdAdapter.notifyDataSetChanged();
+////                    secondTV.setText(jcnrList.get(thirdSecond).getJcxmName() + jcnrList.get(thirdSecond).getJcnrName());
+////                    dialog.dismiss();
+////                }
+////            });
+            Intent intent = new Intent(this, NewSecondTwoActivity.class);
+            intent.putExtra("title", firstTV.getText().toString());
+            intent.putExtra("taskId", renwuId);
+            intent.putExtra("mobanId", mobanId);
+            intent.putExtra("xiangmuId", xiangmuId);
+            intent.putExtra("jcnr", jcnrList.get(thirdSecond));
+            startActivityForResult(intent, NEWSECONDTWO);
         });
     }
 

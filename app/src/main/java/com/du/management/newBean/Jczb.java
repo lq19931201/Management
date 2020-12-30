@@ -1,8 +1,9 @@
 package com.du.management.newBean;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Jczb {
+public class Jczb implements Serializable {
     public int jcqkPosition;
     public String nextXulieId;
     public long jczbId;

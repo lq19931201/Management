@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -20,11 +20,21 @@
             android:textColor="@color/black"
             android:textSize="15sp"></TextView>
 
-        <TextView
+        <EditText
             android:id="@+id/value"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/key"
+            android:background="@null"
+            android:textColor="@color/black"
+            android:textSize="15sp"></EditText>
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/key"
             android:textSize="15sp"
-            android:textColor="@color/black"></TextView>
-    </LinearLayout>
+            android:visibility="gone"></Spinner>
+    </RelativeLayout>
 </LinearLayout>

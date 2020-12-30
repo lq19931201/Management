@@ -67,8 +67,6 @@ public class NewSecondTwoActivity extends BaseActivity {
 
     private boolean isComplete;
 
-    private List<Jcnr> jcnrList = new ArrayList<>();
-
     private int thirdSecond = 0;
 
     private long mobanId;
@@ -90,6 +88,8 @@ public class NewSecondTwoActivity extends BaseActivity {
     private boolean titleTakePhoto;
 
     private long renwuId;
+
+    private Jcnr jcnr;
 
     @Override
     protected int initLayoutId() {
@@ -145,55 +145,23 @@ public class NewSecondTwoActivity extends BaseActivity {
             bottomLV.setVisibility(View.GONE);
         }
         firstTV.setText(getIntent().getStringExtra("title"));
+        jcnr = (Jcnr) getIntent().getSerializableExtra("jcnr");
+        secondTV.setText(jcnr.getJcxmName() + jcnr.getJcnrName());
+        newThirdAdapter = new NewThirdAdapter(NewSecondTwoActivity.this, jcnr.getJcnrfjlist());
+        myListView.setAdapter(newThirdAdapter);
+        newThirdAdapter.setCameraOnClick(new NewThirdAdapter.CameraOnClick() {
+            @Override
+            public void onClick(int jcnrfjPosition, int position) {
+                titleTakePhoto = false;
+                jczbId = jcnr.getJcnrfjlist().get(jcnrfjPosition).getJczblist().get(position).getJczbId();
+                openCamera();
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        requestThirdList(mobanId, xiangmuId);
-    }
-
-    private void requestThirdList(long mobanId, long xiangmuId) {
-        jcnrList.clear();
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(HttpConstant.REQUSET_BASE_URL).append("jianchazhicheng/getJianchashishiMoban/").append(MainApplication.userId).append("/" + mobanId).append("/" + xiangmuId);
-        HeaderStringRequest request = new HeaderStringRequest(Request.Method.GET, stringBuffer.toString(), response -> {
-            try {
-                JSONObject jsonObject = new JSONObject(response);
-                if (jsonObject.getString("code").equals(HttpConstant.CODE_SUCCESS)) {
-                    Gson gson = new Gson();
-                    JSONArray jsonArray = jsonObject.getJSONArray("data");
-                    List<Jcxm> thirdList = new ArrayList<>();
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        thirdList.add(gson.fromJson(jsonArray.getJSONObject(i).toString(), Jcxm.class));
-                    }
-                    for (int i = 0; i < thirdList.size(); i++) {
-                        Log.w("lqlqlq", response);
-                        for (int j = 0; j < thirdList.get(i).getJcnrlist().size(); j++) {
-                            thirdList.get(i).getJcnrlist().get(j).setXiangmuId(thirdList.get(i).getJcxmId());
-                            thirdList.get(i).getJcnrlist().get(j).setJcxmName((i + 1) + "、" + thirdList.get(i).getJcxmName() + "/" + (j + 1) + "、");
-                        }
-                        jcnrList.addAll(thirdList.get(i).getJcnrlist());
-                    }
-                    secondTV.setText(jcnrList.get(0).getJcxmName() + jcnrList.get(0).getJcnrName());
-                    newThirdAdapter = new NewThirdAdapter(NewSecondTwoActivity.this, jcnrList.get(0).getJcnrfjlist());
-                    myListView.setAdapter(newThirdAdapter);
-                    newThirdAdapter.setCameraOnClick(new NewThirdAdapter.CameraOnClick() {
-                        @Override
-                        public void onClick(int jcnrfjPosition, int position) {
-                            titleTakePhoto = false;
-                            jczbId = jcnrList.get(thirdSecond).getJcnrfjlist().get(jcnrfjPosition).getJczblist().get(position).getJczbId();
-                            openCamera();
-                        }
-                    });
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }, error -> Toast.makeText(NewSecondTwoActivity.this, "网络请求失败", Toast.LENGTH_SHORT).show());
-        requestQueue.add(request);
     }
 
     public void openCamera() {
@@ -355,19 +323,22 @@ public class NewSecondTwoActivity extends BaseActivity {
     protected void onclick() {
         findViewById(R.id.back).setOnClickListener(v -> finish());
 
-        secondTV.setOnClickListener(v -> {
-            Intent intent = new Intent(this, NewSecondActivity.class);
-            intent.putExtra("title", firstTV.getText().toString());
-            intent.putExtra("taskId", renwuId);
-            intent.putExtra("mobanId", mobanId);
-            intent.putExtra("xiangmuId", xiangmuId);
-            startActivity(intent);
-        });
+//        secondTV.setOnClickListener(v -> {
+//            Intent intent = new Intent(this, NewSecondActivity.class);
+//            intent.putExtra("title", firstTV.getText().toString());
+//            intent.putExtra("taskId", renwuId);
+//            intent.putExtra("mobanId", mobanId);
+//            intent.putExtra("xiangmuId", xiangmuId);
+//            startActivity(intent);
+//        });
 
         findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveRequest(jcnrList.get(thirdSecond).getJcnrfjlist());
+                saveRequest(jcnr.getJcnrfjlist());
+                Intent intent = new Intent();
+                intent.putExtra("data", jcnr);
+                setResult(0, intent);
                 finish();
             }
         });

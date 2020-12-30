@@ -119,7 +119,7 @@ public class CurrentTaskAdapter extends BaseAdapter {
                 context.startActivity(intent);
             });
             viewHolder.jianchaTV.setOnClickListener(v -> {
-                Intent intent = new Intent(context, NewSecondTwoActivity.class);
+                Intent intent = new Intent(context, NewSecondActivity.class);
                 intent.putExtra("title", list.get(i).getDanweiName());
                 intent.putExtra("taskId", renwuId);
                 intent.putExtra("mobanId", list.get(i).getMobanId());

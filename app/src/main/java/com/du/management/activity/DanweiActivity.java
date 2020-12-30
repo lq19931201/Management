@@ -138,9 +138,6 @@ public class DanweiActivity extends BaseActivity {
     }
 
     private void bindJczcField() {
-        if (danweiBean.getUnitInformations() == null || danweiBean.getUnitInformations().size() == 0) {
-            return;
-        }
         List<UnitInformations> unitList = danweiBean.getUnitInformations();
         for (UnitInformations unitInformations : unitList) {
             for (JczcField jczcField : jczcFieldList) {
@@ -159,7 +156,6 @@ public class DanweiActivity extends BaseActivity {
         jczcFieldList.clear();
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         HeaderStringRequest request = new HeaderStringRequest(Request.Method.GET, url, response -> {
-
             try {
                 Log.w("DanweiActivity", "listJczcField ->" + response);
                 JSONObject jsonObject = new JSONObject(response);
@@ -242,6 +238,27 @@ public class DanweiActivity extends BaseActivity {
             danweiBean.setLianxifangshi(phone.getText().toString());
             danweiBean.setLianxiren(userName.getText().toString());
             danweiBean.setCreditCode(creditCode.getText().toString());
+            if (danweiBean.getUnitInformations() == null || danweiBean.getUnitInformations().size() > 0) {
+                danweiBean.unitInformations = new ArrayList<>();
+            }
+            if (jczcFieldList.size() > 0) {
+                List<UnitInformations> unitInformations = danweiBean.getUnitInformations();
+                for (JczcField jczcField : jczcFieldList) {
+                    if (unitInformations.contains(jczcField.getFieldId())) {
+                        for (UnitInformations unitInformations1 : unitInformations) {
+                            if (unitInformations1.getFieldId() == jczcField.getFieldType()) {
+                                unitInformations1.setInfoValue(jczcField.getSaveValue());
+                            }
+                        }
+                    } else {
+                        UnitInformations unitInformations1 = new UnitInformations();
+                        unitInformations1.setFieldId(jczcField.getFieldId());
+                        unitInformations1.setInfoValue(jczcField.getSaveValue());
+                        danweiBean.getUnitInformations().add(unitInformations1);
+                    }
+                }
+            }
+            Log.w("DanweiActivity", "save - > " + new Gson().toJson(danweiBean));
             try {
                 RequestQueue requestQueue = Volley.newRequestQueue(this);
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, "http://52.130.85.90:1311/usermanagement/app-api/saveUnit", new JSONObject(new Gson().toJson(danweiBean)), response -> {

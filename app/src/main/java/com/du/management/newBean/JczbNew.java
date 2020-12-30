@@ -2,7 +2,9 @@ package com.du.management.newBean;
 
 import android.support.annotation.Nullable;
 
-public class JczbNew {
+import java.io.Serializable;
+
+public class JczbNew implements Serializable {
     public long jczbId;
     public String jczbName;
     public boolean checked;

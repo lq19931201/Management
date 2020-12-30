@@ -1,8 +1,9 @@
 package com.du.management.newBean;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Jcnr {
+public class Jcnr implements Serializable {
     public long xiangmuId;
     public String jcxmName;
     public String id;

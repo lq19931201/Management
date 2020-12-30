@@ -5,8 +5,18 @@ import java.util.List;
 public class JczcField {
     public long fieldId;
     public String fieldName;
-    public long fieldType;
+    public int fieldType;
     public String value;
+    public String saveValue;
+
+    public void setSaveValue(String saveValue) {
+        this.saveValue = saveValue;
+    }
+
+    public String getSaveValue() {
+        return saveValue;
+    }
+
     public List<JczcFieldValue> jczcFieldValue;
 
     public String getValue() {
@@ -33,11 +43,11 @@ public class JczcField {
         this.fieldName = fieldName;
     }
 
-    public long getFieldType() {
+    public int getFieldType() {
         return fieldType;
     }
 
-    public void setFieldType(long fieldType) {
+    public void setFieldType(int fieldType) {
         this.fieldType = fieldType;
     }
 
