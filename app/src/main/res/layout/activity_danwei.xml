@@ -47,19 +47,8 @@
                     android:layout_height="wrap_content"
                     android:padding="10dp">
 
-                    <TextView
-                        android:id="@+id/chakan"
-                        android:layout_width="45dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="5dp"
-                        android:background="@drawable/drawable_danwei"
-                        android:gravity="center"
-                        android:text="查看"
-                        android:textColor="@color/white"
-                        android:textSize="15sp"></TextView>
-
                     <ImageView
+                        android:id="@+id/photo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -244,13 +233,11 @@
                         android:textColor="@color/black"
                         android:textSize="15sp"></TextView>
 
-                    <EditText
+                    <Spinner
                         android:id="@+id/type"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:hint="船闸/航道/港口/运输"
-                        android:textSize="15sp"></EditText>
+                        android:textSize="15sp"></Spinner>
                 </LinearLayout>
 
                 <!--        <LinearLayout-->
@@ -334,7 +321,8 @@
                 <com.du.management.view.NewMyListView
                     android:id="@+id/listView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"></com.du.management.view.NewMyListView>
+                    android:layout_height="wrap_content"
+                    android:divider="@null"></com.du.management.view.NewMyListView>
 
             </LinearLayout>
         </LinearLayout>
