@@ -301,7 +301,8 @@ public class NewSecondActivity extends BaseActivity {
         if (requestCode == NEWSECONDTWO) {
             Jcnr jcnr = (Jcnr) data.getSerializableExtra("data");
             if (jcnr != null) {
-                jcnrList.set(thirdSecond, jcnr);
+                int position = data.getIntExtra("position",0);
+                jcnrList.set(position, jcnr);
                 newThirdAdapter.setList(jcnrList.get(thirdSecond).getJcnrfjlist());
                 newThirdAdapter.notifyDataSetChanged();
             }
@@ -454,34 +455,35 @@ public class NewSecondActivity extends BaseActivity {
 //        });
 
         secondTV.setOnClickListener(v -> {
-//            List<String> list = new ArrayList<>();
-////            for (int i = 0; i < jcnrList.size(); i++) {
-////                list.add(jcnrList.get(i).getJcxmName() + jcnrList.get(i).getJcnrName());
-////            }
-////            final SecondTitleDialog dialog = new SecondTitleDialog(NewSecondActivity.this, list);
-////            dialog.show();
-////            dialog.setOnItemClickListener(new SecondTitleDialog.CallBack() {
-////                @Override
-////                public void onItemClick(int position) {
-////                    thirdSecond = position;
-////                    if (jcnrList.size() - 1 == thirdSecond) {
-////                        nextTV.setText("提交");
-////                    } else {
-////                        nextTV.setText("下一項");
-////                    }
-////                    newThirdAdapter.setList(jcnrList.get(thirdSecond).getJcnrfjlist());
-////                    newThirdAdapter.notifyDataSetChanged();
-////                    secondTV.setText(jcnrList.get(thirdSecond).getJcxmName() + jcnrList.get(thirdSecond).getJcnrName());
-////                    dialog.dismiss();
-////                }
-////            });
-            Intent intent = new Intent(this, NewSecondTwoActivity.class);
-            intent.putExtra("title", firstTV.getText().toString());
-            intent.putExtra("taskId", renwuId);
-            intent.putExtra("mobanId", mobanId);
-            intent.putExtra("xiangmuId", xiangmuId);
-            intent.putExtra("jcnr", jcnrList.get(thirdSecond));
-            startActivityForResult(intent, NEWSECONDTWO);
+            List<String> list = new ArrayList<>();
+            for (int i = 0; i < jcnrList.size(); i++) {
+                list.add(jcnrList.get(i).getJcxmName() + jcnrList.get(i).getJcnrName());
+            }
+            final SecondTitleDialog dialog = new SecondTitleDialog(NewSecondActivity.this, list);
+            dialog.show();
+            dialog.setOnItemClickListener(new SecondTitleDialog.CallBack() {
+                @Override
+                public void onItemClick(int position) {
+                    dialog.dismiss();
+                    Intent intent = new Intent(NewSecondActivity.this, NewSecondTwoActivity.class);
+                    intent.putExtra("title", firstTV.getText().toString());
+                    intent.putExtra("taskId", renwuId);
+                    intent.putExtra("mobanId", mobanId);
+                    intent.putExtra("xiangmuId", xiangmuId);
+                    intent.putExtra("jcnr", jcnrList.get(position));
+                    intent.putExtra("position",position);
+                    startActivityForResult(intent, NEWSECONDTWO);
+//                    thirdSecond = position;
+//                    if (jcnrList.size() - 1 == thirdSecond) {
+//                        nextTV.setText("提交");
+//                    } else {
+//                        nextTV.setText("下一項");
+//                    }
+//                    newThirdAdapter.setList(jcnrList.get(thirdSecond).getJcnrfjlist());
+//                    newThirdAdapter.notifyDataSetChanged();
+//                    secondTV.setText(jcnrList.get(thirdSecond).getJcxmName() + jcnrList.get(thirdSecond).getJcnrName());
+                }
+            });
         });
     }
 

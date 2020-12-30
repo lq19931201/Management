@@ -28,15 +28,12 @@ import com.du.management.MainApplication;
 import com.du.management.R;
 import com.du.management.adapter.NewThirdAdapter;
 import com.du.management.bean.PushBean;
-import com.du.management.http.HeaderStringRequest;
 import com.du.management.http.HttpConstant;
 import com.du.management.newBean.Jcnr;
 import com.du.management.newBean.Jcnrfj;
-import com.du.management.newBean.Jcxm;
 import com.du.management.newBean.Jczb;
 import com.du.management.utils.Utils;
 import com.du.management.view.MyListView;
-import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -90,6 +87,8 @@ public class NewSecondTwoActivity extends BaseActivity {
     private long renwuId;
 
     private Jcnr jcnr;
+
+    private int position;
 
     @Override
     protected int initLayoutId() {
@@ -146,6 +145,7 @@ public class NewSecondTwoActivity extends BaseActivity {
         }
         firstTV.setText(getIntent().getStringExtra("title"));
         jcnr = (Jcnr) getIntent().getSerializableExtra("jcnr");
+        position = getIntent().getIntExtra("position",0);
         secondTV.setText(jcnr.getJcxmName() + jcnr.getJcnrName());
         newThirdAdapter = new NewThirdAdapter(NewSecondTwoActivity.this, jcnr.getJcnrfjlist());
         myListView.setAdapter(newThirdAdapter);
@@ -338,6 +338,7 @@ public class NewSecondTwoActivity extends BaseActivity {
                 saveRequest(jcnr.getJcnrfjlist());
                 Intent intent = new Intent();
                 intent.putExtra("data", jcnr);
+                intent.putExtra("position",position);
                 setResult(0, intent);
                 finish();
             }
