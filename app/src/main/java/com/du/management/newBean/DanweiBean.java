@@ -11,8 +11,8 @@ public class DanweiBean {
     public String shishiAddress ;
     public String checkedType ;
     public String creditCode;
-    public long locationX ;
-    public long locationY ;
+    public double locationX ;
+    public double locationY ;
     public long unitTypeId;
     public List<UnitInformations> unitInformations;
 
@@ -88,19 +88,19 @@ public class DanweiBean {
         this.checkedType = checkedType;
     }
 
-    public long getLocationX() {
+    public double getLocationX() {
         return locationX;
     }
 
-    public void setLocationX(long locationX) {
+    public void setLocationX(double locationX) {
         this.locationX = locationX;
     }
 
-    public long getLocationY() {
+    public double getLocationY() {
         return locationY;
     }
 
-    public void setLocationY(long locationY) {
+    public void setLocationY(double locationY) {
         this.locationY = locationY;
     }
 

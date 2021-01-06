@@ -67,12 +67,19 @@
                         android:textSize="15sp"></TextView>
                 </FrameLayout>
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@color/line"></View>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:paddingLeft="30dp"
-                    android:paddingTop="30dp"
+                    android:paddingTop="10dp"
                     android:paddingRight="30dp">
 
                     <TextView
@@ -92,12 +99,20 @@
                         android:textSize="15sp"></EditText>
                 </LinearLayout>
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@color/line"></View>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:paddingLeft="30dp"
-                    android:paddingTop="30dp"
+                    android:paddingTop="20dp"
                     android:paddingRight="30dp">
 
                     <TextView
@@ -117,12 +132,20 @@
                         android:textSize="15sp"></EditText>
                 </LinearLayout>
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@color/line"></View>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:paddingLeft="30dp"
-                    android:paddingTop="30dp"
+                    android:paddingTop="20dp"
                     android:paddingRight="30dp">
 
                     <TextView
@@ -142,12 +165,20 @@
                         android:textSize="15sp"></EditText>
                 </LinearLayout>
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@color/line"></View>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:paddingLeft="30dp"
-                    android:paddingTop="30dp"
+                    android:paddingTop="20dp"
                     android:paddingRight="30dp">
 
                     <TextView
@@ -167,12 +198,20 @@
                         android:textSize="15sp"></EditText>
                 </LinearLayout>
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@color/line"></View>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:paddingLeft="30dp"
-                    android:paddingTop="30dp"
+                    android:paddingTop="20dp"
                     android:paddingRight="30dp">
 
                     <TextView
@@ -192,12 +231,20 @@
                         android:textSize="15sp"></EditText>
                 </LinearLayout>
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@color/line"></View>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:paddingLeft="30dp"
-                    android:paddingTop="30dp"
+                    android:paddingTop="20dp"
                     android:paddingRight="30dp">
 
                     <TextView
@@ -217,12 +264,20 @@
                         android:textSize="15sp"></EditText>
                 </LinearLayout>
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@color/line"></View>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:paddingLeft="30dp"
-                    android:paddingTop="30dp"
+                    android:paddingTop="20dp"
                     android:paddingRight="30dp">
 
                     <TextView
@@ -240,12 +295,20 @@
                         android:textSize="15sp"></Spinner>
                 </LinearLayout>
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@color/line"></View>
+
                 <!--        <LinearLayout-->
                 <!--            android:layout_width="match_parent"-->
                 <!--            android:layout_height="wrap_content"-->
                 <!--            android:orientation="horizontal"-->
                 <!--            android:paddingLeft="30dp"-->
-                <!--            android:paddingTop="30dp"-->
+                <!--            android:paddingTop="20dp"-->
                 <!--            android:paddingRight="30dp">-->
 
                 <!--            <TextView-->
@@ -271,7 +334,7 @@
                 <!--            android:layout_height="wrap_content"-->
                 <!--            android:orientation="horizontal"-->
                 <!--            android:paddingLeft="30dp"-->
-                <!--            android:paddingTop="30dp"-->
+                <!--            android:paddingTop="20dp"-->
                 <!--            android:paddingRight="30dp">-->
 
                 <!--            <TextView-->
@@ -297,7 +360,7 @@
                 <!--            android:layout_height="wrap_content"-->
                 <!--            android:orientation="horizontal"-->
                 <!--            android:paddingLeft="30dp"-->
-                <!--            android:paddingTop="30dp"-->
+                <!--            android:paddingTop="20dp"-->
                 <!--            android:paddingRight="30dp">-->
 
                 <!--            <TextView-->

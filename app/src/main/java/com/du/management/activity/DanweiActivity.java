@@ -6,12 +6,17 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
@@ -36,6 +41,7 @@ import com.du.management.http.HttpConstant;
 import com.du.management.newBean.DanweiBean;
 import com.du.management.newBean.JczcField;
 import com.du.management.newBean.UnitInformations;
+import com.du.management.utils.GPSUtil;
 import com.du.management.utils.Utils;
 import com.du.management.view.CameraPhotoDialog;
 import com.du.management.view.PhotoDialog;
@@ -52,7 +58,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import okhttp3.Call;
@@ -130,6 +135,7 @@ public class DanweiActivity extends BaseActivity {
                 danweiBean = gson.fromJson(jsonObject.getJSONObject("data").toString(), DanweiBean.class);
                 bindData(danweiBean);
                 listJczcUnitType();
+                requestLocation();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -287,7 +293,7 @@ public class DanweiActivity extends BaseActivity {
                 if (position == 0) {
                     openCamera();
                 } else {
-                    PhotoDialog photoDialog = new PhotoDialog(DanweiActivity.this);
+                    PhotoDialog photoDialog = new PhotoDialog(DanweiActivity.this, xiangmuId);
                     photoDialog.show();
                 }
             });
@@ -447,4 +453,82 @@ public class DanweiActivity extends BaseActivity {
             }
         });
     }
+
+    private void requestLocation() {
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        criteria.setAltitudeRequired(false);
+        criteria.setBearingRequired(true);
+        criteria.setCostAllowed(true);
+        criteria.setSpeedRequired(true);
+        criteria.setPowerRequirement(Criteria.POWER_LOW);
+        criteria.setBearingAccuracy(Criteria.ACCURACY_HIGH);
+        criteria.setSpeedAccuracy(Criteria.ACCURACY_HIGH);
+        criteria.setHorizontalAccuracy(Criteria.ACCURACY_HIGH);
+        criteria.setVerticalAccuracy(Criteria.ACCURACY_HIGH);
+
+        // 获取最佳服务对象
+        String provider = locationManager.getBestProvider(criteria, true);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.w("DanweiActivity", "requestLocation == null");
+            return;
+        }
+        locationManager.getLastKnownLocation(provider).getProvider();
+
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10, 10, gpsLocationListener);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10, 10, networkListener);
+    }
+
+    private LocationListener networkListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            double[] a = GPSUtil.gps84_To_Gcj02(location.getLatitude(), location.getLongitude());
+            Log.w("DanweiActivity", "requestLocation networkListener-> " + a[0]);
+            Log.w("DanweiActivity", "requestLocation networkListener-> " + a[1]);
+            danweiBean.setLocationX(a[1]);
+            danweiBean.setLocationY(a[0]);
+        }
+
+        @Override
+        public void onStatusChanged(String s, int i, Bundle bundle) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String s) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String s) {
+
+        }
+    };
+
+    private LocationListener gpsLocationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            double[] a = GPSUtil.gps84_To_Gcj02(location.getLatitude(), location.getLongitude());
+            Log.w("DanweiActivity", "requestLocation gpsLocationListener-> " + a[0]);
+            Log.w("DanweiActivity", "requestLocation gpsLocationListener-> " + a[1]);
+            danweiBean.setLocationX(a[1]);
+            danweiBean.setLocationY(a[0]);
+        }
+
+        @Override
+        public void onStatusChanged(String s, int i, Bundle bundle) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String s) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String s) {
+
+        }
+    };
 }

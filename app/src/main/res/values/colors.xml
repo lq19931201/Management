@@ -13,8 +13,10 @@
     <color name="white">#ffffff</color>
     <color name="six_three">#333333</color>
     <color name="transprant">#00000000</color>
-    <color name="dialog_back">#7F7F7F </color>
+    <color name="dialog_back">#7F7F7F</color>
 
     <color name="ishege_red">#F43C3C</color>
     <color name="ishege_blue">#317FE9</color>
+
+    <color name="line">#cccccc</color>
 </resources>

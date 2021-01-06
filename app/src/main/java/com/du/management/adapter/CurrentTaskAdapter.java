@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.du.management.R;
@@ -106,6 +107,7 @@ public class CurrentTaskAdapter extends BaseAdapter {
                 viewHolder.nameTV = convertView.findViewById(R.id.name);
                 viewHolder.danweiTV = convertView.findViewById(R.id.danwei);
                 viewHolder.jianchaTV = convertView.findViewById(R.id.jiancha);
+                viewHolder.allLV = convertView.findViewById(R.id.all);
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (DanweiHolder) convertView.getTag();
@@ -126,6 +128,11 @@ public class CurrentTaskAdapter extends BaseAdapter {
                 intent.putExtra("xiangmuId", list.get(i).getXiangmuId());
                 context.startActivity(intent);
             });
+            if (newContent.getFinished() == 1) {
+                viewHolder.allLV.setBackgroundColor(context.getResources().getColor(R.color.colorPrimary));
+            } else {
+                viewHolder.allLV.setBackgroundColor(context.getResources().getColor(R.color.transprant));
+            }
             return convertView;
         }
 
@@ -135,6 +142,8 @@ public class CurrentTaskAdapter extends BaseAdapter {
             public TextView danweiTV;
 
             public TextView jianchaTV;
+
+            public RelativeLayout allLV;
         }
     }
 }

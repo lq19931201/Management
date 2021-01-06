@@ -31,11 +31,11 @@ public class PhotoDialog extends Dialog {
 
     private Context context;
 
-    public PhotoDialog(Context context) {
+    public PhotoDialog(Context context, long xiangmuId) {
         super(context, R.style.customDialog);
         this.context = context;
         setContentView(R.layout.dialog_photo);
-        recyclerView = (RecyclerView) findViewById(R.id.recycleView);
+        recyclerView = findViewById(R.id.recycleView);
         recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
         findViewById(R.id.cancle).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,47 +43,36 @@ public class PhotoDialog extends Dialog {
                 dismiss();
             }
         });
-        getPhoto();
+        getPhoto(xiangmuId);
     }
 
-    private void getPhoto() {
+    private void getPhoto(long xiangmuId) {
         final RequestQueue requestQueue = Volley.newRequestQueue(context);
         StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(HttpConstant.REQUSET_BASE_URL).append("jianchazhicheng/getDanweiPics/").append(NewSecondActivity.xiangmuId);
+        stringBuffer.append(HttpConstant.REQUSET_BASE_URL).append("jianchazhicheng/getDanweiPics/").append(xiangmuId);
 
-        HeaderStringRequest request = new HeaderStringRequest(Request.Method.GET, stringBuffer.toString(), new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    Log.w("PhotoDialog", response);
-                    JSONObject jsonObject = new JSONObject(response);
-                    if (jsonObject.getString("code").equals(HttpConstant.CODE_SUCCESS)) {
-                        JSONArray jsonArray = jsonObject.getJSONArray("data");
-                        final List<String> list = new ArrayList<>();
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            String path = HttpConstant.REQUSET_BASE_URL + jsonArray.getJSONObject(i).getString("savepath");
-                            list.add(path.replaceAll("\\\\", "/"));
-                        }
-                        final PhotoAdapter adapter = new PhotoAdapter(context, list);
-                        recyclerView.setAdapter(adapter);
-                        adapter.setOnItemClickListener(new PhotoAdapter.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(View view, int postion) {
-                                BigPhotoDialog dialog = new BigPhotoDialog(context, list.get(postion));
-                                dialog.show();
-                            }
-                        });
+        HeaderStringRequest request = new HeaderStringRequest(Request.Method.GET, stringBuffer.toString(), response -> {
+            try {
+                Log.w("PhotoDialog", response);
+                JSONObject jsonObject = new JSONObject(response);
+                if (jsonObject.getString("code").equals(HttpConstant.CODE_SUCCESS)) {
+                    JSONArray jsonArray = jsonObject.getJSONArray("data");
+                    final List<String> list = new ArrayList<>();
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        String path = HttpConstant.REQUSET_BASE_URL + jsonArray.getJSONObject(i).getString("savepath");
+                        list.add(path.replaceAll("\\\\", "/"));
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    final PhotoAdapter adapter = new PhotoAdapter(context, list);
+                    recyclerView.setAdapter(adapter);
+                    adapter.setOnItemClickListener((view, postion) -> {
+                        BigPhotoDialog dialog = new BigPhotoDialog(context, list.get(postion));
+                        dialog.show();
+                    });
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, "网络请求失败", Toast.LENGTH_SHORT).show();
-            }
-        });
+        }, error -> Toast.makeText(context, "网络请求失败", Toast.LENGTH_SHORT).show());
         requestQueue.add(request);
     }
 

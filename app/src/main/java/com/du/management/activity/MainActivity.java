@@ -1,5 +1,8 @@
 package com.du.management.activity;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -27,6 +30,17 @@ public class MainActivity extends BaseActivity {
         return R.layout.activity_main;
     }
 
+    private void requestPremission() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            int location1 = checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+            int location2 = checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION);
+            if (location1 != PackageManager.PERMISSION_GRANTED || location2 != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                        1);
+            }
+        }
+    }
+
     @Override
     protected void initView() {
         radioGroup = findViewById(R.id.radioGroup);
@@ -37,6 +51,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initData() {
+        requestPremission();
         final CurrentTaskFragment currentTaskFragment = new CurrentTaskFragment();
         final MineFragment mineFragment = new MineFragment();
 

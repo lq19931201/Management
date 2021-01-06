@@ -5,7 +5,7 @@
 
     <ImageView
         android:id="@+id/view"
-        android:layout_width="1000dp"
-        android:layout_height="650dp"
+        android:layout_width="500dp"
+        android:layout_height="500dp"
         android:scaleType="center"></ImageView>
 </LinearLayout>
