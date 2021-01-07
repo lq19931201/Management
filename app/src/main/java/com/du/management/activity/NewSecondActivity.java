@@ -501,7 +501,7 @@ public class NewSecondActivity extends BaseActivity {
                 intent.putExtra("taskId", renwuId);
                 intent.putExtra("mobanId", mobanId);
                 intent.putExtra("xiangmuId", xiangmuId);
-                intent.putExtra("jcnr", jcnrNewList.get(position));
+                intent.putExtra("jcnr", jcnrList.get(position));
                 intent.putExtra("position", position);
                 startActivityForResult(intent, NEWSECONDTWO);
 //                    thirdSecond = position;
