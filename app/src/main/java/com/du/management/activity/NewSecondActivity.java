@@ -74,6 +74,8 @@ public class NewSecondActivity extends BaseActivity {
 
     private List<Jcnr> jcnrList = new ArrayList<>();
 
+    private List<Jcnr> jcnrNewList = new ArrayList<>();
+
     private int thirdSecond = 0;
 
     private long mobanId;
@@ -159,6 +161,39 @@ public class NewSecondActivity extends BaseActivity {
         }
         firstTV.setText(getIntent().getStringExtra("title"));
         requestThirdList(mobanId, xiangmuId);
+        requestNewThirdList(mobanId, xiangmuId);
+    }
+
+    private void requestNewThirdList(long mobanId, long xiangmuId) {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append(HttpConstant.REQUSET_BASE_URL).append("jianchazhicheng/getJianchashishiMoban/").append(MainApplication.userId).append("/" + mobanId).append("/" + xiangmuId);
+        HeaderStringRequest request = new HeaderStringRequest(Request.Method.GET, stringBuffer.toString(), response -> {
+            try {
+                JSONObject jsonObject = new JSONObject(response);
+                if (jsonObject.getString("code").equals(HttpConstant.CODE_SUCCESS)) {
+                    Gson gson = new Gson();
+                    JSONArray jsonArray = jsonObject.getJSONArray("data");
+                    List<Jcxm> thirdList = new ArrayList<>();
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        thirdList.add(gson.fromJson(jsonArray.getJSONObject(i).toString(), Jcxm.class));
+                    }
+                    for (int i = 0; i < thirdList.size(); i++) {
+                        Log.w("lqlqlq", response);
+                        for (int j = 0; j < thirdList.get(i).getJcnrlist().size(); j++) {
+                            thirdList.get(i).getJcnrlist().get(j).setXiangmuId(thirdList.get(i).getJcxmId());
+                            thirdList.get(i).getJcnrlist().get(j).setJcxmName((i + 1) + "、" + thirdList.get(i).getJcxmName() + "/" + (j + 1) + "、");
+                        }
+                        jcnrNewList.addAll(thirdList.get(i).getJcnrlist());
+                    }
+                    secondTV.setText(jcnrNewList.get(0).getJcxmName() + jcnrNewList.get(0).getJcnrName());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }, error -> Toast.makeText(NewSecondActivity.this, "网络请求失败", Toast.LENGTH_SHORT).show());
+        requestQueue.add(request);
     }
 
     private void requestThirdList(long mobanId, long xiangmuId) {
@@ -184,19 +219,15 @@ public class NewSecondActivity extends BaseActivity {
                         }
                         jcnrList.addAll(thirdList.get(i).getJcnrlist());
                     }
-                    secondTV.setText(jcnrList.get(0).getJcxmName() + jcnrList.get(0).getJcnrName());
                     newThirdAdapter = new NewThirdAdapter(NewSecondActivity.this, jcnrList.get(0).getJcnrfjlist());
                     myListView.setAdapter(newThirdAdapter);
                     if (thirdList.get(0).getJcnrlist().size() == 1 && thirdList.size() == 1) {
                         nextTV.setText("提交");
                     }
-                    newThirdAdapter.setCameraOnClick(new NewThirdAdapter.CameraOnClick() {
-                        @Override
-                        public void onClick(int jcnrfjPosition, int position) {
-                            titleTakePhoto = false;
-                            jczbId = jcnrList.get(thirdSecond).getJcnrfjlist().get(jcnrfjPosition).getJczblist().get(position).getJczbId();
-                            openCamera();
-                        }
+                    newThirdAdapter.setCameraOnClick((jcnrfjPosition, position) -> {
+                        titleTakePhoto = false;
+                        jczbId = jcnrList.get(thirdSecond).getJcnrfjlist().get(jcnrfjPosition).getJczblist().get(position).getJczbId();
+                        openCamera();
                     });
                 }
             } catch (Exception e) {
@@ -299,12 +330,14 @@ public class NewSecondActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == NEWSECONDTWO) {
-            Jcnr jcnr = (Jcnr) data.getSerializableExtra("data");
-            if (jcnr != null) {
-                int position = data.getIntExtra("position",0);
-                jcnrList.set(position, jcnr);
-                newThirdAdapter.setList(jcnrList.get(thirdSecond).getJcnrfjlist());
-                newThirdAdapter.notifyDataSetChanged();
+            if (data != null) {
+                Jcnr jcnr = (Jcnr) data.getSerializableExtra("data");
+                if (jcnr != null) {
+                    int position = data.getIntExtra("position", 0);
+                    jcnrList.set(position, jcnr);
+                    newThirdAdapter.setList(jcnrList.get(thirdSecond).getJcnrfjlist());
+                    newThirdAdapter.notifyDataSetChanged();
+                }
             }
         } else {
             if (tempFile.exists()) {
@@ -414,7 +447,7 @@ public class NewSecondActivity extends BaseActivity {
                 newThirdAdapter.setList(jcnrList.get(thirdSecond).getJcnrfjlist());
                 newThirdAdapter.notifyDataSetChanged();
             }
-            secondTV.setText(jcnrList.get(thirdSecond).getJcxmName() + jcnrList.get(thirdSecond).getJcnrName());
+//            secondTV.setText(jcnrList.get(thirdSecond).getJcxmName() + jcnrList.get(thirdSecond).getJcnrName());
         });
         prevTV.setOnClickListener(v -> {
             if (jcnrList.size() == 0) {
@@ -430,7 +463,7 @@ public class NewSecondActivity extends BaseActivity {
             }
             newThirdAdapter.setList(jcnrList.get(thirdSecond).getJcnrfjlist());
             newThirdAdapter.notifyDataSetChanged();
-            secondTV.setText(jcnrList.get(thirdSecond).getJcxmName() + jcnrList.get(thirdSecond).getJcnrName());
+//            secondTV.setText(jcnrList.get(thirdSecond).getJcxmName() + jcnrList.get(thirdSecond).getJcnrName());
         });
 //        ImageView titleIV = (ImageView) findViewById(R.id.take_photo);
 //        titleIV.setOnClickListener(new View.OnClickListener() {
@@ -456,23 +489,21 @@ public class NewSecondActivity extends BaseActivity {
 
         secondTV.setOnClickListener(v -> {
             List<String> list = new ArrayList<>();
-            for (int i = 0; i < jcnrList.size(); i++) {
-                list.add(jcnrList.get(i).getJcxmName() + jcnrList.get(i).getJcnrName());
+            for (int i = 0; i < jcnrNewList.size(); i++) {
+                list.add(jcnrNewList.get(i).getJcxmName() + jcnrNewList.get(i).getJcnrName());
             }
             final SecondTitleDialog dialog = new SecondTitleDialog(NewSecondActivity.this, list);
             dialog.show();
-            dialog.setOnItemClickListener(new SecondTitleDialog.CallBack() {
-                @Override
-                public void onItemClick(int position) {
-                    dialog.dismiss();
-                    Intent intent = new Intent(NewSecondActivity.this, NewSecondTwoActivity.class);
-                    intent.putExtra("title", firstTV.getText().toString());
-                    intent.putExtra("taskId", renwuId);
-                    intent.putExtra("mobanId", mobanId);
-                    intent.putExtra("xiangmuId", xiangmuId);
-                    intent.putExtra("jcnr", jcnrList.get(position));
-                    intent.putExtra("position",position);
-                    startActivityForResult(intent, NEWSECONDTWO);
+            dialog.setOnItemClickListener(position -> {
+                dialog.dismiss();
+                Intent intent = new Intent(NewSecondActivity.this, NewSecondTwoActivity.class);
+                intent.putExtra("title", firstTV.getText().toString());
+                intent.putExtra("taskId", renwuId);
+                intent.putExtra("mobanId", mobanId);
+                intent.putExtra("xiangmuId", xiangmuId);
+                intent.putExtra("jcnr", jcnrNewList.get(position));
+                intent.putExtra("position", position);
+                startActivityForResult(intent, NEWSECONDTWO);
 //                    thirdSecond = position;
 //                    if (jcnrList.size() - 1 == thirdSecond) {
 //                        nextTV.setText("提交");
@@ -482,7 +513,6 @@ public class NewSecondActivity extends BaseActivity {
 //                    newThirdAdapter.setList(jcnrList.get(thirdSecond).getJcnrfjlist());
 //                    newThirdAdapter.notifyDataSetChanged();
 //                    secondTV.setText(jcnrList.get(thirdSecond).getJcxmName() + jcnrList.get(thirdSecond).getJcnrName());
-                }
             });
         });
     }
