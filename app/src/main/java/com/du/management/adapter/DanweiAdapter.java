@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,8 @@ import android.widget.TextView;
 import com.du.management.R;
 import com.du.management.newBean.JczcField;
 import com.du.management.newBean.JczcFieldValue;
+
+import org.json.JSONException;
 
 import java.util.List;
 
@@ -54,8 +57,10 @@ public class DanweiAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        JczcField jczcField = jczcFieldList.get(i);
+        final JczcField jczcField = jczcFieldList.get(i);
         viewHolder.key.setText(jczcField.getFieldName());
+        viewHolder.value.setTag(i);
+        viewHolder.value.clearFocus();
         if (jczcField.getFieldType() == 1) {
             viewHolder.value.setVisibility(View.GONE);
             viewHolder.spinner.setVisibility(View.VISIBLE);
@@ -70,7 +75,7 @@ public class DanweiAdapter extends BaseAdapter {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                     viewHolder.spinner.setSelection(i);
-                    jczcField.setSaveValue(i + "");
+                    jczcField.setSaveValue(String.valueOf(i + 1));
                 }
 
                 @Override
@@ -94,12 +99,19 @@ public class DanweiAdapter extends BaseAdapter {
 
                 @Override
                 public void afterTextChanged(Editable editable) {
-                    jczcField.setSaveValue(viewHolder.value.getText().toString());
+                    try {
+                        //取位置
+                        int posTag = (int) viewHolder.value.getTag();
+                        jczcFieldList.get(posTag).setSaveValue(editable.toString());
+                        Log.w("DanweiAdapter", posTag + "," + editable.toString());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         }
-        if (!TextUtils.isEmpty(jczcField.getValue())) {
-            viewHolder.value.setText(jczcField.getValue());
+        if (!TextUtils.isEmpty(jczcField.getSaveValue())) {
+            viewHolder.value.setText(jczcField.getSaveValue());
         }
         return convertView;
     }

@@ -6,7 +6,6 @@ public class JczcField {
     public long fieldId;
     public String fieldName;
     public int fieldType;
-    public String value;
     public String saveValue;
 
     public void setSaveValue(String saveValue) {
@@ -18,14 +17,6 @@ public class JczcField {
     }
 
     public List<JczcFieldValue> jczcFieldValue;
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
 
     public long getFieldId() {
         return fieldId;

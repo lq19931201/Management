@@ -79,7 +79,7 @@ public class DanweiActivity extends BaseActivity {
     private EditText creditCode;
     private EditText phone;
     private EditText userName;
-    private Spinner type;
+    private Spinner typeSpinner;
     private ListView listView;
     HashMap<Integer, String> typeMap = new HashMap<>();
     List<JczcField> jczcFieldList = new ArrayList<>();
@@ -148,7 +148,7 @@ public class DanweiActivity extends BaseActivity {
         for (UnitInformations unitInformations : unitList) {
             for (JczcField jczcField : jczcFieldList) {
                 if (unitInformations.getFieldId() == jczcField.getFieldId()) {
-                    jczcField.setValue(unitInformations.getInfoValue());
+                    jczcField.setSaveValue(unitInformations.getInfoValue());
                 }
             }
         }
@@ -162,6 +162,7 @@ public class DanweiActivity extends BaseActivity {
         jczcFieldList.clear();
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         HeaderStringRequest request = new HeaderStringRequest(Request.Method.GET, url, response -> {
+            jczcFieldList.clear();
             try {
                 Log.w("DanweiActivity", "listJczcField ->" + response);
                 JSONObject jsonObject = new JSONObject(response);
@@ -196,9 +197,9 @@ public class DanweiActivity extends BaseActivity {
                 }
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mItems);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                type.setAdapter(adapter);
+                typeSpinner.setAdapter(adapter);
                 if (danweiBean.getUnitTypeId() != 0) {
-                    type.setSelection((int) danweiBean.getUnitTypeId() - 1);
+                    typeSpinner.setSelection((int) danweiBean.getUnitTypeId() - 1);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -219,14 +220,14 @@ public class DanweiActivity extends BaseActivity {
         creditCode = findViewById(R.id.creditCode);
         phone = findViewById(R.id.phone);
         userName = findViewById(R.id.userName);
-        type = findViewById(R.id.type);
+        typeSpinner = findViewById(R.id.type);
         listView = findViewById(R.id.listView);
     }
 
     @Override
     protected void onclick() {
         findViewById(R.id.back).setOnClickListener(view -> finish());
-        type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 danweiBean.setUnitTypeId(i + 1);
@@ -248,20 +249,17 @@ public class DanweiActivity extends BaseActivity {
                 danweiBean.unitInformations = new ArrayList<>();
             }
             if (jczcFieldList.size() > 0) {
-                List<UnitInformations> unitInformations = danweiBean.getUnitInformations();
+                if (danweiBean.getUnitInformations() != null && danweiBean.getUnitInformations().size() > 0) {
+                    danweiBean.getUnitInformations().clear();
+                }
                 for (JczcField jczcField : jczcFieldList) {
-                    if (unitInformations.contains(jczcField.getFieldId())) {
-                        for (UnitInformations unitInformations1 : unitInformations) {
-                            if (unitInformations1.getFieldId() == jczcField.getFieldType()) {
-                                unitInformations1.setInfoValue(jczcField.getSaveValue());
-                            }
-                        }
-                    } else {
-                        UnitInformations unitInformations1 = new UnitInformations();
-                        unitInformations1.setFieldId(jczcField.getFieldId());
-                        unitInformations1.setInfoValue(jczcField.getSaveValue());
-                        danweiBean.getUnitInformations().add(unitInformations1);
-                    }
+                    UnitInformations unitInformations1 = new UnitInformations();
+                    unitInformations1.setFieldId(jczcField.getFieldId());
+                    unitInformations1.setInfoValue(jczcField.getSaveValue());
+                    unitInformations1.setInfoType(jczcField.getFieldType());
+                    unitInformations1.setUnitId(xiangmuId);
+                    unitInformations1.setTypeId(typeSpinner.getSelectedItemId() + 1);
+                    danweiBean.getUnitInformations().add(unitInformations1);
                 }
             }
             Log.w("DanweiActivity", "save - > " + new Gson().toJson(danweiBean));
