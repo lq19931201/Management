@@ -56,6 +56,7 @@ public class LoginActivity extends BaseActivity {
                         Request.Method.GET, new StringBuffer().append(HttpConstant.REQUSET_BASE_URL).append("jianchauser/login/").append(userNameET.getText().toString()).append("/").append(passWordET.getText().toString()).toString(),
                         new JSONObject(params), response -> {
                             try {
+                                Log.w("LoginActivity",response.toString());
                                 String code = response.getString("code");
                                 if (code.equals(HttpConstant.CODE_SUCCESS)) {
                                     MainApplication.userId = response.getJSONObject("data").getString("userId");
@@ -75,6 +76,7 @@ public class LoginActivity extends BaseActivity {
                             }
                             loginTV.setEnabled(true);
                         }, error -> {
+                    Log.w("LoginActivity",error.getMessage());
                     loginTV.setEnabled(true);
                     Toast.makeText(LoginActivity.this, "网络请求失败", Toast.LENGTH_SHORT).show();
                 }) {

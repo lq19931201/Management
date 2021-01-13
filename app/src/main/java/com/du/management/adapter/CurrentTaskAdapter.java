@@ -129,9 +129,9 @@ public class CurrentTaskAdapter extends BaseAdapter {
                 context.startActivity(intent);
             });
             if (newContent.getFinished() == 1) {
-                viewHolder.allLV.setBackgroundColor(context.getResources().getColor(R.color.colorPrimary));
+                viewHolder.nameTV.setTextColor(context.getResources().getColor(R.color.colorPrimary));
             } else {
-                viewHolder.allLV.setBackgroundColor(context.getResources().getColor(R.color.transprant));
+                viewHolder.nameTV.setTextColor(context.getResources().getColor(R.color.black));
             }
             return convertView;
         }
