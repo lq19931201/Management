@@ -8,7 +8,7 @@
         android:layout_width="312dp"
         android:layout_height="148dp"
         android:layout_centerInParent="true"
-        android:background="#ffffff"
+        android:background="@drawable/commit_dialog"
         android:orientation="vertical">
 
         <TextView
@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="21dp"
-            android:text="提交"
+            android:text="提示"
             android:textColor="#353535"
             android:textSize="17sp"></TextView>
 
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="9dp"
-            android:text="是否提交当前检查任务"
+            android:text="您输入的内容还未进行保存，确认要离开吗"
             android:textColor="#666666"
             android:textSize="14sp"></TextView>
 

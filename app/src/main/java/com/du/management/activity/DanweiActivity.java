@@ -44,6 +44,7 @@ import com.du.management.newBean.UnitInformations;
 import com.du.management.utils.GPSUtil;
 import com.du.management.utils.Utils;
 import com.du.management.view.CameraPhotoDialog;
+import com.du.management.view.CommitDialog;
 import com.du.management.view.PhotoDialog;
 import com.google.gson.Gson;
 
@@ -226,7 +227,26 @@ public class DanweiActivity extends BaseActivity {
 
     @Override
     protected void onclick() {
-        findViewById(R.id.back).setOnClickListener(view -> finish());
+        findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CommitDialog dialog = new CommitDialog(DanweiActivity.this);
+                dialog.setOnConfirmClick(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                        finish();
+                    }
+                });
+                dialog.setOnCancleClick(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+            }
+        });
         typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {

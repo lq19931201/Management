@@ -15,6 +15,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -93,7 +94,8 @@ public class NewSecondTwoActivity extends BaseActivity {
     @Override
     protected int initLayoutId() {
         MIUISetStatusBarLightMode(this, true);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);//隐藏标题栏
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//隐藏状态栏
         return R.layout.activity_newsecond_two;
     }
 
@@ -145,7 +147,7 @@ public class NewSecondTwoActivity extends BaseActivity {
         }
         firstTV.setText(getIntent().getStringExtra("title"));
         jcnr = (Jcnr) getIntent().getSerializableExtra("jcnr");
-        position = getIntent().getIntExtra("position",0);
+        position = getIntent().getIntExtra("position", 0);
         secondTV.setText(jcnr.getJcxmName() + jcnr.getJcnrName());
         newThirdAdapter = new NewThirdAdapter(NewSecondTwoActivity.this, jcnr.getJcnrfjlist());
         myListView.setAdapter(newThirdAdapter);
@@ -338,7 +340,7 @@ public class NewSecondTwoActivity extends BaseActivity {
                 saveRequest(jcnr.getJcnrfjlist());
                 Intent intent = new Intent();
                 intent.putExtra("data", jcnr);
-                intent.putExtra("position",position);
+                intent.putExtra("position", position);
                 setResult(0, intent);
                 finish();
             }
