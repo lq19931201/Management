@@ -78,6 +78,7 @@ public class NewThirdDetailAdapter extends BaseAdapter {
             viewHolder.operateLV = convertView.findViewById(R.id.operate);
             viewHolder.allLV = convertView.findViewById(R.id.all);
             viewHolder.detailTV = convertView.findViewById(R.id.detail);
+            viewHolder.nameTagTV = convertView.findViewById(R.id.nameTag);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
@@ -95,12 +96,15 @@ public class NewThirdDetailAdapter extends BaseAdapter {
         if (jczb.getJczcJianchajieguo().getIsHege() == 0) {
             viewHolder.nameTV.setTextColor(context.getResources().getColor(R.color.ishege_red));
             viewHolder.operateLV.setVisibility(View.VISIBLE);
+            viewHolder.nameTagTV.setText("×");
         } else if (jczb.getJczcJianchajieguo().getIsHege() == 2) {
             viewHolder.nameTV.setTextColor(context.getResources().getColor(R.color.ishege_blue));
             viewHolder.operateLV.setVisibility(View.VISIBLE);
+            viewHolder.nameTagTV.setText("√");
         } else if (jczb.getJczcJianchajieguo().getIsHege() == 1) {
             viewHolder.nameTV.setTextColor(context.getResources().getColor(R.color.black));
             viewHolder.operateLV.setVisibility(View.GONE);
+            viewHolder.nameTagTV.setText("○");
         }
         List<String> list = new ArrayList<>();
         if (jczb.getZhibiaotype() == 0) {
@@ -194,5 +198,6 @@ public class NewThirdDetailAdapter extends BaseAdapter {
         public LinearLayout operateLV;
         public LinearLayout allLV;
         public ImageView detailTV;
+        public TextView nameTagTV;
     }
 }
