@@ -22,15 +22,6 @@
             android:layout_height="20dp"
             android:src="@mipmap/icon_fanhui"></ImageView>
 
-        <TextView
-            android:id="@+id/firstTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@id/back"
-            android:textColor="#000000"
-            android:textSize="12sp" />
-
         <ImageView
             android:id="@+id/save"
             android:layout_width="wrap_content"
@@ -38,14 +29,33 @@
             android:layout_alignParentRight="true"
             android:src="@mipmap/icon_save"></ImageView>
 
-        <TextView
-            android:id="@+id/secondTV"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@id/save"
-            android:textColor="#000000"
-            android:textSize="12sp" />
+            android:layout_toRightOf="@id/back"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/firstTV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="#000000"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/secondTV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:textColor="#000000"
+                android:textSize="12sp" />
+        </LinearLayout>
 
     </RelativeLayout>
 

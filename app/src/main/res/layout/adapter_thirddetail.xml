@@ -23,7 +23,7 @@
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="5dp"
         android:textColor="@color/black"
-        android:textSize="13sp"></TextView>
+        android:textSize="15sp"></TextView>
 
     <LinearLayout
         android:id="@+id/operate"
